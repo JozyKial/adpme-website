@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Calque_1" data-name="Calque 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1920 850">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+      }
+
+      .cls-1, .cls-2 {
+        stroke-width: 0px;
+      }
+
+      .cls-3 {
+        clip-path: url(#clippath);
+      }
+
+      .cls-2 {
+        fill: #336733;
+        opacity: .45;
+      }
+    </style>
+    <clipPath id="clippath">
+      <rect class="cls-1" x="0" width="1920" height="850"/>
+    </clipPath>
+  </defs>
+  <g class="cls-3">
+    <rect class="cls-1" x="0" y="-71.49" width="1920" height="850"/>
+    <image width="2560" height="1920" transform="translate(-9.53 -322.94) scale(.8)" xlink:href="C:\Users\HP\Pictures\WhatsApp Image 2025-12-18 à 15.15.05_a4fe86a4.jpg"/>
+  </g>
+  <rect class="cls-2" x="0" width="1920" height="850"/>
+</svg>

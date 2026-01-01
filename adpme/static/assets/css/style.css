@@ -7959,7 +7959,7 @@ header.header--sticky.sticky .nav-area ul li.main-nav {
   background-image: url(../images/banner/b-04.jpg);
 }
 .rts-banner-area-two.three {
-  background-image: url(../images/banner/b-05.jpg);
+  background-image: url(../images/banner/banner-2b.svg);
 }
 
 .banner-inner-two-content {
@@ -10432,7 +10432,7 @@ header.header--sticky.sticky .nav-area ul li.main-nav {
 .left-thumbnail-about-area-two .counter-about-area {
   position: absolute;
   padding: 50px 33px;
-  background: #29963C;
+  background: #336633;
   position: absolute;
   top: 50px;
   left: -75px;
@@ -11517,7 +11517,7 @@ section.main-wrapper-sticky .sticky-statement .right .arrow i {
 }
 
 .service-bg-style-one-wrapper {
-  background-image: url(../images/service/01.webp);
+  background-image: url(../images/service/service-2.svg);
   padding: 80px 100px 50px 100px;
   background-size: cover;
   background-position: center;
@@ -16399,7 +16399,7 @@ body.with-sticky-item {
 }
 
 .footer-8-area-bg {
-  background-image: url(../images/footer/05.webp);
+  background-image: url(../images/footer/footer-2.svg);
 }
 
 .footer-logo-area-left-8 {
@@ -16410,7 +16410,7 @@ body.with-sticky-item {
   margin-bottom: 15px;
 }
 .footer-logo-area-left-8 p.disc {
-  color: #8B8F99;
+  color: #fff;
   margin-bottom: 25px;
 }
 .footer-logo-area-left-8 ul {
