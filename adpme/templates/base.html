@@ -45,7 +45,7 @@
                                 <ul class="top-nav">
                                     <li><a href="{% url 'actualite' %}">ADPME News</a></li>
                                     <li><a href="#">Faq</a></li>
-                                    <li><a href="#">Contact</a></li>
+                                    <li><a href="{% url 'contact' %}">Contact</a></li>
                                 </ul>
                                 <ul class="social-wrapper-one">
                                     <li><a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a></li>
@@ -181,7 +181,7 @@
                                             </ul>
                                         </li>
                                         <li class="main-nav project-a-after">
-                                            <a href="#">CONTACT</a>
+                                            <a href="{% url 'contact' %}">CONTACT</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -501,7 +501,7 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="contact.html" class="main" aria-expanded="false">Contact Us</a>
+                        <a href="{% url 'contact' %}" class="main" aria-expanded="false">Contact Us</a>
                     </li>
                 </ul>
             </nav>

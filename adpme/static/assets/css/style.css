@@ -48,7 +48,7 @@
   --color-secondary: #9486bb;
   --color-blue: #0b4df5;
   --color-sky: #82b440;
-  --color-body: #5D666F;
+  --color-body: #5D666F; /* couleur du texte corps du site */
   --color-heading-1: #336633;
   --color-title: #141416;
   --color-heading-dark: #141416;
@@ -71,20 +71,20 @@
   --color-vimeo: #00ADEF;
   --color-twitch: #6441A3;
   --color-discord: #7289da;
-  --p-light: 300;
-  --p-regular: 400;
-  --p-medium: 500;
-  --p-semi-bold: 600;
-  --p-bold: 700;
-  --p-extra-bold: 800;
+  --p-light: 400;
+  --p-regular: 500;
+  --p-medium: 600;
+  --p-semi-bold: 700;
+  --p-bold: 800;
+  --p-extra-bold: 900;
   --p-black: 900;
-  --s-light: 300;
-  --s-regular: 400;
-  --s-medium: 500;
-  --s-semi-bold: 600;
-  --s-bold: 700;
-  --s-extra-bold: 800;
-  --s-black: 900;
+  --s-light: 400;
+  --s-regular: 500;
+  --s-medium: 600;
+  --s-semi-bold: 700;
+  --s-bold: 800;
+  --s-extra-bold: 900;
+  --s-black: 1000;
   --transition: 0.3s;
   --font-primary: "Red Hat Display", serif;
   --font-secondary: "DM Sans", serif;
@@ -531,7 +531,7 @@ ul li {
   line-height: var(--line-height-b1);
   margin-top: 10px;
   margin-bottom: 10px;
-  color: var(--color-body);
+  color: var(--color-body); /* potentiel changement couleur icones */
 }
 ul li a {
   text-decoration: none;
@@ -11137,7 +11137,7 @@ header.header--sticky.sticky .nav-area ul li.main-nav {
   min-width: max-content;
   color: transparent;
   -webkit-text-stroke-width: 1px;
-  -webkit-text-stroke-color: rgba(0, 0, 0, 0.1);
+  -webkit-text-stroke-color: rgba(0, 0, 0, 0.253);
   line-height: 1;
 }
 @media only screen and (max-width: 575px) {
@@ -13417,7 +13417,7 @@ section.main-wrapper-sticky .sticky-statement.narrow .left-side img {
   font-family: var(--font-secondary);
   -webkit-text-fill-color: transparent;
   -webkit-text-stroke: 1px;
-  -webkit-text-stroke-color: rgba(141, 141, 141, 0.3098039216);
+  -webkit-text-stroke-color: rgba(209, 205, 205, 0.31);
   letter-spacing: 2px;
 }
 @media only screen and (max-width: 991px) {

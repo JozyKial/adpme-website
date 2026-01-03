@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+    ADPME - Contact
+{% endblock title %}
+
+{% block content %}
+    
+      <div class="rts-breadcrumb-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="title-area-left center">
+                        <span class="bg-title">Contacts</span>
+                        <h1 class="title rts-text-anime-style-1">
+                           Contactez-nous
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="shape-area">
+            <img src="{%static 'assets/images/about/shape/01.png'%}" alt="shape" class="one">
+            <img src="{% static 'assets/images/about/shape/02.png'%}" alt="shape" class="two">
+            <img src="{% static 'assets/images/about/shape/03.png'%}" alt="shape" class="three">
+        </div>
+    </div>
+
+
+    <!-- contact areas main -->
+    <div class="rts-contact-area-in-page" data-animation="fadeInUp" data-delay="0.2">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="contact-info-area-wrapper-p new">
+                        <div class="single-contact-info">
+                            <div class="icon">
+                                <i class="fa-solid fa-phone-flip"></i>
+                            </div>
+                            <div class="info-wrapper">
+                                <span>Contactez-nous 24/7</span>
+                                <a href="#">(+242) 22 613 5432</a>
+                            </div>
+                        </div>
+                        <div class="single-contact-info">
+                            <div class="icon">
+                                <i class="fa-solid fa-envelope"></i>
+                            </div>
+                            <div class="info-wrapper">
+                                <span>E-mail</span>
+                                <a href="#">adpme-dg@adpme.cg</a>
+                            </div>
+                        </div>
+                        <div class="single-contact-info">
+                            <div class="icon">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </div>
+                            <div class="info-wrapper">
+                                <span>ADPME Brazzaville</span>
+                                <a href="#">53, Av. Charles de Foucauld, Centre-ville</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="contact-info-area-wrapper-p new">
+                        <div class="single-contact-info">
+                            <div class="icon">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </div>
+                            <div class="info-wrapper">
+                                <span>ADPME Pointe-Noire</span>
+                                <a href="#">125 Town, United State</a>
+                            </div>
+                        </div>
+                         <div class="single-contact-info">
+                            <div class="icon">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </div>
+                            <div class="info-wrapper">
+                                <span>ADPME Dolisie</span>
+                                <a href="#">125 Town, United State</a>
+                            </div>
+                        </div>
+                         <div class="single-contact-info">
+                            <div class="icon">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </div>
+                            <div class="info-wrapper">
+                                <span>ADPME Owando</span>
+                                <a href="#">125 Town, United State</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              
+            </div>
+        </div>
+    </div>
+    <!-- contact areas main end -->
+
+    <!-- map area start -->
+    <div class="google-map-area rts-section-gapTop">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="google-map">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d237.01455577126302!2d15.280612043930104!3d-4.271437638100892!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1sfr!2scg!4v1767345210956!5m2!1sfr!2scg" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- map area end -->
+
+    <!-- rts cta area start -->
+    <div class="rts-cta-area-inner bg_image ptb--100">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="cta-inner-content-inner-page">
+                        <div class="left-side-content">
+                            <span>ADPME</span>
+                            <h3 class="title">Conseiller les porteurs de projets <br> et les entrepreneurs</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- rts cta area end -->
+
+
+{% endblock content %}
+

@@ -1,5 +1,5 @@
 from django.db import models
-
+from autoslug import AutoSlugField
 from django.template.defaultfilters import slugify
 from django.utils import timezone
 
@@ -23,50 +23,42 @@ class AgenceInfo(models.Model):
         return self.nom_agence
 
 
-class MembreEquipe(models.Model):
-    nom         = models.CharField(max_length=100)
-    prenom      = models.CharField(max_length=100)
-    fonction    = models.CharField(max_length=100)
-    photo       = models.ImageField(upload_to='equipes/', blank=True, null=True)
-    ordre_affichage = models.IntegerField(default=0, help_text="Ordre d'affichage sur la page de l'équipe")
-
-    class Meta:
-        verbose_name        = "Membre d'équipe"
-        verbose_name_plural = "Membres d'équipe"
-        ordering            = ['ordre_affichage']
-
-    def __str__(self):
-        return f"{self.nom} - ({self.fonction})"
-
-
-class CategorieActualite(models.Model):
+class CategorieActu(models.Model):
     """
     Catégories pour organiser les actualités (ex: "Événement", "Annonce", "Rapport").
     """
-    nom     = models.CharField(max_length=100, unique=True)
-    slug    = models.SlugField(max_length=100, unique=True, blank=True)
+    nom     = models.CharField(max_length=100)
+    slug    = AutoSlugField(populate_from = "name", unique=True, blank=True, default=None)
 
     class Meta:
         verbose_name        = "Catégorie d'actualité"
         verbose_name_plural = "Catégorie d'actualités"
     
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.nom)
-        super().save(*args, **kwargs)
-    
     def __str__(self):
         return self.nom
+
+
 
 
 class Actualite(models.Model):
     """
     Modèle pour les articles d'actualité et les annonces.
     """
+    STATUTS = (
+        ('0','DRAFT'),
+        ('1','PUBLISH')
+    )
+
+    SECTION = (
+        ('Recent','Recent'),
+        ('Publish','Publish'),
+        ('Trending','Trending')
+    )
+
     titre       = models.CharField(max_length=200)
-    slug        = models.SlugField(unique=True, blank=True)
+    actu_slug   = AutoSlugField(populate_from="titre", unique=True, blank=True, default=None)
     categorie   = models.ForeignKey(
-        CategorieActualite,
+        CategorieActu,
         on_delete=models.SET_NULL, # si une catégoei est supprimé, les actualités ne le sont pas
         blank=True,
         null=True,
@@ -86,20 +78,20 @@ class Actualite(models.Model):
     contenu             = models.TextField()
     date_publication    = models.DateTimeField(default=timezone.now)
     mis_a_jour_le       = models.DateTimeField(auto_now=True)
-    est_publie          = models.BooleanField(default=True, help_text="Cochez pour publier l'actualité sur le site")
+    # est_publie          = models.BooleanField(default=True, help_text="Cochez pour publier l'actualité sur le site")
+    status              = models.CharField(choices=STATUTS, max_length=1, default='0')
+    section             = models.CharField(choices=SECTION, max_length=100, default='Recent')
+
 
     class Meta:
         verbose_name        = "Actualité"
         verbose_name_plural = "Actualités"
         ordering            = ['-date_publication'] # les plus récentes en premier
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.titre)
-        super().save(*args, **kwargs)
     
     def __str__(self):
-        return self.titre
+        return f"{self.titre} ({self.categorie})"
+
+
 
 
 class ImageActualite(models.Model):
@@ -133,102 +125,6 @@ class ImageActualite(models.Model):
 
     def __str__(self):
         return f"Image pour '{self.actualite.titre}' - {self.description or 'Sans description'}"
-
-
-class CategorieDocument(models.Model):
-    nom     = models.CharField(max_length=100, unique=True)
-    slug    = models.SlugField(max_length=100, unique=True, blank=True)
-
-    class Meta:
-        verbose_name    = "Catégorie de document"
-        verbose_name_plural = "Catégories de documents"
-    
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.nom)
-        super().save(*args, **kwargs)
-    
-    def __str__(self):
-        return self.nom
-
-
-class Document(models.Model):
-    titre       = models.CharField(max_length=225)
-    slug        = models.SlugField(max_length=255, unique=True, blank=True)
-    categorie   = models.ForeignKey(
-        CategorieDocument,
-        on_delete=models.SET_NULL,
-        blank=True,
-        null=True,
-        related_name='documents'
-    )
-    description = models.TextField(blank=True, null=True, help_text="Brève description du document")
-    fichier     = models.FileField(
-        upload_to='documents_telechargement/',
-        help_text="Le fichier à télécharger (PDF, Word, Excel, etc.)"
-    )
-    date_publication        = models.DateTimeField(default=timezone.now)
-    est_public              = models.BooleanField(default=True, help_text="Cochez pour rendre public le téléchargement")
-    nombre_telechargements  = models.IntegerField(default=0, editable=False) # compter le nombre de téléchargement du fichier
-
-    class Meta:
-        verbose_name    = "Document"
-        verbose_name_plural     = "Documents"
-        ordering = ['-date_publication']
-    
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.titre)
-        super().save(*args, **kwargs)
-
-    def __str__(self):
-        return self.titre
-    
-    def increment_downloads(self):
-        """ Méthode pour incrémenter le compteur de téléchargements """
-        self.nombre_telechargements+=1
-        self.save()
-
-
-class MessageContact(models.Model):
-    nom         = models.CharField(max_length=100)
-    email       = models.EmailField()
-    sujet       = models.CharField(max_length=150)
-    message     = models.TextField()
-    date_envoi  = models.DateTimeField(auto_now_add=True)
-    lu          = models.BooleanField(default=False)
-
-    def __str__(self):
-        return f"{self.nom} - {self.sujet}"
-
-
-class PageStatique(models.Model):
-    TITRES_PAGES = [
-        ('a_propos', 'A propos'),
-        ('document', 'Lois et textes'),
-        ('contact', 'Contact'),
-    ]
-
-    titre    = models.CharField(max_length=100, choices=TITRES_PAGES, unique=True)
-    contenu  = models.TextField()
-    slug     = models.SlugField(unique=True, blank=True)
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.get_titre_display())
-            super().save(*args, **kwargs)
-    
-    def __str__(self):
-        return self.get_titre_display()
-
-
-class Partenaire(models.Model):
-    nomPartenanire  = models.CharField(max_length=150)
-    logo            = models.ImageField(upload_to='partenaires_logo/', blank=True, null=True)
-    lien            = models.URLField(blank=True)
-
-    def __str__(self):
-        return self.nomPartenanire
 
 
 
