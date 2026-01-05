@@ -6,7 +6,10 @@ git branch -M main
 git push -uf origin main
 
 ```
-
+## Augementer la taille du buffer (classique)
+```
+git config --global http.postBuffer 524288000
+```
 ## Pour commiter le projet
 ```
 1- git status
@@ -35,7 +38,9 @@ source ~/nom_variable_environnement/bin/activate
 ```
 
 ## suppression de la base de données SQLite
+```
 rm db.sqlite3
+```
 
 ## Supprimer tous les fichiers de migrations sauf __init__.py
 ```
@@ -64,10 +69,10 @@ python manage.py migrate
 
 ## Exporter la base SQLite vers Mysql
 ### 1 exporter la base sqlite vers json
-python manage.py dumpdata --natural-primary --natural-foreign --indent 4 > data.json
 
 ```
-Cela va générer un fichier data.json contenant toutes les données de ta base SQLite.
+python manage.py dumpdata --natural-primary --natural-foreign --indent 4 > data.json
+** Cela va générer un fichier data.json contenant toutes les données de ta base SQLite.
 ```
 
 ### 2 appliquer les migrations

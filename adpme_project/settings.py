@@ -124,6 +124,25 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
 
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'Custom',
+        'toolbar_Custom': [
+            ['Bold', 'Italic', 'Underline', 'Strike'],
+            ['NumberedList', 'BulletedList'],
+            ['Outdent', 'Indent'],
+            ['Link', 'Unlink'],
+            ['Image', 'Table'],
+            ['Format', 'Styles'],
+            ['RemoveFormat'],
+            ['Source'],
+        ],
+        'height': 300,
+        'width': '100%',
+    }
+}
+
+
 # Fichiers statiques compressés
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',

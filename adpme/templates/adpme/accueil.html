@@ -359,7 +359,7 @@
                                     <!-- single Post blog large -->
                                     <div class="rts-blog-h-2-wrapper">
                                         <a href="{% url 'actu_detail' pt.blog_slug %}" class="thumbnail">
-                                            <img src="{{pt.image.url}}" alt="Business_blog">
+                                            <img src="{%if pt.image %} {{ pt.image.url }} {%else%}{% static 'assets/images/blog/adpme-par-defaut.webp'%}{%endif%}" alt="adpme_blog">
                                         </a>
                                         <div class="body">
                                             <span>{{pt.category}} / par David Dolean</span>
@@ -377,7 +377,7 @@
                                     <!-- single Post blog large -->
                                     <div class="rts-blog-h-2-wrapper">
                                         <a href="blog-details.html" class="thumbnail">
-                                            <img src="{% static 'assets/images/blog/05.webp'%}" alt="Business_blog">
+                                            <img src="{% static 'assets/images/blog/05.webp'%}" alt="adpme_blog">
                                         </a>
                                         <div class="body">
                                             <span>Business Solution / by David Dolean</span>
@@ -395,7 +395,7 @@
                                     <!-- single Post blog large -->
                                     <div class="rts-blog-h-2-wrapper">
                                         <a href="blog-details.html" class="thumbnail">
-                                            <img src="{% static 'assets/images/blog/04.webp'%}" alt="Business_blog">
+                                            <img src="{% static 'assets/images/blog/04.webp'%}" alt="adpme_blog">
                                         </a>
                                         <div class="body">
                                             <span>Business Solution / by David Dolean</span>
@@ -413,7 +413,7 @@
                                     <!-- single Post blog large -->
                                     <div class="rts-blog-h-2-wrapper">
                                         <a href="blog-details.html" class="thumbnail">
-                                            <img src="{% static 'assets/images/blog/06.webp'%}" alt="Business_blog">
+                                            <img src="{% static 'assets/images/blog/06.webp'%}" alt="adpme_blog">
                                         </a>
                                         <div class="body">
                                             <span>Business Solution / by David Dolean</span>
@@ -431,7 +431,7 @@
                                     <!-- single Post blog large -->
                                     <div class="rts-blog-h-2-wrapper">
                                         <a href="blog-details.html" class="thumbnail">
-                                            <img src="{% static 'assets/images/blog/05.webp'%}" alt="Business_blog">
+                                            <img src="{% static 'assets/images/blog/05.webp'%}" alt="adpme_blog">
                                         </a>
                                         <div class="body">
                                             <span>Business Solution / by David Dolean</span>
@@ -449,7 +449,7 @@
                                     <!-- single Post blog large -->
                                     <div class="rts-blog-h-2-wrapper">
                                         <a href="blog-details.html" class="thumbnail">
-                                            <img src="{% static 'assets/images/blog/04.webp'%}" alt="Business_blog">
+                                            <img src="{% static 'assets/images/blog/04.webp'%}" alt="adpme_blog">
                                         </a>
                                         <div class="body">
                                             <span>Business Solution / by David Dolean</span>

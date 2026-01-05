@@ -8,9 +8,16 @@
 
 {% block content %}
     
-    <div class="blog-details-banner-large-image">
+    {% if post.image %}
+    <div class="blog-details-banner-large-image"
+         style="background-image: url('{{ post.image.url }}');">
+      </div>
+    {% else %}
+        <div class="blog-details-banner-large-image"
+            style="background-image: url('{%static "assets/images/blog/adpme-par-defaut.webp"%}');">
+        </div>
+    {% endif %}
 
-    </div>
 
 
     <div class="blog-details-area-main-wrapper mt-dec-180">
@@ -70,14 +77,19 @@
                             {% for pt in posts %}
                             <div class="recent-post-single">
                                 <div class="thumbnail">
-                                    <a href="#"><img src="{{pt.image.url}}" alt="Blog_post" style="width: 100px;"></a>
+                                     {% if pt.image %}
+                                        <img src="{{pt.image.url}}" alt="adpme_image" style="width:100px">
+                                    {% else %}
+                                        <img src="{% static 'assets/images/blog/adpme-par-defaut.webp' %}" alt="adpme_image" style="width:100px">
+                                    {% endif %}
+
                                 </div>
                                 <div class="content-area">
                                     <div class="user">
                                         <i class="fal fa-clock"></i>
                                         <span>{{pt.created_on}}</span>
                                     </div>
-                                    <a class="post-title" href="#">
+                                    <a class="post-title" href="{% url 'actu_detail' pt.blog_slug %}">
                                         <h6 class="title">{{pt.title}}</h6>
                                     </a>
                                 </div>

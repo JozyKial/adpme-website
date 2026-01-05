@@ -38,9 +38,9 @@ def Categorie(request, slug):
 
 
 def Blog_detail(request, slug):
-    posts       = BlogActualite.objects.order_by('-id')
-    category    = Category.objects.all()
     post        = get_object_or_404(BlogActualite, blog_slug=slug)
+    posts       = BlogActualite.objects.filter(published=True).exclude(id=post.id).order_by('-created_on')[:5]
+    category    = Category.objects.all()
 
     context = {
         'posts' : posts,

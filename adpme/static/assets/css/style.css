@@ -9364,7 +9364,7 @@ header.header--sticky.sticky .nav-area ul li.main-nav {
 
 .blog-details-banner-large-image {
   height: 703px;
-  background-image: url(../images/blog/18.webp);
+  /*background-image: url(../images/blog/18.webp);*/
   background-attachment: fixed;
   background-position: center, center;
   background-size: cover;
