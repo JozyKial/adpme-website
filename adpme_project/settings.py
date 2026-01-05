@@ -26,16 +26,18 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'adpme',
 
     # Bibliothèques tierces
     'ckeditor',
+    'ckeditor_uploader',
+    
     'sorl.thumbnail',
     'compressor',
     'modeltranslation',
 
-    "django_browser_reload",
+    'django_browser_reload',
 
+    'adpme',
 ]
 
 MIDDLEWARE = [
@@ -120,6 +122,8 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+CKEDITOR_UPLOAD_PATH = "uploads/"
+
 # Fichiers statiques compressés
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -131,6 +135,9 @@ STATICFILES_FINDERS = [
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

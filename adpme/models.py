@@ -2,6 +2,10 @@ from django.db import models
 from autoslug import AutoSlugField
 from django.template.defaultfilters import slugify
 from django.utils import timezone
+from django.contrib.auth import get_user_model
+from ckeditor_uploader.fields import RichTextUploadingField
+
+User = get_user_model()
 
 class AgenceInfo(models.Model):
     nom_agence      = models.CharField(max_length=200, default="ADPME")
@@ -22,113 +26,57 @@ class AgenceInfo(models.Model):
     def __str__(self):
         return self.nom_agence
 
-
-class CategorieActu(models.Model):
-    """
-    Catégories pour organiser les actualités (ex: "Événement", "Annonce", "Rapport").
-    """
-    nom     = models.CharField(max_length=100)
-    slug    = AutoSlugField(populate_from = "name", unique=True, blank=True, default=None)
+class Category(models.Model):
+    name   = models.CharField(max_length=100, verbose_name="Categorie")
+    slug   = AutoSlugField(populate_from = "name", unique=True, null=True, default=None)
 
     class Meta:
-        verbose_name        = "Catégorie d'actualité"
-        verbose_name_plural = "Catégorie d'actualités"
+        verbose_name = "Categorie"
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(self.name)
+            self.slug = f"{base_slug}"
+        super().save(*args, **kwargs)
     
-    def __str__(self):
-        return self.nom
+    def __str__(self) -> str:
+        return self.name
 
-
-
-
-class Actualite(models.Model):
-    """
-    Modèle pour les articles d'actualité et les annonces.
-    """
-    STATUTS = (
+class BlogActualite(models.Model):
+    
+    STATUS = (
         ('0','DRAFT'),
         ('1','PUBLISH')
     )
 
     SECTION = (
-        ('Recent','Recent'),
-        ('Publish','Publish'),
-        ('Trending','Trending')
+        ('Recent', 'Recent'),
+        ('Publish', 'Publish'),
+        ('Trending', 'Trending')
     )
 
-    titre       = models.CharField(max_length=200)
-    actu_slug   = AutoSlugField(populate_from="titre", unique=True, blank=True, default=None)
-    categorie   = models.ForeignKey(
-        CategorieActu,
-        on_delete=models.SET_NULL, # si une catégoei est supprimé, les actualités ne le sont pas
-        blank=True,
-        null=True,
-        related_name='actualites'
-    )
-    image_principale = models.ImageField(
-        upload_to='actualites_images/',
-        blank=True,
-        null=True,
-        help_text="Image d'illustration de l'actualité"
-    )
-    resume  = models.TextField(
-        help_text="Un court résumé visible sur la liste des actualités",
-        blank=True, 
-        null=True
-    )
-    contenu             = models.TextField()
-    date_publication    = models.DateTimeField(default=timezone.now)
-    mis_a_jour_le       = models.DateTimeField(auto_now=True)
-    # est_publie          = models.BooleanField(default=True, help_text="Cochez pour publier l'actualité sur le site")
-    status              = models.CharField(choices=STATUTS, max_length=1, default='0')
-    section             = models.CharField(choices=SECTION, max_length=100, default='Recent')
+    title       = models.CharField(max_length=255, unique=True, verbose_name="Titre")
+    author      = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    image       = models.ImageField(upload_to="actualite_img", blank=True, null=True, verbose_name="Image d'entête")
+    content     = RichTextUploadingField()
+    category    = models.ForeignKey(Category, related_name='category', on_delete=models.CASCADE)
+    blog_slug   = AutoSlugField(populate_from='title', unique=True, null=True, default=None)
+    last_update = models.DateTimeField(auto_now=True)
+    created_on  = models.DateField(auto_now_add=True)
+    published   = models.BooleanField(default=False, verbose_name="Publié")
+    Main_post   = models.BooleanField(default=False)
+    status      = models.CharField(choices=STATUS, max_length=1, default='0')
+    section     = models.CharField(choices=SECTION, max_length=100)
 
 
     class Meta:
-        verbose_name        = "Actualité"
-        verbose_name_plural = "Actualités"
-        ordering            = ['-date_publication'] # les plus récentes en premier
+        ordering = ['-created_on']
+        verbose_name = "Actualite"
     
     def __str__(self):
-        return f"{self.titre} ({self.categorie})"
-
-
-
-
-class ImageActualite(models.Model):
-    """
-    Modèle pour les images supplémentaires d'une actualité.
-    """
-    actualite = models.ForeignKey(
-        Actualite,
-        on_delete=models.CASCADE, # Si l'actualité est supprimée, ses images le sont aussi
-        related_name='autres_images' # Nom pour accéder aux images depuis une actualité (e.g., actualite.autres_images.all())
-    )
-    image = models.ImageField(
-        upload_to='actualites_images/supplementaires/', # Dossier pour les images supplémentaires
-        help_text="Image supplémentaire pour l'actualité"
-    )
-    description = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True,
-        help_text="Description ou légende de l'image"
-    )
-    ordre_affichage = models.IntegerField(
-        default=0,
-        help_text="Ordre d'affichage de l'image dans la galerie"
-    )
-
-    class Meta:
-        verbose_name = "Image d'Actualité Supplémentaire"
-        verbose_name_plural = "Images d'Actualité Supplémentaires"
-        ordering = ['ordre_affichage'] # Pour afficher les images dans un ordre défini
-
-    def __str__(self):
-        return f"Image pour '{self.actualite.titre}' - {self.description or 'Sans description'}"
-
-
-
+        return f"{self.title} ({self.category})"
     
+  
 
 
 
