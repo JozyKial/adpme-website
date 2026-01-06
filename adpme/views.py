@@ -52,10 +52,14 @@ def Blog_detail(request, slug):
 
 
 def ActualiteView(request):
-    cat    = Category.objects.all()
+    posts   = BlogActualite.objects.filter(published=True).order_by('-created_on')
+    cat     = Category.objects.all()
+
     context = {
-        'cat' : cat
+        'cat' : cat,
+        'posts':posts
     }
+
     return render(request,"adpme/actualite.html", context)
 
 

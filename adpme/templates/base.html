@@ -50,7 +50,6 @@
                                 <ul class="social-wrapper-one">
                                     <li><a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a></li>
                                     <li><a href="#" aria-label="twitter"><i class="fab fa-twitter"></i></a></li>
-                                    <li><a href="#" aria-label="instagram"><i class="fab fa-instagram"></i></a></li>
                                     <li><a class="mr--0" href="#" aria-label="linkedin"><i
                                             class="fab fa-linkedin-in"></i></a></li>
                                 </ul>
@@ -168,8 +167,13 @@
                                                 </div>
                                             </div>
                                         </li>
-                                        <li class="main-nav mega-menu">
+                                        <li class="main-nav has-dropdown project-a-after">
                                             <a href="#">SERVICES</a>
+                                            <ul class="submenu parent-nav">
+                                                <li><a href="#">CONSEIL</a></li>
+                                                <li><a href="#">INFORMATION & ORIENTATION</a></li>
+                                                <li><a href="#">ACCOMPAGNEMENT</a></li>
+                                            </ul>
                                         </li>
                                         <li class="main-nav project-a-after">
                                             <a href="{% url 'actualite' %}">ACTUALITES</a>
@@ -184,9 +188,16 @@
                             <!-- 2nd logo (logo ministère) -->
                             <div class="thumbnail logo-droite">
                                 <a href="{% url 'accueil' %}">
-                                    <img src="{% static 'assets/images/logo/adpme.png'%}" alt="finbiz-logo" class="logo-ministere">
+                                    <img src="{% static 'assets/images/logo/adpme.png'%}" alt="finbiz-logo" class="adpme-logo">
                                 </a>
                             </div>
+
+                            
+                                <div class="button-area">
+                                    <button id="menu-btn" aria-label="Menu" class="menu-btn menu ml--20 ml_sm--5">
+                                        <img class="menu-light" src="{% static 'assets/images/icons/01.svg'%}" alt="Menu-icon">
+                                    </button>
+                                </div>
                         </div>
                     </div>
                 </div>
@@ -231,7 +242,7 @@
                             <ul class="links">
                                 <li><a href="{% url 'a_propos' %}"><i class="far fa-arrow-right"></i> A propos</a></li>
                                 <li><a href="#"><i class="far fa-arrow-right"></i> Programmes</a></li>
-                                <li><a href="#"><i class="far fa-arrow-right"></i> Actualités</a></li>
+                                <li><a href="{% url 'actualite' %}"><i class="far fa-arrow-right"></i> Actualités</a></li>
                                 <li><a href="#"><i class="far fa-arrow-right"></i> Accompagnement</a></li>
                             </ul>
                             <ul class="links margin-left-70">
@@ -312,11 +323,10 @@
         <button class="close-icon-menu" title="Close menu"><i class="far fa-times"></i></button>
         <!-- inner menu area desktop start -->
         <div class="rts-sidebar-menu-desktop">
-            <a class="logo-1" href="{% url 'accueil' %}"><img class="logo" src="{% static 'assets/images/logo/01.svg'%}" alt="finbiz_logo"></a>
+            <a class="logo-1" href="{% url 'accueil' %}"><img class="logo" src="{% static 'assets/images/logo/adpme.png'%}" style="width: 250px;" alt="adpme_logo"></a>
             <div class="body d-none d-xl-block">
                 <p class="disc">
-                    We must explain to you how all seds this mistakens idea denouncing pleasures and praising account.
-                    All seds this mistakens idea denouncing pleasures.
+                    Notre devoir, Vous accompagner <br>Votre réussite, Notre satisfaction
                 </p>
                 <div class="get-in-touch">
                     <!-- title -->
@@ -326,176 +336,63 @@
                         <!-- single -->
                         <div class="single">
                             <i class="fas fa-phone-alt"></i>
-                            <a href="#">+8801234566789</a>
+                            <a href="#">+242 22-613-54-32</a>
                         </div>
                         <!-- single ENd -->
                         <!-- single -->
                         <div class="single">
                             <i class="fas fa-envelope"></i>
-                            <a href="#">example@gmail.com</a>
-                        </div>
-                        <!-- single ENd -->
-                        <!-- single -->
-                        <div class="single">
-                            <i class="fas fa-globe"></i>
-                            <a href="#">www.webexample.com</a>
+                            <a href="#">adpme-dg@adpme.cg</a>
                         </div>
                         <!-- single ENd -->
                         <!-- single -->
                         <div class="single">
                             <i class="fas fa-map-marker-alt"></i>
-                            <a href="#">13/A, New Pro State, NYC</a>
+                            <a href="#">53 Av. Charles Foucault, Centre-ville</a>
                         </div>
                         <!-- single ENd -->
                     </div>
                     <div class="social-wrapper-two menu">
                         <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
                         <a href="#" aria-label="twitter"><i class="fab fa-twitter"></i></a>
-                        <a href="#" aria-label="instagram"><i class="fab fa-instagram"></i></a>
-                        <a href="#" aria-label="instagram"><i class="fab fa-instagram"></i></a>
-                        <!-- <a href="#"><i class="fab fa-linkedin"></i></a> -->
+                        <a href="#" aria-label="linkedin"><i class="fab fa-linkedin"></i></a>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- mobile menu area start -->
+       <!-- mobile menu area start -->
         <div class="mobile-menu d-block d-xl-none">
             <nav class="nav-main mainmenu-nav mt--30">
                 <ul class="mainmenu metismenu" id="mobile-menu-active">
+                    <li class="main-nav mega-menu">
+                        <a href="{% url 'accueil' %}" class="main" aria-expanded="false">ACCUEIL</a>
+                    </li>
+                    <li class="main-nav mega-menu">
+                        <a href="{% url 'a_propos' %}" class="main" aria-expanded="false">A PROPOS</a>
+                    </li>
                     <li class="has-droupdown">
-                        <a href="#" class="main" aria-expanded="false">Demos</a>
+                        <a href="#" class="main" aria-expanded="false">PROGRAMMES</a>
                         <ul class="submenu mm-collapse" style="height: 0px;">
-                            <li><a href="index.html">Business One</a></li>
-                            <li><a href="index-two.html">Business Two</a></li>
-                            <li><a href="index-three.html">Business Three</a></li>
-                            <li><a href="index-four.html">Business Four</a></li>
-                            <li><a href="index-five.html">Finance Demo</a></li>
-                            <li><a href="index-six.html">Marketing agency</a></li>
-                            <li><a href="index-seven.html">Business agency</a></li>
-                            <li><a href="index-eight.html">Business Management</a></li>
-                            <li><a href="index-nine.html">Insurance Home</a></li>
-                            <li><a href="index-ten.html">Business Website</a></li>
-                            <li><a href="index-eleven.html">Business Parallax</a></li>
-                            <li><a href="index-twelve.html">Business Video</a></li>
-                            <li><a href="index-thirteen.html">Accountent One</a></li>
-                            <li><a href="index-fourteen.html">Accountent Two</a></li>
-                            <li><a href="index-fifteen.html">HR Website</a></li>
-                            <li><a href="index-sixteen.html">Business Coach</a></li>
-                            <li><a href="index-seventeen.html">SEO Website</a></li>
-                            <li><a href="index-eighteen.html">Technology Demo</a></li>
-                            <li><a href="index-nineteen.html">Business Investment</a></li>
+                            <li><a href="#">Caravane</a></li>
+                            <li><a href="#">FADPME</a></li>
+                            <li><a href="#">CPA</a>
+                            </li>
                         </ul>
                     </li>
                     <li class="has-droupdown">
-                        <a href="#" class="main" aria-expanded="false">Onepage</a>
+                        <a href="#" class="main" aria-expanded="false">SERVICES</a>
                         <ul class="submenu mm-collapse" style="height: 0px;">
-                            <li><a href="onepage-one.html">Business One</a></li>
-                            <li><a href="onepage-two.html">Business Two</a></li>
-                            <li><a href="onepage-three.html">Business Three</a></li>
-                            <li><a href="onepage-four.html">Business Four</a></li>
-                            <li><a href="onepage-five.html">Finance Demo</a></li>
-                            <li><a href="onepage-six.html">Marketing agency</a></li>
-                            <li><a href="onepage-seven.html">Business agency</a></li>
-                            <li><a href="onepage-eight.html">Business Management</a></li>
-                            <li><a href="onepage-nine.html">Insurance Home</a></li>
-                            <li><a href="onepage-ten.html">Business Website</a></li>
-                            <li><a href="onepage-eleven.html">Business Parallax</a></li>
-                            <li><a href="onepage-twelve.html">Business Video</a></li>
-                            <li><a href="onepage-thirteen.html">Accountent One</a></li>
-                            <li><a href="onepage-fourteen.html">Accountent Two</a></li>
-                            <li><a href="onepage-fifteen.html">HR Website</a></li>
-                            <li><a href="onepage-sixteen.html">Business Coach</a></li>
-                            <li><a href="onepage-eighteen.html">Technology Demo</a></li>
-                            <li><a href="onepage-nineteen.html">Business Investment</a></li>
+                            <li><a class="mobile-menu-link" href="#">CONSEIL</a></li>
+                            <li><a class="mobile-menu-link" href="#">INFORMATION & ORIENTATION</a></li>
+                            <li><a class="mobile-menu-link" href="#">ACCOMPAGNEMENT</a></li>
                         </ul>
                     </li>
-                    <li class="has-droupdown">
-                        <a href="#" class="main" aria-expanded="false">Pages</a>
-                        <ul class="submenu mm-collapse" style="height: 0px;">
-                            <li><a href="about.html">About
-                                    Company</a></li>
-                            <li><a href="service.html">Service</a></li>
-                            <li><a href="service-details.html">Service
-                                    Details</a>
-                            </li>
-                            <li><a href="service-details-2.html">Service
-                                    Details 2</a>
-                            </li>
-                            <li><a href="project.html">Project</a>
-                            </li>
-                            <li><a href="team.html">Team</a>
-                            </li>
-                            <li><a href="team-details.html">Team
-                                    Details</a>
-                            </li>
-                            <li><a href="pricing.html">Pricing</a>
-                            </li>
-                            <li><a href="appoinment.html">Appoinment</a>
-                            </li>
-                            <li><a href="history.html">Our
-                                    History</a>
-                            </li>
-                            <li><a href="blog-list.html">Blog
-                                    List</a>
-                            </li>
-                            <li><a href="blog-grid.html">Blog
-                                    List</a>
-                            </li>
-                            <li><a href="blog-details.html">Blog
-                                    Details</a>
-                            </li>
-                            <li><a href="blog-details-2.html">Blog
-                                    Details 02</a>
-                            </li>
-                            <li><a href="faq.html">Faq's</a>
-                            <li><a href="career.html">Career</a>
-                            </li>
-                            <li><a href="our-mission.html">Our
-                                    Mission</a>
-                            </li>
-                            <li><a href="partners.html">Partners</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="has-droupdown">
-                        <a href="#" class="main" aria-expanded="false">Services</a>
-                        <ul class="submenu mm-collapse" style="height: 0px;">
-                            <li><a class="mobile-menu-link" href="service.html">Service</a></li>
-                            <li><a class="mobile-menu-link" href="service-details.html">Service Details</a></li>
-                            <li><a class="mobile-menu-link" href="service-details-2.html">Service Details 2</a></li>
-                            <li><a class="mobile-menu-link" href="service-details-3.html">Service Details 3</a></li>
-                            <li><a class="mobile-menu-link" href="service-details-4.html">Service Details 4</a></li>
-                            <li><a class="mobile-menu-link" href="service-details-5.html">Service Details 5</a></li>
-
-                        </ul>
-                    </li>
-                    <li class="has-droupdown">
-                        <a href="#" class="main" aria-expanded="false">Projects</a>
-                    </li>
-                    <li class="has-droupdown">
-                        <a href="#" class="main" aria-expanded="false">Shop Pages</a>
-                        <ul class="submenu mm-collapse">
-                            <li><a href="shop.html">Shop</a>
-                            </li>
-                            <li><a href="shop-single.html">Shop
-                                    Details</a>
-                            </li>
-                            <li><a href="account.html">Account</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="has-droupdown">
-                        <a href="#" class="main" aria-expanded="false">Blog</a>
-                        <ul class="submenu mm-collapse">
-                            <li><a href="blog-grid.html">Blog Grid</a></li>
-                            <li><a href="blog-list.html">Blog List</a></li>
-                            <li><a href="blog-details.html">Blog Details</a></li>
-                            <li><a href="blog-details-2.html">Blog Details 2</a></li>
-                        </ul>
+                    <li class="main-nav mega-menu">
+                        <a href="{% url 'actualite' %}" class="main" aria-expanded="false">ACTUALITES</a>
                     </li>
                     <li>
-                        <a href="{% url 'contact' %}" class="main" aria-expanded="false">Contact Us</a>
+                        <a href="{% url 'contact' %}" class="main" aria-expanded="false">CONTACT</a>
                     </li>
                 </ul>
             </nav>
@@ -526,8 +423,6 @@
             </div>
         </div>
         <!-- mobile menu area end -->
-
-
     </div>
     <!-- inner menu area desktop End -->
 
