@@ -183,7 +183,7 @@
                                 </div>
                                 <div class="information">
                                     <span>Contactez-nous</span>
-                                    <a href="#">
+                                    <a href="{% url 'contact' %}">
                                         <h6 class="title">(+242) 22 613 5432</h6>
                                     </a>
                                 </div>
@@ -236,7 +236,7 @@
                                                            Mise à disposition d’informations fiables sur les dispositifs publics, 
                                                            les opportunités entrepreneuriales, les démarches administratives et les mécanismes d’appui aux TPME.
                                                         </p>
-                                                        <a href="service-details.html" class="arrow-right">
+                                                        <a href="{% url 'information' %}" class="arrow-right">
                                                             <i class="fa-sharp fa-solid fa-arrow-right"></i>
                                                             <span>En savoir plus</span>
                                                         </a>
@@ -254,7 +254,7 @@
                                                            Appui personnalisé aux porteurs de projets et chefs d’entreprise, 
                                                            de l’idée à la structuration, en passant par la formalisation et le suivi des activités.
                                                         </p>
-                                                        <a href="service-details.html" class="arrow-right">
+                                                        <a href="{% url 'accompagnement' %}" class="arrow-right">
                                                             <i class="fa-sharp fa-solid fa-arrow-right"></i>
                                                             <span>En savoir plus</span>
                                                         </a>
@@ -272,7 +272,7 @@
                                                             Organisation de formations, ateliers, caravanes et sessions de sensibilisation 
                                                             pour renforcer les capacités techniques et managériales des entrepreneurs.
                                                         </p>
-                                                        <a href="service-details.html" class="arrow-right">
+                                                        <a href="{% url 'formation' %}" class="arrow-right">
                                                             <i class="fa-sharp fa-solid fa-arrow-right"></i>
                                                             <span>En savoir plus</span>
                                                         </a>
@@ -291,7 +291,7 @@
                                                             le Droit, la Comptabilité, les RH, Processus de production, Elaboration des documents
                                                             techniques.
                                                         </p>
-                                                        <a href="#" class="arrow-right">
+                                                        <a href="{% url 'conseil' %}" class="arrow-right">
                                                             <i class="fa-sharp fa-solid fa-arrow-right"></i>
                                                             <span>En savoir plus</span>
                                                         </a>
@@ -373,96 +373,6 @@
                                     <!-- single Post blog large End -->
                                 </div>
                                {% endfor %}
-                                <div class="swiper-slide">
-                                    <!-- single Post blog large -->
-                                    <div class="rts-blog-h-2-wrapper">
-                                        <a href="blog-details.html" class="thumbnail">
-                                            <img src="{% static 'assets/images/blog/05.webp'%}" alt="adpme_blog">
-                                        </a>
-                                        <div class="body">
-                                            <span>Business Solution / by David Dolean</span>
-                                            <a href="blog-details.html">
-                                                <h4 class="title">Transforming Your Approach to Business</h4>
-                                            </a>
-                                            <a class="rts-read-more btn-primary" href="blog-details.html"><i
-                                                    class="far fa-arrow-right"></i>Read
-                                                More</a>
-                                        </div>
-                                    </div>
-                                    <!-- single Post blog large End -->
-                                </div>
-                                <div class="swiper-slide">
-                                    <!-- single Post blog large -->
-                                    <div class="rts-blog-h-2-wrapper">
-                                        <a href="blog-details.html" class="thumbnail">
-                                            <img src="{% static 'assets/images/blog/04.webp'%}" alt="adpme_blog">
-                                        </a>
-                                        <div class="body">
-                                            <span>Business Solution / by David Dolean</span>
-                                            <a href="blog-details.html">
-                                                <h4 class="title">Building a Brand That from Market Leaders</h4>
-                                            </a>
-                                            <a class="rts-read-more btn-primary" href="blog-details.html"><i
-                                                    class="far fa-arrow-right"></i>Read
-                                                More</a>
-                                        </div>
-                                    </div>
-                                    <!-- single Post blog large End -->
-                                </div>
-                                <div class="swiper-slide">
-                                    <!-- single Post blog large -->
-                                    <div class="rts-blog-h-2-wrapper">
-                                        <a href="blog-details.html" class="thumbnail">
-                                            <img src="{% static 'assets/images/blog/06.webp'%}" alt="adpme_blog">
-                                        </a>
-                                        <div class="body">
-                                            <span>Business Solution / by David Dolean</span>
-                                            <a href="blog-details.html">
-                                                <h4 class="title">The quick settle tips of the new ages exist </h4>
-                                            </a>
-                                            <a class="rts-read-more btn-primary" href="blog-details.html"><i
-                                                    class="far fa-arrow-right"></i>Read
-                                                More</a>
-                                        </div>
-                                    </div>
-                                    <!-- single Post blog large End -->
-                                </div>
-                                <div class="swiper-slide">
-                                    <!-- single Post blog large -->
-                                    <div class="rts-blog-h-2-wrapper">
-                                        <a href="blog-details.html" class="thumbnail">
-                                            <img src="{% static 'assets/images/blog/05.webp'%}" alt="adpme_blog">
-                                        </a>
-                                        <div class="body">
-                                            <span>Business Solution / by David Dolean</span>
-                                            <a href="blog-details.html">
-                                                <h4 class="title">Transforming Your Approach to Business</h4>
-                                            </a>
-                                            <a class="rts-read-more btn-primary" href="blog-details.html"><i
-                                                    class="far fa-arrow-right"></i>Read
-                                                More</a>
-                                        </div>
-                                    </div>
-                                    <!-- single Post blog large End -->
-                                </div>
-                                <div class="swiper-slide">
-                                    <!-- single Post blog large -->
-                                    <div class="rts-blog-h-2-wrapper">
-                                        <a href="blog-details.html" class="thumbnail">
-                                            <img src="{% static 'assets/images/blog/04.webp'%}" alt="adpme_blog">
-                                        </a>
-                                        <div class="body">
-                                            <span>Business Solution / by David Dolean</span>
-                                            <a href="blog-details.html">
-                                                <h4 class="title">Building a Brand That from Market Leaders</h4>
-                                            </a>
-                                            <a class="rts-read-more btn-primary" href="blog-details.html"><i
-                                                    class="far fa-arrow-right"></i>Read
-                                                More</a>
-                                        </div>
-                                    </div>
-                                    <!-- single Post blog large End -->
-                                </div>
                             </div>
                             <div class="swiper-pagination"></div>
                         </div>
@@ -473,6 +383,8 @@
     </div>
     <!-- End blog slide -->
    
+
+    
 
 
 

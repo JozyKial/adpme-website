@@ -8,7 +8,7 @@
     <meta name="description" content="Agence de développement des très petites, petites et moyennes entreprises est un établissement publique à caractère administratif, placé sous tutelle du Ministère des Petites et Moyennes Entreprises et de l'Artisanat - Brazzaville, République du Congo">
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/images/adpme-fav.png'%}">
     <title>{% block title %}
-        ADPME - 
+        ADPME - Conseil
     {% endblock title %}</title>
     <link rel="stylesheet preload" href="{% static 'assets/css/plugins/fontawesome.css'%}" as="style">
     <link rel="stylesheet preload" href="{% static 'assets/css/plugins/swiper.css'%}" as="style">
@@ -170,9 +170,10 @@
                                         <li class="main-nav has-dropdown project-a-after">
                                             <a href="#">SERVICES</a>
                                             <ul class="submenu parent-nav">
-                                                <li><a href="#">CONSEIL</a></li>
-                                                <li><a href="#">INFORMATION & ORIENTATION</a></li>
-                                                <li><a href="#">ACCOMPAGNEMENT</a></li>
+                                                <li><a href="{% url 'conseil' %}">CONSEIL</a></li>
+                                                <li><a href="{% url 'information' %}">INFORMATION & ORIENTATION</a></li>
+                                                <li><a href="{% url 'accompagnement' %}">ACCOMPAGNEMENT</a></li>
+                                                <li><a href="{% url 'formation' %}">FORMATION & ANIMATION</a></li>
                                             </ul>
                                         </li>
                                         <li class="main-nav project-a-after">
@@ -205,9 +206,9 @@
         </div>
     </header>
 
-{% block content %}
-  
-{% endblock content %}
+    {% block content %}
+    
+    {% endblock content %}
 
 
  <!-- footer area start -->
@@ -220,7 +221,7 @@
                             <img src="{% static 'assets/images/logo/adpme-blanc-2.png'%}" alt="logo">
                         </a>
                         <p class="disc">
-                           Notre devoir, <strong>Vous accompagner</strong><br>
+                           Notre devoir, <strong>bVous accompagner</strong><br>
                            Votre réussite, <strong>Notre satisfaction</strong>
                         </p>
                         <ul class="social-area-wrapper-two">
@@ -243,7 +244,7 @@
                                 <li><a href="{% url 'a_propos' %}"><i class="far fa-arrow-right"></i> A propos</a></li>
                                 <li><a href="#"><i class="far fa-arrow-right"></i> Programmes</a></li>
                                 <li><a href="{% url 'actualite' %}"><i class="far fa-arrow-right"></i> Actualités</a></li>
-                                <li><a href="#"><i class="far fa-arrow-right"></i> Accompagnement</a></li>
+                                <li><a href="{% url 'accompagnement' %}"><i class="far fa-arrow-right"></i> Accompagnement</a></li>
                             </ul>
                             <ul class="links margin-left-70">
                                 <li><a href="https://www.entreprises.gouv.cg/"><i class="far fa-arrow-right"></i> MPMEA</a></li>
@@ -383,9 +384,10 @@
                     <li class="has-droupdown">
                         <a href="#" class="main" aria-expanded="false">SERVICES</a>
                         <ul class="submenu mm-collapse" style="height: 0px;">
-                            <li><a class="mobile-menu-link" href="#">CONSEIL</a></li>
-                            <li><a class="mobile-menu-link" href="#">INFORMATION & ORIENTATION</a></li>
-                            <li><a class="mobile-menu-link" href="#">ACCOMPAGNEMENT</a></li>
+                            <li><a class="mobile-menu-link" href="{% url 'conseil' %}">CONSEIL</a></li>
+                            <li><a class="mobile-menu-link" href="{% url 'information' %}">INFORMATION & ORIENTATION</a></li>
+                            <li><a class="mobile-menu-link" href="{% url 'accompagnement' %}">ACCOMPAGNEMENT</a></li>
+                            <li><a class="mobile-menu-link" href="{% url 'formation' %}">FORMATION & ANIMATION</a></li>
                         </ul>
                     </li>
                     <li class="main-nav mega-menu">

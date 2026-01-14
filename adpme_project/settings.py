@@ -13,7 +13,7 @@ SECRET_KEY = 'django-insecure-itb#u$7g=@@$r1_*bl@zul!&%q$9a)(8)$l725o)2!5f)%v+8^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['Caravane.pythonanywhere.com','127.0.0.1']
 
 
 # Application definition

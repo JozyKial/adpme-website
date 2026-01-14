@@ -12,6 +12,10 @@ urlpatterns = [
     path('programme', views.ProgrammeView, name="programme"),
     path('actualite', views.ActualiteView,name="actualite"),
     path('contact', views.ContactView,name="contact"),
+    path('conseil', views.ConseilView, name="conseil"),
+    path('information', views.Info_orientationView, name="information"),
+    path('accompagnement', views.AccompagnementView, name="accompagnement"),
+    path('formation', views.FormationView, name="formation"),
     path('actualite/<str:slug>', views.Blog_detail, name="actu_detail"),
     path('ckeditor/', include('ckeditor_uploader.urls')),
 

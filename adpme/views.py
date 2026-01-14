@@ -66,6 +66,18 @@ def ActualiteView(request):
 def AproposView(request):
     return render(request,"adpme/apropos.html")
 
+def Info_orientationView(request):
+    return render(request,"adpme/information.html")
+
+def FormationView(request):
+    return render(request,"adpme/formation.html")
+
+def AccompagnementView(request):
+    return render(request,"adpme/accompagnement.html")
+
+def ConseilView(request):
+    return render(request,"adpme/conseil.html")
+
 
 def ProgrammeView(request):
     return render(request,"adpme/programme.html")    
