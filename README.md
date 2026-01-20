@@ -17,6 +17,28 @@ git config --global http.postBuffer 524288000
 3- git commit -m "Nom du commit"
 4- git push origin main
 ```
+## Push vers GitHub
+```
+git push origin main
+```
+A ce stade, Github est à jour
+
+## Sur Pythonanywhere : Consoles → Bash
+```
+cd ~/adpme-website
+source venv/bin/activate
+git pull origin main
+
+```
+Si tout est propre, tu verras
+```
+Already up to date.
+```
+## Pour les fichiers MEDIA
+Après chaque git push, lances : 
+```
+rsync -av media/ ton_user@ssh.pythonanywhere.com:/home/ton_user/adpme-website/media/
+```
 
 ## Activer le env dans le bash de pythonanywhere
 ```
