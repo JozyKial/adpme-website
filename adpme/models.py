@@ -77,7 +77,13 @@ class BlogActualite(models.Model):
         return f"{self.title} ({self.category})"
     
   
+class ActualiteEnImage(models.Model):
+    actualite   = models.ForeignKey(BlogActualite, related_name='galerie', on_delete=models.CASCADE)
+    image       = models.ImageField(upload_to='actualite_galerie/')
+    caption     = models.CharField(max_length=255, blank=True,help_text="Description facultative de l'image")
 
+    def __str__(self):
+        return f"Image - {self.actualite.title}" 
 
 
 
