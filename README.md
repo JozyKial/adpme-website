@@ -59,6 +59,11 @@ source ~/nom_variable_environnement/bin/activate
 
 ```
 
+## Script à exécuter dans console bash sachant update.sh existe
+```
+./update.sh
+```
+
 ## suppression de la base de données SQLite
 ```
 rm db.sqlite3
