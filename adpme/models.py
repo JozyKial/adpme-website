@@ -67,10 +67,12 @@ class BlogActualite(models.Model):
     Main_post   = models.BooleanField(default=False)
     status      = models.CharField(choices=STATUS, max_length=1, default='0')
     section     = models.CharField(choices=SECTION, max_length=100)
+    date_publication    = models.DateField(default=timezone.now, verbose_name="Date de publication effective")
+    last_update         = models.DateTimeField(auto_now=True)
 
 
     class Meta:
-        ordering = ['-created_on']
+        ordering = ['-date_publication']
         verbose_name = "Actualite"
     
     def __str__(self):

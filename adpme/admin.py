@@ -15,8 +15,8 @@ class ActualiteEnImageInline(admin.TabularInline):
 
 @admin.register(BlogActualite)
 class BlogActualiteAdmin(admin.ModelAdmin):
-    list_display        = ('title', 'published','created_on','author')
-    list_editable       = ('published',)
+    list_display        = ('title', 'published','created_on','date_publication','author')
+    list_editable       = ('date_publication',)
     search_fields       = ('title',)
     inlines             = [ActualiteEnImageInline]
 
