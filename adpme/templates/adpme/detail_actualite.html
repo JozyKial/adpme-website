@@ -87,7 +87,7 @@
                                 <div class="content-area">
                                     <div class="user">
                                         <i class="fal fa-clock"></i>
-                                        <span>{{pt.created_on}}</span>
+                                        <span>{{pt.date_publication|date:"d F Y"}}</span>
                                     </div>
                                     <a class="post-title" href="{% url 'actu_detail' pt.blog_slug %}">
                                         <h6 class="title">{{pt.title}}</h6>
