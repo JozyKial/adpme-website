@@ -1,15 +1,38 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Agence de développement des très petites, petites et moyennes entreprises est un établissement publique à caractère administratif, placé sous tutelle du Ministère des Petites et Moyennes Entreprises et de l'Artisanat - Brazzaville, République du Congo">
-    <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/images/adpme-fav.png'%}">
+
+    <!-- SEO de base -->
+    <meta name="description" content="{% block meta_description %}L'ADPME accompagne les porteurs de projets, entrepreneurs et artisans dans la création, le développement et la pérennisation de leurs activités — Brazzaville, République du Congo.{% endblock %}">
+    <meta name="author" content="ADPME — Agence de Développement des TPME, République du Congo">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+
+    <!-- Open Graph (Facebook, WhatsApp, LinkedIn) -->
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    <meta property="og:site_name" content="ADPME Congo">
+    <meta property="og:title" content="{% block og_title %}ADPME — Agence de Développement des TPME{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}L'ADPME accompagne les porteurs de projets, entrepreneurs et artisans dans la création et le développement de leurs activités au Congo.{% endblock %}">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'assets/images/adpme-fav.png' %}{% endblock %}">
+    <meta property="og:locale" content="fr_CG">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% block twitter_title %}ADPME Congo{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}L'ADPME accompagne les entrepreneurs congolais dans la création et le développement de leurs activités.{% endblock %}">
+    <meta name="twitter:image" content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'assets/images/adpme-fav.png' %}{% endblock %}">
+
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/images/adpme-fav.png' %}">
+
     <title>{% block title %}
         ADPME - Conseil
     {% endblock title %}</title>
+
     <link rel="stylesheet preload" href="{% static 'assets/css/plugins/fontawesome.css'%}" as="style">
     <link rel="stylesheet preload" href="{% static 'assets/css/plugins/swiper.css'%}" as="style">
     <link rel="stylesheet preload" href="{% static 'assets/css/plugins/metismenu.css'%}" as="style">
@@ -22,6 +45,34 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet preload" as="style">
     <link rel="preload" as="image" href="{% static 'assets/images/banner/21.webp'%}" />
     <link rel="stylesheet preload" href="{% static 'assets/css/style.css'%}" as="style">
+
+    <style>
+  .rts-contact-form-area input[type="text"],
+  .rts-contact-form-area input[type="email"],
+  .rts-contact-form-area textarea {
+      width: 100%;
+      padding: 12px 16px;
+      margin-top: 6px;
+      border: 1px solid #d0d0d0;
+      border-radius: 6px;
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.2s;
+  }
+  .rts-contact-form-area input:focus,
+  .rts-contact-form-area textarea:focus {
+      border-color: #2e7d32;
+  }
+  .rts-contact-form-area .form-group {
+      margin-bottom: 0;
+  }
+  .rts-contact-form-area label {
+      font-weight: 500;
+      font-size: 14px;
+      display: block;
+  }
+</style>
+
 </head>
 
 <body>
@@ -32,10 +83,13 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="header-top-one-wrapper">
+
                             <div class="left">
                                 <div class="mail">
-                                    <a href="mailto:webmaster@example.com"><i class="fal fa-envelope"></i>
-                                        dg-adpme@adpme.cg</a>
+                                    <a href="mailto:{{ agence.email_contact|default:'dg-adpme@adpme.cg' }}">
+                                        <i class="fal fa-envelope"></i>
+                                        {{ agence.email_contact|default:'dg-adpme@adpme.cg' }}
+                                    </a>
                                 </div>
                                 <div class="working-time">
                                     <p><i class="fal fa-clock"></i> Ouvert de : 8h00 à 17h00</p>
@@ -44,16 +98,22 @@
                             <div class="right">
                                 <ul class="top-nav">
                                     <li><a href="{% url 'actualite' %}">ADPME News</a></li>
-                                    <li><a href="#">Faq</a></li>
+                                    <li><a href="{% url 'faq' %}">Faq</a></li>
                                     <li><a href="{% url 'contact' %}">Contact</a></li>
                                 </ul>
                                 <ul class="social-wrapper-one">
-                                    <li><a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a></li>
-                                    <li><a href="#" aria-label="twitter"><i class="fab fa-twitter"></i></a></li>
-                                    <li><a class="mr--0" href="#" aria-label="linkedin"><i
-                                            class="fab fa-linkedin-in"></i></a></li>
+                                    {% if agence.liens_sociaux.facebook %}
+                                    <li><a href="{{ agence.liens_sociaux.facebook }}" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a></li>
+                                    {% endif %}
+                                    {% if agence.liens_sociaux.twitter %}
+                                    <li><a href="{{ agence.liens_sociaux.twitter }}" target="_blank" rel="noopener" aria-label="Twitter"><i class="fab fa-twitter"></i></a></li>
+                                    {% endif %}
+                                    {% if agence.liens_sociaux.linkedin %}
+                                    <li><a class="mr--0" href="{{ agence.liens_sociaux.linkedin }}" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a></li>
+                                    {% endif %}
                                 </ul>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -77,7 +137,7 @@
                                 <div class="nav-area">
                                     <ul class="">
                                         <li class="main-nav mega-menu project-a-after">
-                                            <a href="{% url 'accueil' %}">ADPME</a>
+                                            <a href="{% url 'accueil' %}">ACCUEIL</a>
                                         </li>
 
                                         <li class="main-nav mega-menu">
@@ -114,9 +174,25 @@
                                                                                     <img src="{% static 'assets/images/service/12.svg'%}" alt="service">
                                                                                 </div>
                                                                                 <div class="info">
-                                                                                    <h5 class="title">CPA Universités</h5>
+                                                                                    <h5 class="title">Programme CPA</h5>
                                                                                     <p class="details">
                                                                                         Promotion de l'esprit d'entreprise en milieu universitaire.
+                                                                                    </p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </a>
+                                                                    </li>
+                                                                    
+                                                                      <li>
+                                                                        <a href="#">
+                                                                            <div class="single-service-menu">
+                                                                                <div class="icon">
+                                                                                    <img src="{% static 'assets/images/service/07.svg'%}" alt="service">
+                                                                                </div>
+                                                                                <div class="info">
+                                                                                    <h5 class="title">Formation GERME</h5>
+                                                                                    <p class="details">
+                                                                                        Appui direct aux entreprises à hauteur de 70%...
                                                                                     </p>
                                                                                 </div>
                                                                             </div>
@@ -144,7 +220,7 @@
                                                                     </li>
                                                                     
                                                                     <li>
-                                                                        <a href="contact.html" class="free-consultation">
+                                                                        <a href="#" class="free-consultation">
                                                                             <div class="single-service-menu">
                                                                                 <div class="info">
                                                                                     <h5 class="title">L'ensemble des programmes</h5>
@@ -157,6 +233,7 @@
                                                                     </li>
                                                                 </ul>
                                                             </div>
+                                                            
                                                             <div class="col-lg-4">
                                                                 <div class="menu-thumb pl--20">
                                                                     <img src="{% static 'assets/images/banner/banner-adpme.svg'%}" alt="">
@@ -181,6 +258,9 @@
                                         </li>
                                         <li class="main-nav project-a-after">
                                             <a href="{% url 'contact' %}">CONTACT</a>
+                                        </li>
+                                        <li class="main-nav mega-menu">
+                                            <a href="{% url 'faq' %}">FAQ</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -225,11 +305,18 @@
                            Votre réussite, <strong>Notre satisfaction</strong>
                         </p>
                         <ul class="social-area-wrapper-two">
-                            <li><a href="#"><i class="fa-brands fa-facebook-f"></i></a></li>
-                            <li><a href="#"><i class="fa-brands fa-twitter"></i></a></li>
-                            <li><a href="#"><i class="fa-brands fa-linkedin-in"></i></a></li>
-                            <li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
-                            <li><a href="#"><i class="fa-brands fa-linkedin-in"></i></a></li>
+                            {% if agence.liens_sociaux.facebook %}
+                            <li><a href="{{ agence.liens_sociaux.facebook }}" target="_blank" rel="noopener"><i class="fa-brands fa-facebook-f"></i></a></li>
+                            {% endif %}
+                            {% if agence.liens_sociaux.twitter %}
+                            <li><a href="{{ agence.liens_sociaux.twitter }}" target="_blank" rel="noopener"><i class="fa-brands fa-twitter"></i></a></li>
+                            {% endif %}
+                            {% if agence.liens_sociaux.linkedin %}
+                            <li><a href="{{ agence.liens_sociaux.linkedin }}" target="_blank" rel="noopener"><i class="fa-brands fa-linkedin-in"></i></a></li>
+                            {% endif %}
+                            {% if agence.liens_sociaux.instagram %}
+                            <li><a href="{{ agence.liens_sociaux.instagram }}" target="_blank" rel="noopener"><i class="fa-brands fa-instagram"></i></a></li>
+                            {% endif %}
                         </ul>
                     </div>
                 </div>
@@ -268,7 +355,9 @@
                                 </div>
                                 <div class="inner-content">
                                     <h5 class="title">Contactez-nous</h5>
-                                    <a href="#">(+242) 22.613.5432</a>
+                                    <a href="tel:{{ agence.phone|default:'+242226135432' }}">
+                                        {{ agence.phone|default:'(+242) 22 613 5432' }}
+                                    </a>
                                 </div>
                             </div>
                             <div class="signle-footer-contact-8">
@@ -277,7 +366,9 @@
                                 </div>
                                 <div class="inner-content">
                                     <h5 class="title">E-mail</h5>
-                                    <a href="#">infos@adpme.net</a>
+                                    <a href="mailto:{{ agence.email_contact|default:'dg-adpme@adpme.cg' }}">
+                                        {{ agence.email_contact|default:'dg-adpme@adpme.cg' }}
+                                    </a>
                                 </div>
                             </div>
                             <div class="signle-footer-contact-8">
@@ -286,8 +377,7 @@
                                 </div>
                                 <div class="inner-content">
                                     <h5 class="title">Adresse</h5>
-                                    <a href="#">53, Av. Charles Foucault, Centre-ville <br>
-                                        Brazzaville, Rép. du Congo</a>
+                                    <p>{{ agence.adresse|default:'53, Av. Charles Foucault, Centre-ville, Brazzaville, Rép. du Congo' }}</p>
                                 </div>
                             </div>
                         </div>
@@ -334,24 +424,39 @@
                     <div class="h6 title">Get In Touch</div>
                     <!-- title End -->
                     <div class="wrapper">
-                        <!-- single -->
-                        <div class="single">
+                       <div class="single">
                             <i class="fas fa-phone-alt"></i>
-                            <a href="#">+242 22-613-54-32</a>
+                            <a href="tel:{{ agence.phone|default:'+242226135432' }}">
+                                {{ agence.phone|default:'(+242) 22 613 5432' }}
+                            </a>
                         </div>
                         <!-- single ENd -->
                         <!-- single -->
                         <div class="single">
                             <i class="fas fa-envelope"></i>
-                            <a href="#">adpme-dg@adpme.cg</a>
+                            <a href="mailto:{{ agence.email_contact|default:'dg-adpme@adpme.cg' }}">
+                                {{ agence.email_contact|default:'dg-adpme@adpme.cg' }}
+                            </a>
                         </div>
                         <!-- single ENd -->
                         <!-- single -->
                         <div class="single">
                             <i class="fas fa-map-marker-alt"></i>
-                            <a href="#">53 Av. Charles Foucault, Centre-ville</a>
+                            <span>{{ agence.adresse|default:'53 Av. Charles Foucault, Centre-ville, Brazzaville' }}</span>
                         </div>
                         <!-- single ENd -->
+                        </div>
+                        <div class="social-wrapper-two menu">
+                            {% if agence.liens_sociaux.facebook %}
+                            <a href="{{ agence.liens_sociaux.facebook }}" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                            {% endif %}
+                            {% if agence.liens_sociaux.twitter %}
+                            <a href="{{ agence.liens_sociaux.twitter }}" target="_blank" rel="noopener" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                            {% endif %}
+                            {% if agence.liens_sociaux.linkedin %}
+                            <a href="{{ agence.liens_sociaux.linkedin }}" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                            {% endif %}
+                        </div>
                     </div>
                     <div class="social-wrapper-two menu">
                         <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
@@ -377,8 +482,8 @@
                         <ul class="submenu mm-collapse" style="height: 0px;">
                             <li><a href="#">Caravane</a></li>
                             <li><a href="#">FADPME</a></li>
-                            <li><a href="#">CPA</a>
-                            </li>
+                            <li><a href="#">GERME</a></li>
+                            <li><a href="#">CPA</a></li>
                         </ul>
                     </li>
                     <li class="has-droupdown">

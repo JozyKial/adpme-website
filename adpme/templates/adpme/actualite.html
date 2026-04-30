@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 
+{% block meta_description %}Retrouvez toutes les actualités, activités et programmes de l'ADPME — Agence de Développement des TPME de la République du Congo.{% endblock %}
+{% block og_title %}Actualités — ADPME Congo{% endblock %}
+{% block og_description %}Toutes les actualités, activités et programmes de l'ADPME Congo.{% endblock %}
+
 {% load static %}
+{% load thumbnail %}
 
 {% block title %}
     ADPME - actualité
@@ -50,29 +55,60 @@
                                     <h4 class="title">{{pt.title}}</h4>
                                 </a>
                                 <div class="bottom-details">
-                                    <a href="#" class="thumbnail">
-                                        <img src="{{pt.image.url}}" alt="adpme-image">
+                                    {% load thumbnail %}
+                                    <a href="{% url 'actu_detail' pt.blog_slug %}" class="thumbnail">
+                                        {% if pt.image %}
+                                            {% thumbnail pt.image "800x500" crop="center" as im %}
+                                            <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="adpme-image" loading="lazy">
+                                            {% endthumbnail %}
+                                        {% else %}
+                                            <img src="{% static 'assets/images/blog/adpme-par-defaut.webp' %}" alt="adpme-image" loading="lazy">
+                                        {% endif %}
                                     </a>
                                 </div>
                             </div>
                         </div>
                         {% endfor %}
                     </div>
+
                     <!-- pagination area -->
-                    <div class="row">
+                    {% if posts.paginator.num_pages > 1 %}
+                    <div class="row mt--40">
                         <div class="col-12">
                             <div class="text-center">
                                 <div class="pagination">
-                                    <button class="active">01</button>
-                                    <button>02</button>
-                                    <button>03</button>
-                                    <button>04</button>
-                                    <button><i class="fal fa-angle-double-right"></i></button>
+
+                                    {% if posts.has_previous %}
+                                    <a href="?page={{ posts.previous_page_number }}">
+                                        <button><i class="fal fa-angle-double-left"></i></button>
+                                    </a>
+                                    {% endif %}
+
+                                    {% for num in posts.paginator.page_range %}
+                                        {% if posts.number == num %}
+                                            <button class="active">{{ num|stringformat:"02d" }}</button>
+                                        {% elif num > posts.number|add:'-3' and num < posts.number|add:'3' %}
+                                            <a href="?page={{ num }}"><button>{{ num|stringformat:"02d" }}</button></a>
+                                        {% endif %}
+                                    {% endfor %}
+
+                                    {% if posts.has_next %}
+                                    <a href="?page={{ posts.next_page_number }}">
+                                        <button><i class="fal fa-angle-double-right"></i></button>
+                                    </a>
+                                    {% endif %}
+
                                 </div>
+                                <p class="mt--10" style="font-size: 13px; color: #888;">
+                                    Page {{ posts.number }} sur {{ posts.paginator.num_pages }}
+                                    &mdash; {{ posts.paginator.count }} article{% if posts.paginator.count > 1 %}s{% endif %}
+                                </p>
                             </div>
                         </div>
                     </div>
+                    {% endif %}
                     <!-- pagination area End -->
+
                 </div>
                 <!-- rts-blog post end area -->
 
@@ -110,7 +146,15 @@
                              {% for pt in posts %}
                                 <div class="recent-post-single">
                                     <div class="thumbnail">
-                                        <a href="{% url 'actu_detail' pt.blog_slug %}"><img src="{{pt.image.url}}" alt="adpme-image" style="width: 100px;"></a>
+                                        <a href="{% url 'actu_detail' pt.blog_slug %}">
+                                            {% if pt.image %}
+                                                {% thumbnail pt.image "100x100" crop="center" as im %}
+                                                <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="adpme-image" loading="lazy">
+                                                {% endthumbnail %}
+                                            {% else %}
+                                                <img src="{% static 'assets/images/blog/adpme-par-defaut.webp' %}" alt="adpme-image" loading="lazy">
+                                            {% endif %}
+                                        </a>
                                     </div>
                                     <div class="content-area">
                                         <div class="user">

@@ -61,7 +61,6 @@ class BlogActualite(models.Model):
     content     = RichTextUploadingField()
     category    = models.ForeignKey(Category, related_name='category', on_delete=models.CASCADE)
     blog_slug   = AutoSlugField(populate_from='title', unique=True, null=True, default=None)
-    last_update = models.DateTimeField(auto_now=True)
     created_on  = models.DateField(auto_now_add=True)
     published   = models.BooleanField(default=False, verbose_name="Publié")
     Main_post   = models.BooleanField(default=False)
@@ -77,8 +76,7 @@ class BlogActualite(models.Model):
     
     def __str__(self):
         return f"{self.title} ({self.category})"
-    
-  
+     
 class ActualiteEnImage(models.Model):
     actualite   = models.ForeignKey(BlogActualite, related_name='galerie', on_delete=models.CASCADE)
     image       = models.ImageField(upload_to='actualite_galerie/')
@@ -87,6 +85,19 @@ class ActualiteEnImage(models.Model):
     def __str__(self):
         return f"Image - {self.actualite.title}" 
 
+class FAQ(models.Model):
+    question    = models.CharField(max_length=300, verbose_name="Question")
+    reponse     = models.TextField(verbose_name="Réponse")
+    ordre       = models.PositiveSmallIntegerField(default=0, verbose_name="Ordre d'affichage")
+    active      = models.BooleanField(default=True, verbose_name="Visible sur le site")
+
+    class Meta:
+        ordering        = ['ordre']
+        verbose_name    = "FAQ"
+        verbose_name_plural = "FAQs"
+
+    def __str__(self):
+        return self.question
 
 
 

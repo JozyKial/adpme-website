@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% load static %}
+{% load thumbnail %}
 
 {% block title %}
     ADPME - Accueil
@@ -311,7 +312,97 @@
     </div>
     <!-- rts service area end -->  
 
+    <!-- Mot des autorités -->
+    <div class="rts-about-area-two rts-section-gapBottom">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-5 order-1 order-lg-2">
+                    <div class="thumbnail-about-one" style="
+                        width: 100%;
+                        max-width: 420px;
+                        height: 500px;
+                        margin: 0 auto;
+                        overflow: hidden;
+                        border-radius: 10px;
+                        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+                    ">
+                        <img loading="lazy" 
+                            src="{% static 'assets/images/about/Photo-MPMEA.jpeg' %}" 
+                            alt="S.E Madame la Ministre" 
+                            style="
+                                width: 100%;
+                                height: 100%;
+                                object-fit: cover;
+                                object-position: center top;
+                            ">
+                    </div>
+                </div>
+                <div class="col-lg-7 mt_sm--40 mt_md--40">
+                    <div class="about-inner-content-two">
+                        <div class="title-style-two left">
+                            <span class="pre">Vision Institutionnelle</span>
+                            <h2 class="title">Mot de la Ministre</h2>
+                        </div>
+                        <p class="disc">
+                            "Notre mission est de bâtir un écosystème entrepreneurial solide et dynamique. L'ADPME est l'outil stratégique pour transformer le potentiel de nos TPME en piliers de l'économie nationale. À travers cette plateforme..."
+                        </p>
+                        <div class="author-name-area mb--30">
+                            <h6 class="title">Nom de la Ministre</h6>
+                            <span>Ministre des Petites et Moyennes Entreprises et de l’Artisanat</span>
+                        </div>
+                        <a href="#" class="rts-btn btn-primary">Lire l'intégralité</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <div class="rts-about-area-two rts-section-gapBottom" style="background-color: #f9f9f9; padding: 80px 0;">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-7 order-2 order-lg-1 mt_sm--40 mt_md--40">
+                    <div class="about-inner-content-two">
+                        <div class="title-style-two left">
+                            <span class="pre">Engagement Opérationnel</span>
+                            <h2 class="title">Mot du Directeur Général</h2>
+                        </div>
+                        <p class="disc">
+                            "À l'ADPME, nous traduisons la vision gouvernementale en actions concrètes. Nous accompagnons chaque entrepreneur avec des solutions sur mesure pour garantir la pérennité de leurs projets et stimuler l'innovation..."
+                        </p>
+                        <div class="author-name-area mb--30">
+                            <h6 class="title">Nom du Directeur</h6>
+                            <span>Directeur Général de l'ADPME</span>
+                        </div>
+                        <a href="#" class="rts-btn btn-primary">En savoir plus</a>
+                    </div>
+                </div>
+               <div class="col-lg-5 order-1 order-lg-2">
+                    <div class="thumbnail-about-one" style="
+                        width: 100%;
+                        max-width: 420px;
+                        height: 500px;
+                        margin: 0 auto;
+                        overflow: hidden;
+                        border-radius: 10px;
+                        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+                    ">
+                        <img loading="lazy" 
+                            src="{% static 'assets/images/about/Photo-DG.jpeg' %}" 
+                            alt="Monsieur le Directeur Général" 
+                            style="
+                                width: 100%;
+                                height: 100%;
+                                object-fit: cover;
+                                object-position: center top;
+                            ">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Mot des autorités -->
+
+    <!-- Liste des partenaire -->
     <div class="rts-trusted-client rts-section-gapBottom">
         <div class="container">
             <div class="row">
@@ -332,6 +423,7 @@
             </div>
         </div>
     </div>
+    <!-- End Liste des partenaire -->
 
     <!-- rts blog area start -->
     <div class="rts-blog-area rts-section-gapBottom pt--40 mb--3">
@@ -358,8 +450,15 @@
                                   <div class="swiper-slide">
                                     <!-- single Post blog large -->
                                     <div class="rts-blog-h-2-wrapper">
+                                        {% load thumbnail %}
                                         <a href="{% url 'actu_detail' pt.blog_slug %}" class="thumbnail">
-                                            <img src="{%if pt.image %} {{ pt.image.url }} {%else%}{% static 'assets/images/blog/adpme-par-defaut.webp'%}{%endif%}" alt="adpme_blog">
+                                            {% if pt.image %}
+                                                {% thumbnail pt.image "600x400" crop="center" as im %}
+                                                <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="adpme_blog" loading="lazy">
+                                                {% endthumbnail %}
+                                            {% else %}
+                                                <img src="{% static 'assets/images/blog/adpme-par-defaut.webp' %}" alt="adpme_blog" loading="lazy">
+                                            {% endif %}
                                         </a>
                                         <div class="body">
                                             <span>{{pt.category}} / ADPME</span>

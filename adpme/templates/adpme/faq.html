@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block meta_description %}Foire Aux Questions de l'ADPME — Retrouvez les réponses aux questions fréquentes sur les services, programmes et modalités d'accompagnement de l'agence.{% endblock %}
+{% block og_title %}FAQ — ADPME Congo{% endblock %}
+
+{% load static %}
+{% load thumbnail %}
+
+{% block title %}
+   ADPME - FAQ
+{% endblock title %}
+
+{% block content %}
+
+
+
+    <div class="breadcrumb-service-detals-one">
+        <div class="container-full">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="banner-inner-service-details-1 large-height bg_image">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="title-area-left">
+                                        <span class="bg-title">FAQ</span>
+                                        <h1 class="title rts-text-anime-style-1">
+                                            Foire Aux Questions
+                                        </h1>
+                                        <p class="disc"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- rts business details area left main -->
+    <div class="rts-service-details-area-main-bottom ">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2">
+                    <div class="service-details-left-area mt--0 rts-section-gapTop">
+                        <h3 class="title rts-text-anime-style-1">La Foire Aux Questions (FAQ)</h3>
+                        <p class="disc">
+                            La <strong>Foire Aux Questions (FAQ)</strong> de l’Agence de Développement des Petites et Moyennes Entreprises (ADPME) 
+                            a pour objectif de répondre aux interrogations les plus fréquentes des porteurs de projets, des 
+                            entrepreneurs et des artisans.
+                        </p>
+                        <p class="disc">
+                           Que vous soyez au stade de l’idée, en phase de création d’entreprise ou déjà dirigeant d’une PME, 
+                           cette rubrique vous permettra de mieux comprendre les services proposés par l’ADPME, 
+                           les conditions d’accompagnement et les différentes opportunités offertes pour soutenir le
+                           développement de votre activité.
+                        </p>
+
+                        <h3 class="title mt--50 rts-text-anime-style-1">Questions et Réponses</h3>
+
+                        <div class="accordion faq-wrapper-inner-page mt--50" id="accordionExample">
+                            {% for faq in faqs %}
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="heading{{ forloop.counter }}">
+                                    <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}"
+                                            type="button"
+                                            data-bs-toggle="collapse"
+                                            data-bs-target="#collapse{{ forloop.counter }}"
+                                            aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}"
+                                            aria-controls="collapse{{ forloop.counter }}">
+                                        {{ forloop.counter|stringformat:"02d" }}. {{ faq.question }}
+                                    </button>
+                                </h2>
+                                <div id="collapse{{ forloop.counter }}"
+                                    class="accordion-collapse collapse {% if forloop.first %}show{% endif %}"
+                                    aria-labelledby="heading{{ forloop.counter }}"
+                                    data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        {{ faq.reponse|linebreaksbr }}
+                                    </div>
+                                </div>
+                            </div>
+                            {% empty %}
+                            <p class="disc">Aucune question disponible pour le moment.</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- rts business details area left main end -->
+
+    <!-- rts cta area start -->
+    <div class="rts-cta-area-inner bg_image ptb--100">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="cta-inner-content-inner-page">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- rts cta area end -->
+    
+{% endblock content %}
+

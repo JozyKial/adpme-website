@@ -2,16 +2,46 @@
 
 {% load static %}
 
+{% block og_type %}article{% endblock %}
+
+{% block og_title %}{{ post.title }} — ADPME Congo{% endblock %}
+
+{% block og_description %}
+    {{ post.content|striptags|truncatewords:30 }}
+{% endblock %}
+
+{% block og_image %}
+    {% if post.image %}
+        {{ request.scheme }}://{{ request.get_host }}{{ post.image.url }}
+    {% else %}
+        {{ request.scheme }}://{{ request.get_host }}{% load static %}{% static 'assets/images/blog/adpme-par-defaut.webp' %}
+    {% endif %}
+{% endblock %}
+
+{% block twitter_title %}{{ post.title }}{% endblock %}
+{% block twitter_description %}{{ post.content|striptags|truncatewords:30 }}{% endblock %}
+{% block twitter_image %}
+    {% if post.image %}{{ request.scheme }}://{{ request.get_host }}{{ post.image.url }}{% endif %}
+{% endblock %}
+
+{% block meta_description %}{{ post.content|striptags|truncatewords:30 }}{% endblock %}
+
+
+{% load thumbnail %}
+
 {% block title %}
     ADPME - Détail Actualité
 {% endblock title %}
 
 {% block content %}
     
+    {% load thumbnail %}
     {% if post.image %}
-    <div class="blog-details-banner-large-image"
-         style="background-image: url('{{ post.image.url }}');">
-      </div>
+        {% thumbnail post.image "1400x600" crop="center" as banner %}
+        <div class="blog-details-banner-large-image"
+            style="background-image: url('{{ banner.url }}');">
+            {% endthumbnail %}
+        </div>
     {% else %}
         <div class="blog-details-banner-large-image"
             style="background-image: url('{%static "assets/images/blog/adpme-par-defaut.webp"%}');">
@@ -78,7 +108,9 @@
                             <div class="recent-post-single">
                                 <div class="thumbnail">
                                      {% if pt.image %}
-                                        <img src="{{pt.image.url}}" alt="adpme_image" style="width:100px">
+                                        {% thumbnail pt.image "100x100" crop="center" as im %}
+                                        <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="adpme_image" loading="lazy">
+                                        {% endthumbnail %}
                                     {% else %}
                                         <img src="{% static 'assets/images/blog/adpme-par-defaut.webp' %}" alt="adpme_image" style="width:100px">
                                     {% endif %}
@@ -118,9 +150,11 @@
                                 {% for img in post.galerie.all %}
                                 <div class="col-md-4">
                                         <div class="single-gallery">
-                                            <a href="{{img.image.url}}" class="thumbnail gallery-image">
-                                                <img src="{{ img.image.url }}" alt="{{img.caption}}" style="width: 1265px;">
+                                            {% thumbnail img.image "1200x800" crop="center" as full %}
+                                            <a href="{{ img.image.url }}" class="thumbnail gallery-image">
+                                                <img src="{{ full.url }}" width="{{ full.width }}" height="{{ full.height }}" alt="{{ img.caption }}" loading="lazy">
                                             </a>
+                                            {% endthumbnail %}
                                             <div class="instagram">
                                                 <img src="{% static 'assets/images/gallery/instagram.svg'%}" alt="instagram.svg">
                                             </div>
