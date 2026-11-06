@@ -347,10 +347,10 @@
                             "Notre mission est de bâtir un écosystème entrepreneurial solide et dynamique. L'ADPME est l'outil stratégique pour transformer le potentiel de nos TPME en piliers de l'économie nationale. À travers cette plateforme..."
                         </p>
                         <div class="author-name-area mb--30">
-                            <h6 class="title">Nom de la Ministre</h6>
-                            <span>Ministre des Petites et Moyennes Entreprises et de l’Artisanat</span>
+                            <h6 class="title">{{ discours_min.nom_auteur|default:"La Ministre" }}</h6>
+                            <span>{{ discours_min.fonction|default:"Ministre des PMEA" }}</span>
                         </div>
-                        <a href="#" class="rts-btn btn-primary">Lire l'intégralité</a>
+                        <a href="{% url 'discours_ministre' %}" class="rts-btn btn-primary">Lire l'intégralité</a>
                     </div>
                 </div>
             </div>
@@ -370,10 +370,10 @@
                             "À l'ADPME, nous traduisons la vision gouvernementale en actions concrètes. Nous accompagnons chaque entrepreneur avec des solutions sur mesure pour garantir la pérennité de leurs projets et stimuler l'innovation..."
                         </p>
                         <div class="author-name-area mb--30">
-                            <h6 class="title">Nom du Directeur</h6>
-                            <span>Directeur Général de l'ADPME</span>
+                            <h6 class="title">{{ discours_dg.nom_auteur|default:"Aimé Blanchard LINVANI" }}</h6>
+                            <span>{{ discours_dg.fonction|default:"Directeur Général de l'ADPME" }}</span>
                         </div>
-                        <a href="#" class="rts-btn btn-primary">En savoir plus</a>
+                        <a href="{% url 'discours_dg' %}" class="rts-btn btn-primary">Lire l'intégralité</a>
                     </div>
                 </div>
                <div class="col-lg-5 order-1 order-lg-2">

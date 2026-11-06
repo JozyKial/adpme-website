@@ -20,6 +20,9 @@ urlpatterns = [
     path('actualite/<str:slug>', views.Blog_detail, name="actu_detail"),
     path('ckeditor/', include('ckeditor_uploader.urls')),
 
+    path('discours-directeur-general/', views.DiscoursDGView, name="discours_dg"),
+    path('discours-ministre/', views.DiscoursMinistreView, name="discours_ministre"),
+
     
 ]
 #+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 

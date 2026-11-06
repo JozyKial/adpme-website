@@ -59,7 +59,7 @@ class BlogActualite(models.Model):
     author      = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     image       = models.ImageField(upload_to="actualite_img", blank=True, null=True, verbose_name="Image d'entête")
     content     = RichTextUploadingField()
-    category    = models.ForeignKey(Category, related_name='category', on_delete=models.CASCADE)
+    category    = models.ForeignKey(Category, related_name='category', on_delete=models.CASCADE, verbose_name="Catégorie")
     blog_slug   = AutoSlugField(populate_from='title', unique=True, null=True, default=None)
     created_on  = models.DateField(auto_now_add=True)
     published   = models.BooleanField(default=False, verbose_name="Publié")
@@ -99,7 +99,26 @@ class FAQ(models.Model):
     def __str__(self):
         return self.question
 
+class Discours(models.Model):
+    TYPE_CHOICES = (
+        ('dg', 'Directeur Général'),
+        ('ministre', 'Ministre'),
+    )
 
+    type_discours   = models.CharField(max_length=20, choices=TYPE_CHOICES, unique=True, verbose_name="Type de discours")
+    nom_auteur      = models.CharField(max_length=200, verbose_name="Nom de l'auteur")
+    fonction        = models.CharField(max_length=200, verbose_name="Fonction")
+    photo           = models.ImageField(upload_to="discours/", blank=True, null=True, verbose_name="Photo")
+    extrait         = models.TextField(verbose_name="Extrait (citation courte pour l'accueil)", help_text="2-3 phrases maximum, affichées sur la page d'accueil")
+    contenu_complet = RichTextUploadingField(verbose_name="Discours complet")
+    date_maj        = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name        = "Discours"
+        verbose_name_plural = "Discours"
+
+    def __str__(self):
+        return f"Discours — {self.get_type_discours_display()}"
 
 
 

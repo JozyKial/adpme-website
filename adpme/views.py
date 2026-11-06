@@ -6,7 +6,7 @@ from django.db.models import F
 from .models import (
     BlogActualite,
     Category,
-    FAQ,
+    FAQ, Discours
 )
 
 from django.core.mail import send_mail
@@ -21,12 +21,16 @@ def AccueilView(request):
     main_post   = BlogActualite.objects.order_by('-id').filter(Main_post = True)[0:1] 
     recent      = BlogActualite.objects.filter(section = 'Recent').order_by('-id')[:5]
     categorie   = Category.objects.all()
+    discours_dg = Discours.objects.filter(type_discours='dg').first()
+    discours_min = Discours.objects.filter(type_discours='ministre').first()
 
     context = {
         'post':post,
         'main_post':main_post,
         'recent':recent,
-        'categorie':categorie
+        'categorie':categorie,
+        'discours_dg' : discours_dg,
+        'discours_min' : discours_min,
     }
 
     return render(request,"adpme/accueil.html", context)
@@ -48,12 +52,13 @@ def Categorie(request, slug):
 def Blog_detail(request, slug):
     post        = get_object_or_404(BlogActualite, blog_slug=slug)
     posts       = BlogActualite.objects.filter(published=True).exclude(id=post.id).order_by('-created_on')[:5]
-    category    = Category.objects.all()
+    cat         = Category.objects.filter(category__published=True).distinct()
+
 
     context = {
         'posts' : posts,
-        'category' : category,
-        'post' : post
+        'cat'   : cat,
+        'post'  : post
     }
 
     return render(request, "adpme/detail_actualite.html", context)
@@ -61,7 +66,7 @@ def Blog_detail(request, slug):
 
 def ActualiteView(request):
     posts_list = BlogActualite.objects.filter(published=True).order_by('-created_on')
-    cat        = Category.objects.all()
+    cat        = Category.objects.filter(category__published=True).distinct()
 
     paginator   = Paginator(posts_list, 6)
     page        = request.GET.get('page', 1)
@@ -130,4 +135,12 @@ def ContactView(request):
 def FaqView(request):
     faqs = FAQ.objects.filter(active=True)
     return render(request, "adpme/faq.html", {'faqs':faqs})
+
+def DiscoursDGView(request):
+    discours = get_object_or_404(Discours, type_discours='dg')
+    return render(request, "adpme/discours_detail.html", {'discours':discours})
+
+def DiscoursMinistreView(request):
+    discours = get_object_or_404(Discours, type_discours='ministre')
+    return render(request, "adpme/discours_detail.html", {'discours':discours})
 

@@ -4,7 +4,7 @@ from .models import (
     BlogActualite,
     Category,
     ActualiteEnImage,
-    FAQ,
+    FAQ, Discours
 )
 
 @admin.register(AgenceInfo)
@@ -41,7 +41,7 @@ class ActualiteEnImageInline(admin.TabularInline):
 
 @admin.register(BlogActualite)
 class BlogActualiteAdmin(admin.ModelAdmin):
-    list_display        = ('title', 'published','created_on','date_publication','author')
+    list_display        = ('title', 'published','created_on','date_publication','author','category')
     list_editable       = ('date_publication',)
     search_fields       = ('title',)
     inlines             = [ActualiteEnImageInline]
@@ -57,3 +57,21 @@ class FAQAdmin(admin.ModelAdmin):
     list_editable       = ('ordre', 'active')
     list_display_links  = ('question',)
     ordering            = ('ordre',)
+
+@admin.register(Discours)
+class DiscoursAdmin(admin.ModelAdmin):
+    list_display    = ('get_type_discours_display', 'nom_auteur', 'fonction', 'date_maj')
+    fieldsets = (
+        ('Identité', {
+            'fields': ('type_discours', 'nom_auteur', 'fonction', 'photo')
+        }),
+        ('Contenu', {
+            'fields': ('extrait', 'contenu_complet')
+        }),
+    )
+
+    def get_type_discours_display(self, obj):
+        return obj.get_type_discours_display()
+    get_type_discours_display.short_description = "Type"
+
+
