@@ -10,6 +10,7 @@ urlpatterns = [
     path('',views.AccueilView, name="accueil"),
     path('a-propos/', views.AproposView, name='a_propos'),
     path('programme/', views.ProgrammeView, name="programme"),
+    path('programme/<slug:slug>/', views.ProgrammeDetailView, name="programme_detail"),
     path('actualite/', views.ActualiteView,name="actualite"),
     path('contact/', views.ContactView,name="contact"),
     path('conseil/', views.ConseilView, name="conseil"),

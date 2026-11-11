@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ADPME Congo — main.js — v2
+   ADPME Congo — main.js — v3
    JavaScript maison, sans dépendance. Chaque fonction s'active seulement si
    l'élément HTML correspondant (attribut data-…) est présent sur la page.
    ========================================================================== */
@@ -166,11 +166,49 @@
     }
   }
 
+    /* ── Carrousel du bandeau d'accueil (sans défilement automatique) ──── */
+  function initCarrousel() {
+    document.querySelectorAll("[data-carrousel]").forEach(function (carrousel) {
+      var slides = carrousel.querySelectorAll("[data-slide]");
+      var points = carrousel.querySelectorAll("[data-slide-point]");
+      if (slides.length < 2) return;
+      var actuel = 0;
+
+      function afficher(index) {
+        actuel = (index + slides.length) % slides.length;
+        slides.forEach(function (slide, i) { slide.hidden = i !== actuel; });
+        points.forEach(function (point, i) {
+          if (i === actuel) { point.setAttribute("aria-current", "true"); }
+          else { point.removeAttribute("aria-current"); }
+        });
+      }
+
+      var prec = carrousel.querySelector("[data-slide-prec]");
+      var suiv = carrousel.querySelector("[data-slide-suiv]");
+      if (prec) prec.addEventListener("click", function () { afficher(actuel - 1); });
+      if (suiv) suiv.addEventListener("click", function () { afficher(actuel + 1); });
+      points.forEach(function (point) {
+        point.addEventListener("click", function () { afficher(parseInt(point.getAttribute("data-slide-point"), 10)); });
+      });
+
+      /* Glisser du doigt sur mobile */
+      var departX = null;
+      carrousel.addEventListener("touchstart", function (e) { departX = e.touches[0].clientX; }, { passive: true });
+      carrousel.addEventListener("touchend", function (e) {
+        if (departX === null) return;
+        var ecart = e.changedTouches[0].clientX - departX;
+        if (Math.abs(ecart) > 50) afficher(actuel + (ecart < 0 ? 1 : -1));
+        departX = null;
+      });
+    });
+  }
+
   /* ── Démarrage ─────────────────────────────────────────────────────── */
   function init() {
     initAlertes();
     initDefilement();
     initEntete();
+    initCarrousel();
   }
 
   if (document.readyState === "loading") {

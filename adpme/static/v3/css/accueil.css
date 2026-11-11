@@ -1,0 +1,198 @@
+/* ==========================================================================
+   ADPME Congo — accueil.css — v1
+   Styles propres à la page d'accueil (chargés uniquement sur cette page).
+   ========================================================================== */
+
+/* ── 1. Bandeau principal ──────────────────────────────────────────────── */
+.hero {
+  position: relative;
+  color: #fff;
+  overflow: hidden;
+  background: var(--vert-800);
+}
+.hero__contenu {
+  position: relative; z-index: 1;
+  display: flex; flex-direction: column; justify-content: center;
+  min-height: clamp(440px, 62vh, 620px);
+  padding-block: var(--sp-8) calc(var(--sp-8) + 64px); /* place pour les accès rapides */
+}
+.hero__surtitre {
+  margin-bottom: var(--sp-3);
+  font-size: var(--fs-sm); font-weight: var(--fw-bold);
+  letter-spacing: .08em; text-transform: uppercase;
+  color: var(--violet-100);
+}
+.hero__titre {
+  max-width: 22ch;
+  margin-bottom: var(--sp-4);
+  font-size: var(--fs-3xl);
+  color: #fff;
+}
+.hero__texte {
+  max-width: 60ch;
+  margin-bottom: var(--sp-6);
+  font-size: var(--fs-lg);
+  color: rgba(255, 255, 255, .92);
+}
+.hero__actions { display: flex; flex-wrap: wrap; gap: var(--sp-3); margin: 0; }
+.hero__titre + .hero__actions { margin-top: var(--sp-3); }
+
+/* Bandeau par défaut (aucun slide dans l'admin) */
+.hero--defaut {
+  background:
+    radial-gradient(circle at 85% 20%, rgba(148, 134, 187, .45), transparent 45%),
+    radial-gradient(circle at 70% 90%, rgba(255, 255, 255, .08), transparent 40%),
+    linear-gradient(120deg, var(--vert-900), var(--vert-700) 55%, var(--violet-700));
+}
+.hero--defaut::after {
+  content: "";
+  position: absolute; inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, .09) 1px, transparent 1px);
+  background-size: 22px 22px;
+  mask-image: linear-gradient(90deg, transparent 35%, #000);
+  -webkit-mask-image: linear-gradient(90deg, transparent 35%, #000);
+}
+
+/* Bandeau à slides */
+.hero__slide { position: relative; }
+.hero__image {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.hero__slide::before {
+  content: "";
+  position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(90deg, rgba(23, 36, 26, .88) 0%, rgba(31, 61, 31, .65) 45%, rgba(31, 61, 31, .15) 100%);
+}
+.hero__slide .hero__contenu { z-index: 2; }
+
+.hero__controles {
+  position: absolute; left: 0; right: 0; bottom: calc(64px + var(--sp-5));
+  z-index: 3;
+  display: flex; align-items: center; gap: var(--sp-3);
+}
+.hero__fleche {
+  display: grid; place-items: center;
+  width: 42px; height: 42px;
+  border: 1px solid rgba(255, 255, 255, .6);
+  border-radius: 50%;
+  background: rgba(0, 0, 0, .15);
+  color: #fff;
+}
+.hero__fleche:hover { background: #fff; color: var(--vert-800); }
+.hero__points { display: flex; gap: var(--sp-2); }
+.hero__point {
+  width: 12px; height: 12px; padding: 0;
+  border: 2px solid #fff; border-radius: 50%;
+  background: transparent;
+}
+.hero__point[aria-current="true"] { background: #fff; width: 28px; border-radius: var(--rayon-pill); }
+
+/* ── 2. Accès rapides (panneau qui chevauche le bandeau) ───────────────── */
+.acces { position: relative; z-index: 2; margin-top: -64px; }
+.acces__panneau {
+  padding: var(--sp-6);
+  border-radius: var(--rayon-lg);
+  background: var(--fond);
+  box-shadow: var(--ombre-lg);
+}
+.acces__titre { font-size: var(--fs-xl); margin-bottom: var(--sp-5); }
+@media (max-width: 600px) {
+  .acces__panneau { padding: var(--sp-5) var(--sp-4); }
+}
+
+/* ── 3. Parcours « Vous êtes… » ────────────────────────────────────────── */
+.profil {
+  display: flex; flex-direction: column;
+  height: 100%;
+  padding: var(--sp-6) var(--sp-5);
+  border: 1px solid var(--ligne);
+  border-radius: var(--rayon-lg);
+  background: var(--fond);
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.profil:hover { border-color: var(--violet-500); box-shadow: var(--ombre); }
+.profil__icone {
+  display: grid; place-items: center;
+  width: 64px; height: 64px;
+  margin-bottom: var(--sp-4);
+  border-radius: 50%;
+  background: var(--violet-50); color: var(--violet-700);
+}
+.profil__icone .icon { width: 30px; height: 30px; }
+.profil__titre { font-size: var(--fs-xl); margin-bottom: var(--sp-2); }
+.profil__texte { color: var(--texte-doux); }
+.profil__liens { list-style: none; margin: auto 0 0; padding: var(--sp-3) 0 0; border-top: 1px solid var(--ligne); }
+.profil__liens li { margin: 0; border-bottom: 1px solid var(--ligne); }
+.profil__liens li:last-child { border-bottom: 0; }
+.profil__liens a {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3);
+  padding: var(--sp-3) 0;
+  color: var(--encre);
+  font-weight: var(--fw-medium);
+  text-decoration: none;
+}
+.profil__liens a:hover { color: var(--c-primaire); }
+.profil__liens .icon { color: var(--c-primaire); transition: transform var(--transition); }
+.profil__liens a:hover .icon { transform: translateX(3px); }
+
+/* ── 4. Mot du Directeur général ───────────────────────────────────────── */
+.mot {
+  display: grid; gap: var(--sp-6); align-items: center;
+  grid-template-columns: minmax(0, 1fr);
+}
+@media (min-width: 860px) {
+  .mot { grid-template-columns: 300px minmax(0, 1fr); gap: var(--sp-8); }
+}
+.mot__photo { position: relative; max-width: 300px; }
+.mot__photo::before {
+  content: "";
+  position: absolute; inset: var(--sp-4) calc(-1 * var(--sp-4)) calc(-1 * var(--sp-4)) var(--sp-4);
+  border-radius: var(--rayon-lg);
+  background: var(--violet-100);
+}
+.mot__photo img, .mot__photo-vide {
+  position: relative;
+  width: 100%; aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: var(--rayon-lg);
+}
+.mot__photo-vide { display: grid; place-items: center; background: var(--vert-50); color: var(--vert-600); }
+.mot__photo-vide .icon { width: 72px; height: 72px; }
+.mot__citation {
+  margin: 0 0 var(--sp-5);
+  padding: 0;
+  border: 0; background: none;
+  font-size: var(--fs-xl);
+  line-height: 1.5;
+  color: var(--encre);
+}
+.mot__citation::before {
+  content: "\201C";
+  display: block;
+  height: 0.6em;
+  font-size: 4rem; line-height: 1;
+  color: var(--violet-500);
+}
+.mot__auteur span { color: var(--texte-doux); }
+
+/* ── 5. Partenaires ────────────────────────────────────────────────────── */
+.partenaires {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: var(--sp-4);
+  list-style: none; margin: 0; padding: 0;
+}
+.partenaires li { flex: 0 1 180px; margin: 0; }
+.partenaires li > a, .partenaires li > img {
+  display: grid; place-items: center;
+  height: 100px;
+  padding: var(--sp-4);
+  border: 1px solid var(--ligne);
+  border-radius: var(--rayon);
+  background: var(--fond);
+}
+.partenaires img { max-height: 64px; width: auto; object-fit: contain; filter: grayscale(1); opacity: .8; transition: filter var(--transition), opacity var(--transition); }
+.partenaires li > img { width: 100%; }
+.partenaires a:hover img, .partenaires a:focus-visible img { filter: none; opacity: 1; }
+.partenaires a:hover { border-color: var(--c-primaire); }
+
