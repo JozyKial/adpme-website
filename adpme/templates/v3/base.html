@@ -1,0 +1,61 @@
+{% load static ui %}<!DOCTYPE html>
+{# ADPME Congo — v3/base.html — v1 #}
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{% if agence %}{{ agence.nom_agence }}{% else %}ADPME{% endif %} — Congo{% endblock title %}</title>
+    <meta name="description" content="{% block meta_description %}L'ADPME accompagne les porteurs de projets, entrepreneurs et artisans dans la création, le développement et la pérennisation de leurs activités — Brazzaville, République du Congo.{% endblock %}">
+    <link rel="canonical" href="{% block canonical %}{{ request.scheme }}://{{ request.get_host }}{{ request.path }}{% endblock %}">
+    <meta name="theme-color" content="#336633">
+
+    {# Open Graph / réseaux sociaux — mêmes noms de blocs que l'ancien base.html #}
+    <meta property="og:site_name" content="ADPME Congo">
+    <meta property="og:locale" content="fr_FR">
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
+    <meta property="og:title" content="{% block og_title %}ADPME — Agence de Développement des TPME{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}L'ADPME accompagne les porteurs de projets, entrepreneurs et artisans dans la création et le développement de leurs activités au Congo.{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'assets/images/adpme-fav.png' %}{% endblock %}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% block twitter_title %}ADPME Congo{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}L'ADPME accompagne les entrepreneurs congolais dans la création et le développement de leurs activités.{% endblock %}">
+    <meta name="twitter:image" content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'assets/images/adpme-fav.png' %}{% endblock %}">
+
+    <link rel="icon" type="image/png" href="{% static 'assets/images/adpme-fav.png' %}">
+
+    {# Police : Source Sans 3 (Google Fonts). Pour s'en passer, supprimer ces 3 lignes : la pile système prend le relais. #}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap">
+
+    <link rel="stylesheet" href="{% static 'v3/css/tokens.css' %}">
+    <link rel="stylesheet" href="{% static 'v3/css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'v3/css/components.css' %}">
+    {% block extra_css %}{% endblock %}
+
+    {% block schema_org %}{% endblock %}
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+    <a class="skip-link" href="#contenu">Aller au contenu principal</a>
+
+    {% include "v3/includes/header.html" %}
+
+    <main id="contenu" tabindex="-1">
+        {% block page_hero %}{% endblock %}
+        {% include "v3/includes/messages.html" %}
+        {% block content %}{% endblock content %}
+    </main>
+
+    {% include "v3/includes/footer.html" %}
+
+    <button type="button" class="retour-haut" data-retour-haut aria-label="Revenir en haut de la page">
+        {% icon "fleche-haut" %}
+    </button>
+
+    <script src="{% static 'v3/js/main.js' %}" defer></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
+

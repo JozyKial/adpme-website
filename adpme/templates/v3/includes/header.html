@@ -1,0 +1,18 @@
+{% load static ui %}
+{# ADPME Congo — v3/includes/header.html — v1 (provisoire, remplacé en phase 2 par la barre de contact + méga-menu) #}
+<div class="filet-drapeau"></div>
+<header class="site-header-provisoire">
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:var(--sp-4);min-height:var(--h-header);">
+        <a href="{% url 'accueil' %}" aria-label="ADPME — accueil">
+            <img src="{% static 'assets/images/logo/adpme.png' %}" alt="ADPME" width="160" height="128" style="width:110px;height:auto;">
+        </a>
+        <nav aria-label="Navigation principale" class="cluster text-sm">
+            <a href="{% url 'a_propos' %}">L'agence</a>
+            <a href="{% url 'programme' %}">Programmes</a>
+            <a href="{% url 'actualite' %}">Actualités</a>
+            <a href="{% url 'faq' %}">FAQ</a>
+            <a href="{% url 'contact' %}" class="btn btn--primaire btn--sm">Nous contacter</a>
+        </nav>
+    </div>
+</header>
+

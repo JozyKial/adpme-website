@@ -1,0 +1,27 @@
+{% load ui %}
+{% comment %} ADPME Congo — v3/components/card_actualite.html — v1
+   Paramètre : post (objet BlogActualite)
+{% endcomment %}
+<article class="card">
+    {% if post.image %}
+    <div class="card__media">
+        <img src="{{ post.image.url }}" alt="" loading="lazy" decoding="async">
+    </div>
+    {% else %}
+    <div class="card__media card__media--vide">{% icon "document" %}</div>
+    {% endif %}
+    <div class="card__corps">
+        <div class="card__meta">
+            {% if post.category %}<span class="badge">{{ post.category.name }}</span>{% endif %}
+            <time datetime="{{ post.date_publication|date:'Y-m-d' }}">{{ post.date_publication|date:"j F Y" }}</time>
+        </div>
+        <h3 class="card__titre">
+            <a href="{% url 'actu_detail' post.blog_slug %}" class="card__lien-etendu">{{ post.title }}</a>
+        </h3>
+        <p class="card__texte">{{ post.content|striptags|truncatewords:22 }}</p>
+        <div class="card__pied">
+            <span class="btn btn--lien" aria-hidden="true">Lire l'article {% icon "fleche-droite" %}</span>
+        </div>
+    </div>
+</article>
+

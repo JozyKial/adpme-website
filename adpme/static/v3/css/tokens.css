@@ -1,0 +1,114 @@
+/* ==========================================================================
+   ADPME Congo — tokens.css — v1
+   Variables de design : couleurs, typographie, espacements, rayons, ombres.
+   Modifier une valeur ici la change partout sur le site.
+   ========================================================================== */
+
+:root {
+  /* ── Couleurs institutionnelles ─────────────────────────────────────── */
+  --vert-900: #1f3d1f;
+  --vert-800: #284f28;
+  --vert-700: #336633;   /* vert ADPME : couleur principale */
+  --vert-600: #3f7a3f;
+  --vert-100: #e3eee3;
+  --vert-50:  #f2f7f2;
+
+  --violet-800: #4a3f75;
+  --violet-700: #5f5291; /* violet lisible pour les textes et liens sur fond clair */
+  --violet-500: #9486bb; /* violet exact du logo ADPME */
+  --violet-100: #e9e5f3;
+  --violet-50:  #f5f3fa;
+
+  /* Couleurs du drapeau (filet tricolore, petits accents uniquement) */
+  --drapeau-vert:  #009543;
+  --drapeau-jaune: #fbde4a;
+  --drapeau-rouge: #dc241f;
+
+  /* ── Neutres ────────────────────────────────────────────────────────── */
+  --encre:       #17201a;  /* titres */
+  --texte:       #343c37;  /* texte courant */
+  --texte-doux:  #5b645e;  /* légendes, métadonnées */
+  --ligne:       #dbe2dd;  /* bordures */
+  --ligne-forte: #b9c4bc;
+  --fond:        #ffffff;
+  --fond-alt:    #f5f7f5;  /* sections alternées */
+  --fond-sombre: #17241a;  /* footer */
+
+  /* ── États ──────────────────────────────────────────────────────────── */
+  --succes:      #2e7d32;
+  --succes-fond: #e8f5e9;
+  --erreur:      #b3261e;
+  --erreur-fond: #fdecea;
+  --info:        #1d5f8a;
+  --info-fond:   #e6f1f8;
+  --alerte:      #8a5a00;
+  --alerte-fond: #fff4dc;
+  --whatsapp:    #1f8f4e;
+
+  /* ── Rôles (à utiliser dans les composants) ─────────────────────────── */
+  --c-primaire:        var(--vert-700);
+  --c-primaire-hover:  var(--vert-800);
+  --c-secondaire:      var(--violet-700);
+  --c-secondaire-hover:var(--violet-800);
+  --c-lien:            var(--vert-700);
+  --c-focus:           var(--violet-500);
+
+  /* ── Typographie ────────────────────────────────────────────────────── */
+  --font-sans: "Source Sans 3", "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+  --font-titre: "Source Sans 3", "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+
+  --fs-xs:   0.8125rem;  /* 13px */
+  --fs-sm:   0.9375rem;  /* 15px */
+  --fs-base: 1.0625rem;  /* 17px */
+  --fs-lg:   1.25rem;    /* 20px */
+  --fs-xl:   clamp(1.375rem, 1.2rem + 0.8vw, 1.625rem);
+  --fs-2xl:  clamp(1.625rem, 1.35rem + 1.3vw, 2.125rem);
+  --fs-3xl:  clamp(2rem, 1.5rem + 2.2vw, 2.875rem);
+
+  --fw-normal: 400;
+  --fw-medium: 600;
+  --fw-bold:   700;
+
+  --lh-serre:  1.2;
+  --lh-titre:  1.3;
+  --lh-texte:  1.65;
+
+  /* ── Espacements (échelle de 4px) ───────────────────────────────────── */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --sp-7: 3rem;
+  --sp-8: 4rem;
+  --sp-9: 6rem;
+
+  --section-py: clamp(3rem, 2rem + 4vw, 5.5rem);
+
+  /* ── Mise en page ───────────────────────────────────────────────────── */
+  --conteneur:        1240px;
+  --conteneur-etroit: 820px;
+  --gouttiere:        clamp(1rem, 0.6rem + 2vw, 2rem);
+
+  /* ── Rayons, ombres, transitions ────────────────────────────────────── */
+  --rayon-sm: 4px;
+  --rayon:    8px;
+  --rayon-lg: 14px;
+  --rayon-pill: 999px;
+
+  --ombre-sm: 0 1px 2px rgba(23, 32, 26, 0.06), 0 1px 3px rgba(23, 32, 26, 0.08);
+  --ombre:    0 4px 14px rgba(23, 32, 26, 0.08);
+  --ombre-lg: 0 14px 36px rgba(23, 32, 26, 0.14);
+
+  --transition: 160ms ease;
+
+  /* ── Hauteurs fixes ─────────────────────────────────────────────────── */
+  --h-topbar: 40px;
+  --h-header: 84px;
+  --z-header: 100;
+  --z-overlay: 200;
+}
+
+
+

@@ -1,0 +1,36 @@
+{% load ui %}
+{% comment %} ADPME Congo — v3/components/pagination.html — v1
+   Paramètre : page (objet Page renvoyé par Paginator.get_page)
+{% endcomment %}
+{% if page.has_other_pages %}
+<nav class="pagination" aria-label="Pagination">
+    <ul>
+        <li>
+            {% if page.has_previous %}
+            <a href="?page={{ page.previous_page_number }}" aria-label="Page précédente">{% icon "chevron-gauche" %}</a>
+            {% else %}
+            <span class="desactive" aria-hidden="true">{% icon "chevron-gauche" %}</span>
+            {% endif %}
+        </li>
+        {% for num in page.paginator.get_elided_page_range %}
+        <li>
+            {% if num == page.number %}
+            <span aria-current="page">{{ num }}</span>
+            {% elif num == page.paginator.ELLIPSIS %}
+            <span class="desactive">…</span>
+            {% else %}
+            <a href="?page={{ num }}">{{ num }}</a>
+            {% endif %}
+        </li>
+        {% endfor %}
+        <li>
+            {% if page.has_next %}
+            <a href="?page={{ page.next_page_number }}" aria-label="Page suivante">{% icon "chevron-droite" %}</a>
+            {% else %}
+            <span class="desactive" aria-hidden="true">{% icon "chevron-droite" %}</span>
+            {% endif %}
+        </li>
+    </ul>
+</nav>
+{% endif %}
+

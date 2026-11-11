@@ -1,0 +1,21 @@
+{% load ui %}
+{% comment %} ADPME Congo — v3/components/card_programme.html — v1
+   Paramètres : titre, texte, url, icone (nom d'icône), variante ("violet"), lien_texte, public (badge)
+   En phase 3, on passera directement un objet Programme.
+{% endcomment %}
+<article class="card card--programme{% if variante == 'violet' %} card--violet{% endif %}">
+    <div class="card__corps">
+        {% if icone %}<span class="card__icone">{% icon icone %}</span>{% endif %}
+        {% if public %}<div class="card__meta"><span class="badge{% if variante == 'violet' %} badge--violet{% endif %}">{{ public }}</span></div>{% endif %}
+        <h3 class="card__titre">
+            {% if url %}<a href="{{ url }}" class="card__lien-etendu">{{ titre }}</a>{% else %}{{ titre }}{% endif %}
+        </h3>
+        {% if texte %}<p class="card__texte">{{ texte }}</p>{% endif %}
+        {% if url %}
+        <div class="card__pied">
+            <span class="btn btn--lien" aria-hidden="true">{{ lien_texte|default:"En savoir plus" }} {% icon "fleche-droite" %}</span>
+        </div>
+        {% endif %}
+    </div>
+</article>
+

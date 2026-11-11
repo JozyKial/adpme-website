@@ -1,0 +1,14 @@
+{% load ui %}
+{# ADPME Congo — v3/includes/footer.html — v1 (provisoire, remplacé en phase 2 par le footer en colonnes + QR code) #}
+<footer style="background:var(--fond-sombre);color:rgba(255,255,255,.85);padding-block:var(--sp-7);margin-top:var(--sp-8);">
+    <div class="container cluster" style="justify-content:space-between;">
+        <p class="mb-0">&copy; {% now "Y" %} {% if agence %}{{ agence.nom_agence }}{% else %}ADPME{% endif %} — République du Congo</p>
+        {% if agence.phone or agence.email_contact %}
+        <p class="mb-0 cluster">
+            {% if agence.phone %}<span>{% icon "telephone" %} {{ agence.phone }}</span>{% endif %}
+            {% if agence.email_contact %}<span>{% icon "email" %} {{ agence.email_contact }}</span>{% endif %}
+        </p>
+        {% endif %}
+    </div>
+</footer>
+

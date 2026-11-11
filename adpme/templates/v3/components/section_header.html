@@ -1,0 +1,14 @@
+{% comment %} ADPME Congo — v3/components/section_header.html — v1
+   Paramètres : titre (requis), surtitre, intro, centre (True/False), niveau ("h1"/"h2", défaut h2), id
+   Exemple : {% include "v3/components/section_header.html" with surtitre="Nos programmes" titre="Un appui à chaque étape" centre=True %}
+{% endcomment %}
+<div class="section-header{% if centre %} section-header--centre{% endif %}">
+    {% if surtitre %}<p class="section-header__surtitre">{{ surtitre }}</p>{% endif %}
+    {% if niveau == "h1" %}
+    <h1 class="section-header__titre"{% if id %} id="{{ id }}"{% endif %}>{{ titre }}</h1>
+    {% else %}
+    <h2 class="section-header__titre"{% if id %} id="{{ id }}"{% endif %}>{{ titre }}</h2>
+    {% endif %}
+    {% if intro %}<p class="section-header__intro">{{ intro }}</p>{% endif %}
+</div>
+

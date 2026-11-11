@@ -22,6 +22,9 @@ urlpatterns = [
 
     path('discours-directeur-general/', views.DiscoursDGView, name="discours_dg"),
     path('discours-ministre/', views.DiscoursMinistreView, name="discours_ministre"),
+    
+    # Refonte v3 — guide des composants (DEBUG uniquement)
+    path('styleguide/', views.StyleguideView, name="styleguide"),
 
     
 ]

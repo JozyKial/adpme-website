@@ -1,0 +1,9 @@
+{% load ui %}
+{% comment %} ADPME Congo — v3/components/accordion_item.html — v1
+   Paramètres : question, reponse, ouvert (True/False). À placer dans <div class="accordion">…</div>
+{% endcomment %}
+<details class="accordion__item"{% if ouvert %} open{% endif %}>
+    <summary>{{ question }} {% icon "plus" %}</summary>
+    <div class="accordion__contenu">{{ reponse|linebreaks }}</div>
+</details>
+

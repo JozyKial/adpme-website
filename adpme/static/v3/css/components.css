@@ -1,0 +1,345 @@
+/* ==========================================================================
+   ADPME Congo — components.css — v1
+   Composants réutilisables. Chaque bloc correspond à un gabarit dans
+   templates/v3/components/. Dépend de tokens.css et base.css.
+   ========================================================================== */
+
+/* ── 1. Boutons ────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: var(--sp-2);
+  min-height: 46px;
+  padding: var(--sp-2) var(--sp-5);
+  border: 2px solid transparent;
+  border-radius: var(--rayon);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  line-height: 1.2;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color var(--transition), color var(--transition), border-color var(--transition);
+}
+.btn:hover { text-decoration: none; }
+
+.btn--primaire { background: var(--c-primaire); color: #fff; }
+.btn--primaire:hover { background: var(--c-primaire-hover); color: #fff; }
+
+.btn--secondaire { background: var(--c-secondaire); color: #fff; }
+.btn--secondaire:hover { background: var(--c-secondaire-hover); color: #fff; }
+
+.btn--contour { border-color: var(--c-primaire); color: var(--c-primaire); background: transparent; }
+.btn--contour:hover { background: var(--c-primaire); color: #fff; }
+
+.btn--blanc { background: #fff; color: var(--vert-800); }
+.btn--blanc:hover { background: var(--vert-50); color: var(--vert-900); }
+
+.btn--contour-blanc { border-color: rgba(255,255,255,.85); color: #fff; background: transparent; }
+.btn--contour-blanc:hover { background: #fff; color: var(--vert-800); }
+
+.btn--whatsapp { background: var(--whatsapp); color: #fff; }
+.btn--whatsapp:hover { background: #18723e; color: #fff; }
+
+.btn--lien {
+  min-height: 0; padding: 0; border: 0;
+  background: none; color: var(--c-lien);
+}
+.btn--lien:hover { color: var(--c-primaire-hover); text-decoration: underline; }
+.btn--lien .icon { transition: transform var(--transition); }
+.btn--lien:hover .icon { transform: translateX(3px); }
+
+.btn--sm { min-height: 38px; padding: var(--sp-1) var(--sp-4); }
+.btn--lg { min-height: 54px; padding: var(--sp-3) var(--sp-6); font-size: var(--fs-base); }
+.btn--bloc { display: flex; width: 100%; }
+
+/* ── 2. Badges / étiquettes ────────────────────────────────────────────── */
+.badge {
+  display: inline-flex; align-items: center; gap: var(--sp-1);
+  padding: 2px var(--sp-3);
+  border-radius: var(--rayon-pill);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  line-height: 1.6;
+  background: var(--vert-100); color: var(--vert-800);
+}
+.badge--violet { background: var(--violet-100); color: var(--violet-800); }
+.badge--neutre { background: var(--fond-alt); color: var(--texte-doux); border: 1px solid var(--ligne); }
+.badge--alerte { background: var(--alerte-fond); color: var(--alerte); }
+
+/* ── 3. En-tête de section ─────────────────────────────────────────────── */
+.section-header { max-width: 760px; margin-bottom: var(--sp-7); }
+.section-header--centre { margin-inline: auto; text-align: center; }
+.section-header__surtitre {
+  display: inline-flex; align-items: center; gap: var(--sp-2);
+  margin-bottom: var(--sp-2);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--c-secondaire);
+}
+.section-header__surtitre::before {
+  content: ""; width: 28px; height: 3px; border-radius: 2px;
+  background: var(--violet-500);
+}
+.section-header--centre .section-header__surtitre::before { display: none; }
+.section-header__titre { margin-bottom: var(--sp-3); }
+.section-header__intro { font-size: var(--fs-lg); color: var(--texte-doux); margin: 0; }
+.section--vert .section-header__surtitre { color: var(--violet-100); }
+.section--vert .section-header__intro { color: rgba(255,255,255,.85); }
+
+.section-header__ligne {
+  display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between;
+  gap: var(--sp-4); margin-bottom: var(--sp-7);
+}
+.section-header__ligne .section-header { margin-bottom: 0; }
+
+/* ── 4. Carte générique ────────────────────────────────────────────────── */
+.card {
+  position: relative;
+  display: flex; flex-direction: column;
+  height: 100%;
+  background: var(--fond);
+  border: 1px solid var(--ligne);
+  border-radius: var(--rayon-lg);
+  overflow: hidden;
+  transition: box-shadow var(--transition), border-color var(--transition), transform var(--transition);
+}
+.card:hover { box-shadow: var(--ombre); border-color: var(--ligne-forte); }
+.card:has(.card__lien-etendu:focus-visible) { outline: 3px solid var(--c-focus); outline-offset: 2px; }
+
+.card__media { aspect-ratio: 16 / 9; background: var(--vert-50); overflow: hidden; }
+.card__media img { width: 100%; height: 100%; object-fit: cover; transition: transform 400ms ease; }
+.card:hover .card__media img { transform: scale(1.03); }
+.card__media--vide { display: grid; place-items: center; background: linear-gradient(135deg, var(--vert-50), var(--violet-50)); color: var(--violet-500); }
+.card__media--vide .icon { width: 48px; height: 48px; }
+
+.card__corps { display: flex; flex-direction: column; flex: 1; padding: var(--sp-5); }
+.card__meta { display: flex; flex-wrap: wrap; gap: var(--sp-2); align-items: center; margin-bottom: var(--sp-3); font-size: var(--fs-xs); color: var(--texte-doux); }
+.card__titre { font-size: var(--fs-lg); margin-bottom: var(--sp-2); }
+.card__titre a { color: var(--encre); text-decoration: none; }
+.card__titre a:hover { color: var(--c-primaire); }
+.card__texte { color: var(--texte-doux); font-size: var(--fs-sm); margin-bottom: var(--sp-4); }
+.card__pied { margin-top: auto; padding-top: var(--sp-3); }
+
+/* Toute la carte cliquable sans imbriquer de liens */
+.card__lien-etendu::after { content: ""; position: absolute; inset: 0; z-index: 1; }
+.card__lien-etendu:focus-visible { outline: none; }
+
+/* ── 5. Carte programme ────────────────────────────────────────────────── */
+.card--programme { border-top: 4px solid var(--c-primaire); }
+.card--programme.card--violet { border-top-color: var(--violet-500); }
+.card--programme .card__icone {
+  display: grid; place-items: center;
+  width: 56px; height: 56px;
+  margin-bottom: var(--sp-4);
+  border-radius: var(--rayon);
+  background: var(--vert-50); color: var(--c-primaire);
+}
+.card--programme.card--violet .card__icone { background: var(--violet-50); color: var(--violet-700); }
+.card--programme .card__icone .icon { width: 28px; height: 28px; }
+.card__liste { list-style: none; padding: 0; margin: 0 0 var(--sp-4); font-size: var(--fs-sm); }
+.card__liste li { display: flex; gap: var(--sp-2); align-items: flex-start; }
+.card__liste .icon { color: var(--c-primaire); margin-top: 0.15em; width: 1.1em; height: 1.1em; }
+
+/* ── 6. Tuile « accès rapide » ─────────────────────────────────────────── */
+.tuile {
+  position: relative;
+  display: flex; align-items: center; gap: var(--sp-4);
+  padding: var(--sp-4) var(--sp-5);
+  background: var(--fond);
+  border: 1px solid var(--ligne);
+  border-radius: var(--rayon-lg);
+  color: var(--encre);
+  text-decoration: none;
+  transition: border-color var(--transition), box-shadow var(--transition), background-color var(--transition);
+}
+.tuile:hover { border-color: var(--c-primaire); box-shadow: var(--ombre-sm); color: var(--encre); text-decoration: none; }
+.tuile__icone {
+  display: grid; place-items: center;
+  width: 48px; height: 48px; flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--vert-50); color: var(--c-primaire);
+  transition: background-color var(--transition), color var(--transition);
+}
+.tuile:hover .tuile__icone { background: var(--c-primaire); color: #fff; }
+.tuile__texte { display: flex; flex-direction: column; min-width: 0; }
+.tuile__titre { font-weight: var(--fw-bold); line-height: 1.3; }
+.tuile__desc { font-size: var(--fs-xs); color: var(--texte-doux); }
+.tuile__fleche { margin-left: auto; color: var(--texte-doux); transition: transform var(--transition), color var(--transition); }
+.tuile:hover .tuile__fleche { transform: translateX(3px); color: var(--c-primaire); }
+
+/* ── 7. Chiffre clé ────────────────────────────────────────────────────── */
+.stat { padding: var(--sp-5); border-left: 3px solid var(--violet-500); }
+.stat__valeur { display: block; font-size: var(--fs-3xl); font-weight: var(--fw-bold); line-height: 1.1; color: var(--c-primaire); font-variant-numeric: tabular-nums; }
+.stat__libelle { display: block; margin-top: var(--sp-2); font-weight: var(--fw-medium); color: var(--encre); }
+.stat__source { display: block; margin-top: var(--sp-1); font-size: var(--fs-xs); color: var(--texte-doux); }
+.section--vert .stat { border-left-color: var(--violet-100); }
+.section--vert .stat__valeur, .section--vert .stat__libelle { color: #fff; }
+.section--vert .stat__source { color: rgba(255,255,255,.75); }
+
+/* ── 8. Fil d'Ariane + bandeau de page intérieure ──────────────────────── */
+.page-hero {
+  padding-block: var(--sp-7) var(--sp-6);
+  background: linear-gradient(135deg, var(--vert-800), var(--vert-700) 60%, var(--violet-700));
+  color: #fff;
+}
+.page-hero h1 { color: #fff; margin-bottom: var(--sp-3); }
+.page-hero__intro { max-width: 720px; font-size: var(--fs-lg); color: rgba(255,255,255,.9); margin: 0; }
+
+.breadcrumb { margin-bottom: var(--sp-4); font-size: var(--fs-sm); }
+.breadcrumb ol { display: flex; flex-wrap: wrap; gap: var(--sp-1) var(--sp-2); list-style: none; margin: 0; padding: 0; }
+.breadcrumb li { display: inline-flex; align-items: center; gap: var(--sp-2); margin: 0; }
+.breadcrumb li + li::before { content: "›"; opacity: .7; }
+.breadcrumb a { color: inherit; }
+.breadcrumb [aria-current="page"] { opacity: .85; }
+.page-hero .breadcrumb { color: rgba(255,255,255,.9); }
+
+/* ── 9. Alertes / messages Django ──────────────────────────────────────── */
+.alert {
+  display: flex; gap: var(--sp-3); align-items: flex-start;
+  padding: var(--sp-3) var(--sp-4);
+  margin-bottom: var(--sp-4);
+  border-radius: var(--rayon);
+  border-left: 4px solid currentColor;
+  font-size: var(--fs-sm);
+}
+.alert p { margin: 0; flex: 1; color: var(--texte); }
+.alert--success { background: var(--succes-fond); color: var(--succes); }
+.alert--error   { background: var(--erreur-fond); color: var(--erreur); }
+.alert--info, .alert--debug { background: var(--info-fond); color: var(--info); }
+.alert--warning { background: var(--alerte-fond); color: var(--alerte); }
+.alert__fermer {
+  margin-left: auto; padding: 0; border: 0; background: none;
+  color: var(--texte-doux); line-height: 1;
+}
+.alert__fermer:hover { color: var(--encre); }
+
+/* ── 10. Formulaires ───────────────────────────────────────────────────── */
+.form { display: grid; gap: var(--sp-4); }
+.form__ligne { display: grid; gap: var(--sp-4); grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); }
+.field { display: flex; flex-direction: column; gap: var(--sp-1); }
+.field label { font-size: var(--fs-sm); font-weight: var(--fw-medium); color: var(--encre); }
+.field .requis { color: var(--erreur); }
+.field input:not([type="checkbox"], [type="radio"]),
+.field select,
+.field textarea,
+.input {
+  width: 100%;
+  min-height: 46px;
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--fond);
+  border: 1px solid var(--ligne-forte);
+  border-radius: var(--rayon);
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.field textarea { min-height: 140px; resize: vertical; }
+.field input:focus, .field select:focus, .field textarea:focus, .input:focus {
+  outline: none;
+  border-color: var(--c-primaire);
+  box-shadow: 0 0 0 3px rgba(51, 102, 51, .18);
+}
+.field__aide { font-size: var(--fs-xs); color: var(--texte-doux); }
+.field__erreur { font-size: var(--fs-xs); color: var(--erreur); font-weight: var(--fw-medium); }
+.field--erreur input, .field--erreur textarea, .field--erreur select { border-color: var(--erreur); }
+.errorlist { list-style: none; padding: 0; margin: 0; font-size: var(--fs-xs); color: var(--erreur); }
+
+/* ── 11. Pagination ────────────────────────────────────────────────────── */
+.pagination { margin-top: var(--sp-7); }
+.pagination ul { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--sp-2); list-style: none; margin: 0; padding: 0; }
+.pagination li { margin: 0; }
+.pagination a, .pagination span {
+  display: grid; place-items: center;
+  min-width: 42px; height: 42px; padding: 0 var(--sp-3);
+  border: 1px solid var(--ligne);
+  border-radius: var(--rayon);
+  font-weight: var(--fw-medium);
+  text-decoration: none;
+  color: var(--encre);
+}
+.pagination a:hover { border-color: var(--c-primaire); color: var(--c-primaire); }
+.pagination [aria-current="page"] { background: var(--c-primaire); border-color: var(--c-primaire); color: #fff; }
+.pagination .desactive { color: var(--ligne-forte); }
+
+/* ── 12. Accordéon (FAQ) — <details>, sans JavaScript ──────────────────── */
+.accordion { border-top: 1px solid var(--ligne); }
+.accordion__item { border-bottom: 1px solid var(--ligne); }
+.accordion__item summary {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--sp-4);
+  padding: var(--sp-4) 0;
+  font-weight: var(--fw-bold);
+  color: var(--encre);
+  cursor: pointer;
+  list-style: none;
+}
+.accordion__item summary::-webkit-details-marker { display: none; }
+.accordion__item summary:hover { color: var(--c-primaire); }
+.accordion__item summary .icon { transition: transform var(--transition); color: var(--c-primaire); }
+.accordion__item[open] summary .icon { transform: rotate(45deg); }
+.accordion__contenu { padding: 0 0 var(--sp-5); color: var(--texte); }
+.accordion__contenu > :last-child { margin-bottom: 0; }
+
+/* ── 13. Ligne de document téléchargeable ──────────────────────────────── */
+.doc-liste { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--sp-3); }
+.doc-liste li { margin: 0; }
+.doc {
+  position: relative;
+  display: flex; align-items: center; gap: var(--sp-4);
+  padding: var(--sp-4);
+  border: 1px solid var(--ligne);
+  border-radius: var(--rayon);
+  background: var(--fond);
+}
+.doc:hover { border-color: var(--c-primaire); }
+.doc__type {
+  display: grid; place-items: center;
+  width: 46px; height: 46px; flex-shrink: 0;
+  border-radius: var(--rayon-sm);
+  background: var(--violet-50); color: var(--violet-700);
+  font-size: var(--fs-xs); font-weight: var(--fw-bold); text-transform: uppercase;
+}
+.doc__infos { flex: 1; min-width: 0; }
+.doc__titre { display: block; font-weight: var(--fw-bold); color: var(--encre); text-decoration: none; }
+.doc__titre::after { content: ""; position: absolute; inset: 0; }
+.doc__meta { font-size: var(--fs-xs); color: var(--texte-doux); }
+.doc .icon { color: var(--c-primaire); }
+
+/* ── 14. Bandeau d'appel à l'action ────────────────────────────────────── */
+.cta-band {
+  display: grid; gap: var(--sp-5); align-items: center;
+  grid-template-columns: minmax(0, 1fr);
+  padding: var(--sp-7) var(--sp-6);
+  border-radius: var(--rayon-lg);
+  background: linear-gradient(120deg, var(--violet-700), var(--vert-700));
+  color: #fff;
+}
+.cta-band h2 { color: #fff; margin-bottom: var(--sp-2); }
+.cta-band p { margin: 0; color: rgba(255,255,255,.9); }
+@media (min-width: 860px) {
+  .cta-band { grid-template-columns: minmax(0, 1fr) auto; padding: var(--sp-7) var(--sp-8); }
+}
+
+/* ── 15. Bouton retour en haut ─────────────────────────────────────────── */
+.retour-haut {
+  position: fixed; right: var(--sp-4); bottom: var(--sp-4);
+  z-index: var(--z-header);
+  display: grid; place-items: center;
+  width: 46px; height: 46px;
+  border: 0; border-radius: 50%;
+  background: var(--c-primaire); color: #fff;
+  box-shadow: var(--ombre);
+  opacity: 0; visibility: hidden; transform: translateY(10px);
+  transition: opacity var(--transition), transform var(--transition), visibility var(--transition);
+}
+.retour-haut.est-visible { opacity: 1; visibility: visible; transform: none; }
+.retour-haut:hover { background: var(--c-primaire-hover); }
+
+/* ── 16. État vide (aucune donnée saisie dans l'admin) ─────────────────── */
+.etat-vide {
+  padding: var(--sp-6);
+  border: 1px dashed var(--ligne-forte);
+  border-radius: var(--rayon-lg);
+  text-align: center;
+  color: var(--texte-doux);
+}
+

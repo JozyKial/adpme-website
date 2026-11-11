@@ -1,0 +1,18 @@
+{% comment %} ADPME Congo — v3/components/page_hero.html — v1 : bandeau des pages intérieures + fil d'Ariane
+   Paramètres : titre, intro, parent_titre, parent_url
+   Exemple : {% include "v3/components/page_hero.html" with titre=post.title parent_titre="Actualités" parent_url=url_actus %}
+{% endcomment %}
+<section class="page-hero">
+    <div class="container">
+        <nav class="breadcrumb" aria-label="Fil d'Ariane">
+            <ol>
+                <li><a href="{% url 'accueil' %}">Accueil</a></li>
+                {% if parent_titre %}<li><a href="{{ parent_url }}">{{ parent_titre }}</a></li>{% endif %}
+                <li><span aria-current="page">{{ titre|truncatechars:60 }}</span></li>
+            </ol>
+        </nav>
+        <h1>{{ titre }}</h1>
+        {% if intro %}<p class="page-hero__intro">{{ intro }}</p>{% endif %}
+    </div>
+</section>
+

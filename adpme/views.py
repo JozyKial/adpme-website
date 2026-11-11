@@ -144,3 +144,32 @@ def DiscoursMinistreView(request):
     discours = get_object_or_404(Discours, type_discours='ministre')
     return render(request, "adpme/discours_detail.html", {'discours':discours})
 
+
+
+
+# ── Refonte v3 : guide des composants (local uniquement) ──────────────
+def StyleguideView(request):
+    """Page de contrôle visuel des composants v3. 404 en production."""
+    if not settings.DEBUG:
+        raise Http404()
+    from .templatetags.ui import ICONES, ICONES_PLEINES
+
+    couleurs = [
+        ("Vert ADPME", "--vert-700"), ("Vert foncé", "--vert-800"),
+        ("Vert clair", "--vert-100"), ("Vert très clair", "--vert-50"),
+        ("Violet logo", "--violet-500"), ("Violet texte", "--violet-700"),
+        ("Violet clair", "--violet-100"), ("Violet très clair", "--violet-50"),
+        ("Encre (titres)", "--encre"), ("Texte", "--texte"),
+        ("Texte doux", "--texte-doux"), ("Fond alterné", "--fond-alt"),
+    ]
+    context = {
+        'couleurs': couleurs,
+        'posts': BlogActualite.objects.filter(published=True).select_related('category')[:3],
+        'faqs': FAQ.objects.filter(active=True)[:4],
+        'form': ContactForm(),
+        'icones': list(ICONES) + list(ICONES_PLEINES),
+    }
+    return render(request, "v3/styleguide.html", context)
+
+
+

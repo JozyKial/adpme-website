@@ -1,0 +1,10 @@
+{% comment %} ADPME Congo — v3/components/form_field.html — v1
+   Paramètre : field (champ de formulaire Django). Exemple : {% include "v3/components/form_field.html" with field=form.email %}
+{% endcomment %}
+<div class="field{% if field.errors %} field--erreur{% endif %}">
+    <label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %} <span class="requis" aria-hidden="true">*</span>{% endif %}</label>
+    {{ field }}
+    {% if field.help_text %}<span class="field__aide">{{ field.help_text }}</span>{% endif %}
+    {% for error in field.errors %}<span class="field__erreur" role="alert">{{ error }}</span>{% endfor %}
+</div>
+

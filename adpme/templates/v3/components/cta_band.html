@@ -1,0 +1,15 @@
+{% load ui %}
+{% comment %} ADPME Congo — v3/components/cta_band.html — v1
+   Paramètres : titre, texte, bouton_texte, bouton_url, bouton2_texte, bouton2_url
+{% endcomment %}
+<div class="cta-band">
+    <div>
+        <h2>{{ titre }}</h2>
+        {% if texte %}<p>{{ texte }}</p>{% endif %}
+    </div>
+    <div class="cluster">
+        {% if bouton_url %}<a href="{{ bouton_url }}" class="btn btn--blanc btn--lg">{{ bouton_texte }}</a>{% endif %}
+        {% if bouton2_url %}<a href="{{ bouton2_url }}" class="btn btn--contour-blanc btn--lg">{{ bouton2_texte }}</a>{% endif %}
+    </div>
+</div>
+

@@ -1,0 +1,164 @@
+{% extends "v3/base.html" %}
+{% load ui %}
+{% comment %} ADPME Congo — v3/styleguide.html — v1
+   Page de contrôle des composants, visible uniquement en local (DEBUG=True).
+   Les textes « Exemple » servent seulement à tester l'affichage : rien n'est publié.
+{% endcomment %}
+
+{% block title %}Guide des composants — ADPME v3{% endblock %}
+{% block extra_head %}<meta name="robots" content="noindex, nofollow">{% endblock %}
+
+{% block page_hero %}
+{% include "v3/components/page_hero.html" with titre="Guide des composants" intro="Page de travail locale : contrôle visuel des couleurs, de la typographie et des composants de la refonte." %}
+{% endblock %}
+
+{% block content %}
+
+<section class="section">
+    <div class="container">
+        {% include "v3/components/section_header.html" with surtitre="Fondations" titre="Couleurs" %}
+        <div class="grid grid--4">
+            {% for nom, var in couleurs %}
+            <div>
+                <div style="height:72px;border-radius:var(--rayon);background:var({{ var }});border:1px solid var(--ligne);"></div>
+                <p class="text-sm mb-0"><strong>{{ nom }}</strong><br><code>{{ var }}</code></p>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="filet-drapeau mt-6"></div>
+    </div>
+</section>
+
+<section class="section section--alt">
+    <div class="container">
+        {% include "v3/components/section_header.html" with surtitre="Fondations" titre="Typographie" %}
+        <h1>Titre de niveau 1</h1>
+        <h2>Titre de niveau 2</h2>
+        <h3>Titre de niveau 3</h3>
+        <h4>Titre de niveau 4</h4>
+        <div class="prose">
+            <p>Paragraphe de texte courant. <a href="#">Lien dans le texte</a>, <strong>texte en gras</strong>. Cette ligne permet de vérifier la longueur de lecture confortable et l'interlignage.</p>
+            <blockquote>Citation (utilisée pour les extraits de discours).</blockquote>
+            <ul><li>Élément de liste</li><li>Élément de liste</li></ul>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        {% include "v3/components/section_header.html" with surtitre="Composants" titre="Boutons et badges" %}
+        <div class="cluster mb-6">
+            <a href="#" class="btn btn--primaire">Primaire</a>
+            <a href="#" class="btn btn--secondaire">Secondaire</a>
+            <a href="#" class="btn btn--contour">Contour</a>
+            <a href="#" class="btn btn--whatsapp">{% icon "whatsapp" %} WhatsApp</a>
+            <a href="#" class="btn btn--primaire btn--sm">Petit</a>
+            <a href="#" class="btn btn--primaire btn--lg">Grand</a>
+            <a href="#" class="btn btn--lien">Lien flèche {% icon "fleche-droite" %}</a>
+        </div>
+        <div class="cluster">
+            <span class="badge">Vert</span>
+            <span class="badge badge--violet">Violet</span>
+            <span class="badge badge--neutre">Neutre</span>
+            <span class="badge badge--alerte">Alerte</span>
+        </div>
+    </div>
+</section>
+
+<section class="section section--vert">
+    <div class="container">
+        {% include "v3/components/section_header.html" with surtitre="Composants" titre="Sur fond vert" intro="Vérification des contrastes sur la couleur principale." %}
+        <div class="cluster">
+            <a href="#" class="btn btn--blanc">Bouton blanc</a>
+            <a href="#" class="btn btn--contour-blanc">Contour blanc</a>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        {% include "v3/components/section_header.html" with surtitre="Composants" titre="Cartes programmes et accès rapides" %}
+        <div class="grid grid--3 mb-6">
+            {% include "v3/components/card_programme.html" with titre="Exemple de programme" texte="Texte de démonstration du composant." url="#" icone="formation" public="Exemple" %}
+            {% include "v3/components/card_programme.html" with titre="Exemple de programme" texte="Variante violette du composant." url="#" icone="ampoule" variante="violet" public="Exemple" %}
+            {% include "v3/components/card_programme.html" with titre="Exemple sans lien" texte="Carte non cliquable." icone="boussole" %}
+        </div>
+        <div class="grid grid--3">
+            {% include "v3/components/tuile.html" with titre="Exemple d'accès rapide" desc="Description courte" url="#" icone="mallette" %}
+            {% include "v3/components/tuile.html" with titre="Exemple d'accès rapide" desc="Description courte" url="#" icone="document" %}
+            {% include "v3/components/tuile.html" with titre="Exemple d'accès rapide" url="#" icone="question" %}
+        </div>
+    </div>
+</section>
+
+<section class="section section--alt">
+    <div class="container">
+        {% include "v3/components/section_header.html" with surtitre="Données réelles" titre="Dernières actualités publiées" intro="Ce bloc lit la base de données : s'il est vide, aucune actualité n'est publiée." %}
+        {% if posts %}
+        <div class="grid grid--3">
+            {% for post in posts %}{% include "v3/components/card_actualite.html" %}{% endfor %}
+        </div>
+        {% else %}
+        <p class="etat-vide">Aucune actualité publiée pour le moment.</p>
+        {% endif %}
+    </div>
+</section>
+
+<section class="section">
+    <div class="container container--etroit">
+        {% include "v3/components/section_header.html" with surtitre="Données réelles" titre="FAQ (accordéon)" %}
+        {% if faqs %}
+        <div class="accordion">
+            {% for faq in faqs %}{% include "v3/components/accordion_item.html" with question=faq.question reponse=faq.reponse ouvert=forloop.first %}{% endfor %}
+        </div>
+        {% else %}
+        <p class="etat-vide">Aucune question active dans l'admin.</p>
+        {% endif %}
+    </div>
+</section>
+
+<section class="section section--alt">
+    <div class="container container--etroit">
+        {% include "v3/components/section_header.html" with surtitre="Composants" titre="Formulaire et alertes" %}
+        <div class="alert alert--success"><span>{% icon "check" %}</span><p>Message de succès.</p></div>
+        <div class="alert alert--error"><span>{% icon "info" %}</span><p>Message d'erreur.</p></div>
+        <form class="form" onsubmit="return false;">
+            <div class="form__ligne">
+                {% include "v3/components/form_field.html" with field=form.nom %}
+                {% include "v3/components/form_field.html" with field=form.email %}
+            </div>
+            {% include "v3/components/form_field.html" with field=form.sujet %}
+            {% include "v3/components/form_field.html" with field=form.message %}
+            <div><button type="submit" class="btn btn--primaire">Bouton d'envoi (inactif ici)</button></div>
+        </form>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        {% include "v3/components/section_header.html" with surtitre="Composants" titre="Chiffre clé, document, appel à l'action" %}
+        <div class="grid grid--4 mb-6">
+            {% include "v3/components/stat.html" with valeur="000" libelle="Exemple de libellé" source="Exemple de source" %}
+        </div>
+        <ul class="doc-liste mb-6">
+            <li class="doc">
+                <span class="doc__type">PDF</span>
+                <span class="doc__infos"><a href="#" class="doc__titre">Exemple de document</a><span class="doc__meta">PDF · taille</span></span>
+                {% icon "telecharger" %}
+            </li>
+        </ul>
+        {% include "v3/components/cta_band.html" with titre="Exemple d'appel à l'action" texte="Texte de démonstration." bouton_texte="Bouton principal" bouton_url="#" bouton2_texte="Bouton secondaire" bouton2_url="#" %}
+    </div>
+</section>
+
+<section class="section section--alt">
+    <div class="container">
+        {% include "v3/components/section_header.html" with surtitre="Fondations" titre="Icônes disponibles" intro="Dans un gabarit : load ui, puis la balise icon suivie du nom entre guillemets." %}
+        <div class="grid grid--4">
+            {% for nom in icones %}
+            <div class="cluster text-sm">{% icon nom %} <code>{{ nom }}</code></div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

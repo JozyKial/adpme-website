@@ -1,0 +1,12 @@
+{% comment %} ADPME Congo — v3/components/stat.html — v1 : chiffre clé
+   Paramètres : valeur, libelle, source (ex. « Rapport d'activité 2025 »)
+   Règle : n'afficher que des chiffres réels saisis dans l'admin (modèle ChiffreCle).
+{% endcomment %}
+{% if valeur %}
+<div class="stat">
+    <span class="stat__valeur">{{ valeur }}</span>
+    <span class="stat__libelle">{{ libelle }}</span>
+    {% if source %}<span class="stat__source">Source : {{ source }}</span>{% endif %}
+</div>
+{% endif %}
+
