@@ -1,0 +1,40 @@
+{% extends "v3/base.html" %}
+{% load ui %}
+{# ADPME Congo — v3/page.html — v1 : page de contenu gérée dans l'admin (modèle Page) #}
+
+{% block title %}{{ page.titre }} — ADPME Congo{% endblock %}
+{% block meta_description %}{% firstof page.meta_description page.intro page.titre %}{% endblock %}
+{% block og_title %}{{ page.titre }} — ADPME Congo{% endblock %}
+{% block og_description %}{% firstof page.meta_description page.intro page.titre %}{% endblock %}
+{% block og_image %}{% if page.image %}{{ request.scheme }}://{{ request.get_host }}{{ page.image.url }}{% else %}{{ block.super }}{% endif %}{% endblock %}
+
+{% block page_hero %}
+{% for r in menu_principal %}{% if r.id == rubrique_id %}
+{% include "v3/components/page_hero.html" with titre=page.titre intro=page.intro parent_titre=r.titre parent_url=r.liens.0.href %}
+{% endif %}{% endfor %}
+{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container layout-sidebar">
+        <article>
+            {% if page.image %}<img class="programme__image" src="{{ page.image.url }}" alt="" loading="lazy">{% endif %}
+            <div class="prose">{{ page.contenu|safe }}</div>
+            <p class="text-sm text-doux mt-6">Mis à jour le {{ page.date_maj|date:"j F Y" }}</p>
+        </article>
+        {% include "v3/includes/aside_rubrique.html" %}
+    </div>
+</section>
+
+{% if chiffres %}
+<section class="section section--vert" aria-labelledby="titre-chiffres">
+    <div class="container">
+        {% include "v3/components/section_header.html" with surtitre="En chiffres" titre="L'action de l'agence" id="titre-chiffres" %}
+        <div class="grid grid--4">
+            {% for c in chiffres %}{% include "v3/components/stat.html" with valeur=c.valeur libelle=c.libelle source=c.source %}{% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}
+

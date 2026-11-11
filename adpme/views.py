@@ -6,7 +6,9 @@ from django.db.models import F, Q
 from .models import (
     BlogActualite,
     Category,
-    FAQ, Discours
+    FAQ, Discours,
+    Slide, Programme, Parcours, ChiffreCle, Partenaire,
+    Page,
 )
 
 from django.core.mail import send_mail
@@ -17,23 +19,23 @@ from .forms import ContactForm
 from django.core.paginator import Paginator
 
 def AccueilView(request):
-    post        = BlogActualite.objects.order_by('-id')
-    main_post   = BlogActualite.objects.order_by('-id').filter(Main_post = True)[0:1] 
-    recent      = BlogActualite.objects.filter(section = 'Recent').order_by('-id')[:5]
-    categorie   = Category.objects.all()
-    discours_dg = Discours.objects.filter(type_discours='dg').first()
-    discours_min = Discours.objects.filter(type_discours='ministre').first()
+    """Page d'accueil v3 : chaque bloc ne s'affiche que s'il a du contenu dans l'admin."""
+    from .navigation import ACCES_RAPIDES
 
+    acces = [{**a, "href": reverse(a["url"])} for a in ACCES_RAPIDES]
     context = {
-        'post':post,
-        'main_post':main_post,
-        'recent':recent,
-        'categorie':categorie,
-        'discours_dg' : discours_dg,
-        'discours_min' : discours_min,
+        'slides'            : Slide.objects.filter(actif=True),
+        'acces_rapides'     : acces,
+        'parcours'          : Parcours.objects.filter(actif=True).prefetch_related('liens'),
+        'programmes'        : Programme.objects.filter(actif=True, sur_accueil=True)[:6],
+        'chiffres'          : ChiffreCle.objects.filter(actif=True),
+        'discours_dg'       : Discours.objects.filter(type_discours='dg').first(),
+        'actualites'        : (BlogActualite.objects.filter(published=True)
+                       .select_related('category')
+                       .order_by('-date_publication', '-id')[:3]),
+        'partenaires'       : Partenaire.objects.filter(actif=True),
     }
-
-    return render(request,"adpme/accueil.html", context)
+    return render(request, "v3/accueil.html", context)
 
 
 def Categorie(request, slug):
@@ -80,24 +82,46 @@ def ActualiteView(request):
     return render(request,"adpme/actualite.html", context)
 
 
+def _page_contenu(request, cle, ancien_gabarit, rubrique_id, extra=None):
+    """Affiche une page gérée dans l'admin (modèle Page).
+    Tant que la page n'existe pas (commande charger_pages pas encore lancée),
+    l'ancien gabarit reste affiché : le site n'a jamais de page vide."""
+    page = Page.objects.filter(cle=cle).first()
+    if page is None:
+        return render(request, ancien_gabarit)
+    context = {'page': page, 'rubrique_id': rubrique_id}
+    if extra:
+        context.update(extra)
+    return render(request, "v3/page.html", context)
+
+
 def AproposView(request):
-    return render(request,"adpme/apropos.html")
+    return _page_contenu(request, "a-propos", "adpme/apropos.html", "agence",
+                         {'chiffres': ChiffreCle.objects.filter(actif=True)})
 
 def Info_orientationView(request):
-    return render(request,"adpme/information.html")
+    return _page_contenu(request, "information", "adpme/information.html", "services")
 
 def FormationView(request):
-    return render(request,"adpme/formation.html")
+    return _page_contenu(request, "formation", "adpme/formation.html", "services")
 
 def AccompagnementView(request):
-    return render(request,"adpme/accompagnement.html")
+    return _page_contenu(request, "accompagnement", "adpme/accompagnement.html", "services")
 
 def ConseilView(request):
-    return render(request,"adpme/conseil.html")
+    return _page_contenu(request, "conseil", "adpme/conseil.html", "services")
 
 
 def ProgrammeView(request):
-    return render(request,"adpme/programme.html")    
+    """Liste des programmes publiés (v3)."""
+    context = {'programmes': Programme.objects.filter(actif=True)}
+    return render(request, "v3/programmes.html", context)
+
+
+def ProgrammeDetailView(request, slug):
+    programme = get_object_or_404(Programme, slug=slug, actif=True)
+    autres = Programme.objects.filter(actif=True).exclude(pk=programme.pk)[:3]
+    return render(request, "v3/programme_detail.html", {'programme': programme, 'autres': autres})
 
 
 def BlogActualiteView(request):
@@ -138,14 +162,11 @@ def FaqView(request):
 
 def DiscoursDGView(request):
     discours = get_object_or_404(Discours, type_discours='dg')
-    return render(request, "adpme/discours_detail.html", {'discours':discours})
+    return render(request, "v3/discours.html", {'discours': discours, 'rubrique_id': 'agence'})
 
 def DiscoursMinistreView(request):
     discours = get_object_or_404(Discours, type_discours='ministre')
-    return render(request, "adpme/discours_detail.html", {'discours':discours})
-
-
-
+    return render(request, "v3/discours.html", {'discours': discours, 'rubrique_id': 'agence'})
 
 # ── Refonte v3 : guide des composants (local uniquement) ──────────────
 def StyleguideView(request):
@@ -170,8 +191,6 @@ def StyleguideView(request):
         'icones': list(ICONES) + list(ICONES_PLEINES),
     }
     return render(request, "v3/styleguide.html", context)
-
-
 
 
 # ── Refonte v3 : recherche (version simple, enrichie en phase 5) ──────

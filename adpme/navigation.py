@@ -1,5 +1,5 @@
 # ==========================================================================
-# ADPME Congo — navigation.py — v1
+# ADPME Congo — navigation.py — v3
 # Menu principal du site : C'EST ICI qu'on modifie le méga-menu ET les
 # colonnes du footer (une seule source pour les deux).
 #
@@ -17,7 +17,7 @@ MENU_PRINCIPAL = [
         "liens": [
             {"titre": "Présentation", "url": "a_propos", "icone": "batiment"},
             {"titre": "Mot du Directeur général", "url": "discours_dg", "icone": "message"},
-            {"titre": "Mot du Ministre", "url": "discours_ministre", "icone": "message"},
+            {"titre": "Mot de la Ministre", "url": "discours_ministre", "icone": "message"},
         ],
     },
     {
@@ -35,4 +35,21 @@ MENU_PRINCIPAL = [
      "aussi": ("actu_detail",)},
     {"id": "faq", "titre": "FAQ", "url": "faq", "icone": "question"},
 ]
+
+
+
+
+# --------------------------------------------------------------------------
+# Accès rapides de la page d'accueil (« Que souhaitez-vous faire ? »)
+#   titre = le besoin exprimé par le visiteur ; desc = la page où il arrive.
+# --------------------------------------------------------------------------
+ACCES_RAPIDES = [
+    {"titre": "M'informer et m'orienter", "desc": "Information et orientation", "url": "information", "icone": "boussole"},
+    {"titre": "Obtenir un conseil", "desc": "Conseil", "url": "conseil", "icone": "ampoule"},
+    {"titre": "Être accompagné", "desc": "Accompagnement", "url": "accompagnement", "icone": "poignee"},
+    {"titre": "Me former", "desc": "Formation", "url": "formation", "icone": "formation"},
+    {"titre": "Découvrir les programmes", "desc": "Programmes", "url": "programme", "icone": "drapeau"},
+    {"titre": "Contacter l'agence", "desc": "Contact", "url": "contact", "icone": "message"},
+]
+
 

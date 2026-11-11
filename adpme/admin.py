@@ -4,8 +4,11 @@ from .models import (
     BlogActualite,
     Category,
     ActualiteEnImage,
-    FAQ, Discours
+    FAQ, Discours,
+    Slide, Programme, Parcours, ParcoursLien, ChiffreCle, Partenaire,
+    Page,
 )
+from django.utils.html import format_html
 
 @admin.register(AgenceInfo)
 class AgenceInfoAdmin(admin.ModelAdmin):
@@ -74,4 +77,82 @@ class DiscoursAdmin(admin.ModelAdmin):
         return obj.get_type_discours_display()
     get_type_discours_display.short_description = "Type"
 
+
+
+
+# ==========================================================================
+# Refonte v3 — Phase 3 : contenus de la page d'accueil
+# ==========================================================================
+
+def apercu_image(champ, hauteur=48):
+    """Petite vignette dans la liste de l'admin."""
+    def apercu(self, obj):
+        image = getattr(obj, champ)
+        if image:
+            return format_html('<img src="{}" style="height:{}px;width:auto;border-radius:4px;">', image.url, hauteur)
+        return "—"
+    apercu.short_description = "Aperçu"
+    return apercu
+
+
+@admin.register(Slide)
+class SlideAdmin(admin.ModelAdmin):
+    list_display  = ("titre", "apercu", "ordre", "actif")
+    list_editable = ("ordre", "actif")
+    apercu        = apercu_image("image")
+
+
+@admin.register(Programme)
+class ProgrammeAdmin(admin.ModelAdmin):
+    list_display  = ("titre", "public_cible", "sur_accueil", "ordre", "actif")
+    list_editable = ("sur_accueil", "ordre", "actif")
+    search_fields = ("titre", "resume")
+    fieldsets = (
+        (None, {"fields": ("titre", "resume", "public_cible", "icone", "image")}),
+        ("Page détaillée", {"fields": ("contenu", "site_web")}),
+        ("Affichage", {"fields": ("sur_accueil", "ordre", "actif")}),
+    )
+
+
+class ParcoursLienInline(admin.TabularInline):
+    model = ParcoursLien
+    extra = 1
+
+
+@admin.register(Parcours)
+class ParcoursAdmin(admin.ModelAdmin):
+    list_display  = ("titre", "description", "ordre", "actif")
+    list_editable = ("ordre", "actif")
+    inlines       = [ParcoursLienInline]
+
+
+@admin.register(ChiffreCle)
+class ChiffreCleAdmin(admin.ModelAdmin):
+    list_display  = ("valeur", "libelle", "source", "ordre", "actif")
+    list_editable = ("ordre", "actif")
+
+
+@admin.register(Partenaire)
+class PartenaireAdmin(admin.ModelAdmin):
+    list_display  = ("nom", "apercu", "site_web", "ordre", "actif")
+    list_editable = ("ordre", "actif")
+    apercu        = apercu_image("logo", 36)
+
+
+
+
+# ==========================================================================
+# Refonte v3 — Phase 4 : pages de contenu
+# ==========================================================================
+
+@admin.register(Page)
+class PageAdmin(admin.ModelAdmin):
+    list_display  = ("titre", "cle", "date_maj")
+    search_fields = ("titre", "contenu")
+    fields        = ("titre", "intro", "contenu", "image", "meta_description", "cle")
+
+    def get_readonly_fields(self, request, obj=None):
+        # L'identifiant est figé une fois la page créée : le site s'en sert pour la retrouver.
+        return ("cle",) if obj else ()
+    
 

@@ -1,0 +1,31 @@
+{% extends "v3/base.html" %}
+{% load ui %}
+{# ADPME Congo — v3/programmes.html — v1 : liste des programmes (admin > Programmes) #}
+
+{% block title %}Programmes — ADPME Congo{% endblock %}
+{% block meta_description %}Les programmes portés par l'ADPME pour accompagner les porteurs de projets, entrepreneurs, TPME et artisans en République du Congo.{% endblock %}
+
+{% block page_hero %}
+{% include "v3/components/page_hero.html" with titre="Programmes" intro="Les programmes portés par l'agence pour les porteurs de projets, entrepreneurs, TPME et artisans." %}
+{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        {% if programmes %}
+        <div class="grid grid--3">
+            {% for p in programmes %}
+            {% url 'programme_detail' p.slug as url_programme %}
+            {% include "v3/components/card_programme.html" with titre=p.titre texte=p.resume url=url_programme icone=p.icone public=p.public_cible variante=forloop.counter|divisibleby:2|yesno:"violet," %}
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="etat-vide">
+            <p>Les programmes de l'agence seront bientôt présentés sur cette page.</p>
+            <a class="btn btn--primaire btn--sm" href="{% url 'contact' %}">Se renseigner auprès de l'agence</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+

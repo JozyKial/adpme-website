@@ -1,0 +1,193 @@
+{% extends "v3/base.html" %}
+{% load static ui %}
+{% comment %} ADPME Congo — v3/accueil.html — v1
+   Page d'accueil. Chaque bloc ne s'affiche que s'il a du contenu dans l'admin :
+   Slides, Parcours, Programmes, Chiffres clés, Discours (DG), Actualités, Partenaires.
+   Les accès rapides se modifient dans adpme/navigation.py (ACCES_RAPIDES).
+{% endcomment %}
+
+{% block title %}{% if agence %}{{ agence.nom_agence }}{% else %}ADPME{% endif %} — Agence de Développement des TPME | Congo{% endblock %}
+{% block body_class %}page-accueil{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'v3/css/accueil.css' %}">{% endblock %}
+
+{% block content %}
+
+{# ── 1. Bandeau principal ─────────────────────────────────────────── #}
+{% if slides %}
+<h1 class="sr-only">{% if agence %}{{ agence.nom_agence }}{% else %}ADPME{% endif %} — Agence de Développement des Très Petites, Petites et Moyennes Entreprises</h1>
+<section class="hero hero--slides" aria-roledescription="carrousel" aria-label="À la une" data-carrousel>
+    {% for slide in slides %}
+    <div class="hero__slide" id="slide-{{ forloop.counter }}" role="group" aria-roledescription="diapositive" aria-label="{{ forloop.counter }} sur {{ slides|length }}"{% if not forloop.first %} hidden{% endif %} data-slide>
+        <img class="hero__image" src="{{ slide.image.url }}" alt="" {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}>
+        <div class="container hero__contenu">
+            <h2 class="hero__titre">{{ slide.titre }}</h2>
+            {% if slide.texte %}<p class="hero__texte">{{ slide.texte }}</p>{% endif %}
+            {% if slide.bouton_lien %}
+            <p class="hero__actions"><a class="btn btn--blanc btn--lg" href="{{ slide.bouton_lien }}">{{ slide.bouton_texte|default:"En savoir plus" }}</a></p>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+    {% if slides|length > 1 %}
+    <div class="container hero__controles">
+        <button type="button" class="hero__fleche" data-slide-prec aria-label="Diapositive précédente">{% icon "chevron-gauche" %}</button>
+        <div class="hero__points">
+            {% for slide in slides %}
+            <button type="button" class="hero__point" data-slide-point="{{ forloop.counter0 }}" aria-controls="slide-{{ forloop.counter }}" aria-label="Afficher la diapositive {{ forloop.counter }}"{% if forloop.first %} aria-current="true"{% endif %}></button>
+            {% endfor %}
+        </div>
+        <button type="button" class="hero__fleche" data-slide-suiv aria-label="Diapositive suivante">{% icon "chevron-droite" %}</button>
+    </div>
+    {% endif %}
+</section>
+{% else %}
+<section class="hero hero--defaut">
+    <div class="container hero__contenu">
+        <p class="hero__surtitre">République du Congo</p>
+        <h1 class="hero__titre">Agence de Développement des Très Petites, Petites et Moyennes Entreprises</h1>
+        {% if agence.slogan %}<p class="hero__texte">{{ agence.slogan }}</p>{% endif %}
+        <p class="hero__actions">
+            <a class="btn btn--blanc btn--lg" href="{% url 'information' %}">M'informer et m'orienter</a>
+            <a class="btn btn--contour-blanc btn--lg" href="{% url 'contact' %}">Nous contacter</a>
+        </p>
+    </div>
+</section>
+{% endif %}
+
+{# ── 2. Accès rapides ─────────────────────────────────────────────── #}
+<section class="acces" aria-labelledby="titre-acces">
+    <div class="container">
+        <div class="acces__panneau">
+            <h2 class="acces__titre" id="titre-acces">Que souhaitez-vous faire&nbsp;?</h2>
+            <div class="grid grid--3">
+                {% for a in acces_rapides %}
+                {% include "v3/components/tuile.html" with titre=a.titre desc=a.desc url=a.href icone=a.icone %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+{# ── 3. Parcours « Vous êtes… » ───────────────────────────────────── #}
+{% if parcours %}
+<section class="section" aria-labelledby="titre-parcours">
+    <div class="container">
+        {% include "v3/components/section_header.html" with surtitre="Votre parcours" titre="Vous êtes…" id="titre-parcours" centre=True %}
+        <div class="grid grid--3">
+            {% for profil in parcours %}
+            <article class="profil">
+                <span class="profil__icone">{% icon profil.icone %}</span>
+                <h3 class="profil__titre">{{ profil.titre }}</h3>
+                {% if profil.description %}<p class="profil__texte">{{ profil.description }}</p>{% endif %}
+                {% if profil.liens.all %}
+                <ul class="profil__liens">
+                    {% for lien in profil.liens.all %}
+                    <li><a href="{% url lien.page %}">{{ lien.libelle }} {% icon "chevron-droite" %}</a></li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{# ── 4. Programmes ────────────────────────────────────────────────── #}
+{% if programmes %}
+<section class="section section--alt" aria-labelledby="titre-programmes">
+    <div class="container">
+        <div class="section-header__ligne">
+            {% include "v3/components/section_header.html" with surtitre="Nos programmes" titre="Les programmes portés par l'agence" id="titre-programmes" %}
+            <a class="btn btn--contour" href="{% url 'programme' %}">Tous les programmes {% icon "fleche-droite" %}</a>
+        </div>
+        <div class="grid grid--3">
+            {% for p in programmes %}
+            {% url 'programme_detail' p.slug as url_programme %}
+            {% include "v3/components/card_programme.html" with titre=p.titre texte=p.resume url=url_programme icone=p.icone public=p.public_cible variante=forloop.counter|divisibleby:2|yesno:"violet," %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{# ── 5. Chiffres clés ─────────────────────────────────────────────── #}
+{% if chiffres %}
+<section class="section section--vert" aria-labelledby="titre-chiffres">
+    <div class="container">
+        {% include "v3/components/section_header.html" with surtitre="En chiffres" titre="L'action de l'agence" id="titre-chiffres" %}
+        <div class="grid grid--4">
+            {% for c in chiffres %}
+            {% include "v3/components/stat.html" with valeur=c.valeur libelle=c.libelle source=c.source %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{# ── 6. Mot du Directeur général ──────────────────────────────────── #}
+{% if discours_dg %}
+<section class="section" aria-labelledby="titre-mot-dg">
+    <div class="container">
+        <div class="mot">
+            <div class="mot__photo">
+                {% if discours_dg.photo %}
+                <img src="{{ discours_dg.photo.url }}" alt="{{ discours_dg.nom_auteur }}" loading="lazy">
+                {% else %}
+                <span class="mot__photo-vide">{% icon "utilisateur" %}</span>
+                {% endif %}
+            </div>
+            <div class="mot__texte">
+                <p class="section-header__surtitre" id="titre-mot-dg">Mot du {{ discours_dg.get_type_discours_display }}</p>
+                <blockquote class="mot__citation">{{ discours_dg.extrait|linebreaksbr }}</blockquote>
+                <p class="mot__auteur"><strong>{{ discours_dg.nom_auteur }}</strong><br><span>{{ discours_dg.fonction }}</span></p>
+                <a class="btn btn--lien" href="{% url 'discours_dg' %}">Lire le message complet {% icon "fleche-droite" %}</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{# ── 7. Actualités ────────────────────────────────────────────────── #}
+{% if actualites %}
+<section class="section section--alt" aria-labelledby="titre-actus">
+    <div class="container">
+        <div class="section-header__ligne">
+            {% include "v3/components/section_header.html" with surtitre="Actualités" titre="Les dernières nouvelles de l'agence" id="titre-actus" %}
+            <a class="btn btn--contour" href="{% url 'actualite' %}">Toutes les actualités {% icon "fleche-droite" %}</a>
+        </div>
+        <div class="grid grid--3">
+            {% for post in actualites %}{% include "v3/components/card_actualite.html" %}{% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{# ── 8. Partenaires ───────────────────────────────────────────────── #}
+{% if partenaires %}
+<section class="section section--compacte" aria-labelledby="titre-partenaires">
+    <div class="container">
+        {% include "v3/components/section_header.html" with surtitre="Ils nous accompagnent" titre="Nos partenaires" id="titre-partenaires" centre=True %}
+        <ul class="partenaires">
+            {% for p in partenaires %}
+            <li>
+                {% if p.site_web %}<a href="{{ p.site_web }}" target="_blank" rel="noopener" title="{{ p.nom }} (nouvel onglet)">{% endif %}
+                <img src="{{ p.logo.url }}" alt="{{ p.nom }}" loading="lazy">
+                {% if p.site_web %}</a>{% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</section>
+{% endif %}
+
+{# ── 9. Appel à l'action ──────────────────────────────────────────── #}
+<section class="section">
+    <div class="container">
+        {% url 'contact' as url_contact %}{% url 'faq' as url_faq %}
+        {% include "v3/components/cta_band.html" with titre="Un projet, une question ?" texte="Écrivez-nous, appelez l'agence ou consultez les questions fréquentes." bouton_texte="Nous contacter" bouton_url=url_contact bouton2_texte="Consulter la FAQ" bouton2_url=url_faq %}
+    </div>
+</section>
+
+{% endblock %}
+

@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ADPME Congo — components.css — v1
+   ADPME Congo — components.css — v3
    Composants réutilisables. Chaque bloc correspond à un gabarit dans
    templates/v3/components/. Dépend de tokens.css et base.css.
    ========================================================================== */
@@ -342,4 +342,77 @@
   text-align: center;
   color: var(--texte-doux);
 }
+
+
+
+/* ── 17. Encadré latéral (fiche programme, pages intérieures) ──────────── */
+.encadre {
+  align-self: start;
+  display: grid; gap: var(--sp-3);
+  padding: var(--sp-5);
+  border: 1px solid var(--ligne);
+  border-top: 4px solid var(--c-primaire);
+  border-radius: var(--rayon-lg);
+  background: var(--fond);
+}
+.encadre p { margin: 0; }
+.encadre__icone {
+  display: grid; place-items: center;
+  width: 56px; height: 56px;
+  border-radius: var(--rayon);
+  background: var(--vert-50); color: var(--c-primaire);
+}
+.encadre__icone .icon { width: 28px; height: 28px; }
+.encadre__libelle { font-size: var(--fs-xs); font-weight: var(--fw-bold); text-transform: uppercase; letter-spacing: .06em; color: var(--texte-doux); }
+@media (min-width: 992px) {
+  .encadre { position: sticky; top: calc(var(--h-header) + var(--sp-5)); }
+}
+
+.programme__image { width: 100%; margin-bottom: var(--sp-6); border-radius: var(--rayon-lg); aspect-ratio: 16 / 9; object-fit: cover; }
+
+
+
+/* ── 18. Colonne latérale des pages intérieures ────────────────────────── */
+.aside { align-self: start; display: grid; gap: var(--sp-5); }
+.aside .encadre { position: static; }
+@media (min-width: 992px) {
+  .aside { position: sticky; top: calc(var(--h-header) + var(--sp-5)); }
+}
+.sous-nav { border: 1px solid var(--ligne); border-radius: var(--rayon-lg); overflow: hidden; }
+.sous-nav__titre {
+  margin: 0; padding: var(--sp-3) var(--sp-4);
+  background: var(--fond-alt);
+  font-size: var(--fs-xs); font-weight: var(--fw-bold);
+  letter-spacing: .06em; text-transform: uppercase;
+  color: var(--texte-doux);
+}
+.sous-nav ul { list-style: none; margin: 0; padding: var(--sp-2); }
+.sous-nav li { margin: 0; }
+.sous-nav a {
+  display: flex; align-items: center; gap: var(--sp-3);
+  padding: var(--sp-2) var(--sp-3);
+  border-radius: var(--rayon);
+  color: var(--encre); font-weight: var(--fw-medium); text-decoration: none;
+}
+.sous-nav a .icon { color: var(--c-primaire); }
+.sous-nav a:hover { background: var(--vert-50); color: var(--c-primaire); }
+.sous-nav a[aria-current="page"] { background: var(--c-primaire); color: #fff; }
+.sous-nav a[aria-current="page"] .icon { color: #fff; }
+.encadre a:not(.btn) { color: var(--encre); text-decoration: none; display: inline-flex; align-items: center; gap: var(--sp-2); font-weight: var(--fw-bold); }
+
+/* ── 19. Pages de discours ─────────────────────────────────────────────── */
+.discours__auteur { display: flex; align-items: center; gap: var(--sp-4); margin-bottom: var(--sp-5); }
+.discours__auteur p { margin: 0; }
+.discours__auteur img, .discours__auteur-vide {
+  width: 96px; height: 96px; flex-shrink: 0;
+  border-radius: 50%; object-fit: cover;
+}
+.discours__auteur-vide { display: grid; place-items: center; background: var(--vert-50); color: var(--vert-600); }
+.discours__auteur-vide .icon { width: 40px; height: 40px; }
+.discours__extrait { max-width: 72ch; margin-bottom: var(--sp-6); font-size: var(--fs-lg); }
+
+/* Étapes numérotées dans le contenu (ex. processus d'accompagnement) */
+.prose h3 { padding-left: var(--sp-4); border-left: 3px solid var(--violet-500); }
+
+
 

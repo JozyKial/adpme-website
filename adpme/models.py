@@ -124,4 +124,158 @@ class Discours(models.Model):
 
 
 
+
+# ==========================================================================
+# Refonte v3 — Phase 3 : contenus de la page d'accueil (tous gérés dans l'admin)
+# ==========================================================================
+
+def choix_icones():
+    """Liste des icônes disponibles (adpme/templatetags/ui.py)."""
+    from .templatetags.ui import ICONES
+    return [(nom, nom) for nom in sorted(ICONES)]
+
+
+def choix_pages():
+    """Pages internes du site qu'on peut viser depuis l'admin (nom de route)."""
+    from .navigation import MENU_PRINCIPAL
+    pages = []
+    for rubrique in MENU_PRINCIPAL:
+        for lien in rubrique.get("liens", [rubrique]):
+            pages.append((lien["url"], lien["titre"]))
+    pages += [("contact", "Contact"), ("recherche", "Recherche")]
+    return pages
+
+
+class Slide(models.Model):
+    titre       = models.CharField(max_length=150, verbose_name="Titre")
+    texte       = models.TextField(max_length=300, blank=True, verbose_name="Texte court")
+    image       = models.ImageField(upload_to="slides/", verbose_name="Image (format paysage, 1920×800 conseillé)")
+    bouton_texte = models.CharField(max_length=60, blank=True, verbose_name="Texte du bouton")
+    bouton_lien = models.CharField(max_length=300, blank=True, verbose_name="Lien du bouton",
+                                   help_text="Adresse complète (https://…) ou chemin du site (/contact/).")
+    ordre       = models.PositiveIntegerField(default=0, verbose_name="Ordre")
+    actif       = models.BooleanField(default=True, verbose_name="Affiché")
+
+    class Meta:
+        ordering            = ["ordre", "id"]
+        verbose_name        = "Slide (bandeau d'accueil)"
+        verbose_name_plural = "Slides (bandeau d'accueil)"
+
+    def __str__(self):
+        return self.titre
+
+
+class Programme(models.Model):
+    titre       = models.CharField(max_length=200, verbose_name="Titre")
+    slug        = AutoSlugField(populate_from="titre", unique=True)
+    resume      = models.TextField(max_length=300, verbose_name="Résumé (affiché sur les cartes)")
+    public_cible = models.CharField(max_length=150, blank=True, verbose_name="Public cible",
+                                    help_text="Ex. : Jeunes porteurs de projets")
+    icone       = models.CharField(max_length=40, choices=choix_icones, default="drapeau", verbose_name="Icône")
+    image       = models.ImageField(upload_to="programmes/", blank=True, null=True, verbose_name="Image")
+    contenu     = RichTextUploadingField(blank=True, verbose_name="Présentation détaillée")
+    site_web    = models.URLField(blank=True, verbose_name="Site ou page externe du programme")
+    sur_accueil = models.BooleanField(default=True, verbose_name="Afficher sur l'accueil")
+    ordre       = models.PositiveIntegerField(default=0, verbose_name="Ordre")
+    actif       = models.BooleanField(default=True, verbose_name="Publié")
+
+    class Meta:
+        ordering            = ["ordre", "titre"]
+        verbose_name        = "Programme"
+        verbose_name_plural = "Programmes"
+
+    def __str__(self):
+        return self.titre
+
+
+class Parcours(models.Model):
+    titre       = models.CharField(max_length=100, verbose_name="Profil", help_text="Ex. : Porteur de projet")
+    description = models.CharField(max_length=200, blank=True, verbose_name="Description courte")
+    icone       = models.CharField(max_length=40, choices=choix_icones, default="utilisateur", verbose_name="Icône")
+    ordre       = models.PositiveIntegerField(default=0, verbose_name="Ordre")
+    actif       = models.BooleanField(default=True, verbose_name="Affiché")
+
+    class Meta:
+        ordering            = ["ordre", "id"]
+        verbose_name        = "Parcours « Vous êtes… »"
+        verbose_name_plural = "Parcours « Vous êtes… »"
+
+    def __str__(self):
+        return self.titre
+
+
+class ParcoursLien(models.Model):
+    parcours    = models.ForeignKey(Parcours, related_name="liens", on_delete=models.CASCADE)
+    libelle     = models.CharField(max_length=100, verbose_name="Libellé", help_text="Ex. : M'informer et m'orienter")
+    page        = models.CharField(max_length=60, choices=choix_pages, verbose_name="Page visée")
+    ordre       = models.PositiveIntegerField(default=0, verbose_name="Ordre")
+
+    class Meta:
+        ordering            = ["ordre", "id"]
+        verbose_name        = "Lien du parcours"
+        verbose_name_plural = "Liens du parcours"
+
+    def __str__(self):
+        return self.libelle
+
+
+class ChiffreCle(models.Model):
+    valeur      = models.CharField(max_length=30, verbose_name="Valeur", help_text="Ex. : 1 250 ou 85 %")
+    libelle     = models.CharField(max_length=150, verbose_name="Libellé", help_text="Ex. : entrepreneurs formés")
+    source      = models.CharField(max_length=200, blank=True, verbose_name="Source",
+                                   help_text="Ex. : Rapport d'activité 2025. Fortement conseillé.")
+    ordre       = models.PositiveIntegerField(default=0, verbose_name="Ordre")
+    actif       = models.BooleanField(default=True, verbose_name="Affiché")
+
+    class Meta:
+        ordering            = ["ordre", "id"]
+        verbose_name        = "Chiffre clé"
+        verbose_name_plural = "Chiffres clés"
+
+    def __str__(self):
+        return f"{self.valeur} {self.libelle}"
+
+
+class Partenaire(models.Model):
+    nom         = models.CharField(max_length=150, verbose_name="Nom")
+    logo        = models.ImageField(upload_to="partenaires/", verbose_name="Logo (PNG fond transparent conseillé)")
+    site_web    = models.URLField(blank=True, verbose_name="Site web")
+    ordre       = models.PositiveIntegerField(default=0, verbose_name="Ordre")
+    actif       = models.BooleanField(default=True, verbose_name="Affiché")
+
+    class Meta:
+        ordering            = ["ordre", "nom"]
+        verbose_name        = "Partenaire"
+        verbose_name_plural = "Partenaires"
+
+    def __str__(self):
+        return self.nom
+    
+
+
+
+# ==========================================================================
+# Refonte v3 — Phase 4 : pages de contenu (L'Agence, services)
+# ==========================================================================
+
+class Page(models.Model):
+    cle         = models.SlugField(max_length=60, unique=True, verbose_name="Identifiant",
+                                   help_text="Identifiant technique utilisé par le site (ex. : information). Ne pas modifier.")
+    titre       = models.CharField(max_length=200, verbose_name="Titre")
+    intro       = models.CharField(max_length=300, blank=True, verbose_name="Introduction",
+                                   help_text="Une ou deux phrases affichées sous le titre.")
+    contenu     = RichTextUploadingField(verbose_name="Contenu")
+    image       = models.ImageField(upload_to="pages/", blank=True, null=True, verbose_name="Image d'illustration")
+    meta_description = models.CharField(max_length=160, blank=True, verbose_name="Description pour Google",
+                                        help_text="160 caractères maximum. Vide : l'introduction est utilisée.")
+    date_maj    = models.DateTimeField(auto_now=True, verbose_name="Dernière mise à jour")
+
+    class Meta:
+        ordering            = ["titre"]
+        verbose_name        = "Page"
+        verbose_name_plural = "Pages"
+
+    def __str__(self):
+        return self.titre
+
     

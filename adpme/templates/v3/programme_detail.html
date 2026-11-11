@@ -1,0 +1,56 @@
+{% extends "v3/base.html" %}
+{% load ui %}
+{# ADPME Congo — v3/programme_detail.html — v1 : fiche d'un programme #}
+
+{% block title %}{{ programme.titre }} — Programmes — ADPME Congo{% endblock %}
+{% block meta_description %}{{ programme.resume|truncatechars:160 }}{% endblock %}
+{% block og_title %}{{ programme.titre }}{% endblock %}
+{% block og_description %}{{ programme.resume|truncatechars:200 }}{% endblock %}
+{% block og_image %}{% if programme.image %}{{ request.scheme }}://{{ request.get_host }}{{ programme.image.url }}{% else %}{{ block.super }}{% endif %}{% endblock %}
+
+{% block page_hero %}
+{% url 'programme' as url_programmes %}
+{% include "v3/components/page_hero.html" with titre=programme.titre intro=programme.resume parent_titre="Programmes" parent_url=url_programmes %}
+{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container layout-sidebar">
+        <article>
+            {% if programme.image %}
+            <img class="programme__image" src="{{ programme.image.url }}" alt="" loading="lazy">
+            {% endif %}
+            <div class="prose">
+                {% if programme.contenu %}{{ programme.contenu|safe }}{% else %}<p>{{ programme.resume }}</p>{% endif %}
+            </div>
+        </article>
+
+        <aside class="encadre" aria-label="Informations pratiques">
+            <span class="card__icone encadre__icone">{% icon programme.icone %}</span>
+            {% if programme.public_cible %}
+            <p class="encadre__libelle">Public concerné</p>
+            <p>{{ programme.public_cible }}</p>
+            {% endif %}
+            {% if programme.site_web %}
+            <a class="btn btn--contour btn--bloc" href="{{ programme.site_web }}" target="_blank" rel="noopener">Site du programme {% icon "lien-externe" %}</a>
+            {% endif %}
+            <a class="btn btn--primaire btn--bloc" href="{% url 'contact' %}">Se renseigner</a>
+        </aside>
+    </div>
+</section>
+
+{% if autres %}
+<section class="section section--alt">
+    <div class="container">
+        {% include "v3/components/section_header.html" with surtitre="Programmes" titre="Autres programmes" %}
+        <div class="grid grid--3">
+            {% for p in autres %}
+            {% url 'programme_detail' p.slug as url_programme %}
+            {% include "v3/components/card_programme.html" with titre=p.titre texte=p.resume url=url_programme icone=p.icone public=p.public_cible %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}
+

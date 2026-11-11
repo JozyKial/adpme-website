@@ -1,0 +1,41 @@
+{% extends "v3/base.html" %}
+{% load ui %}
+{# ADPME Congo — v3/discours.html — v1 : mot du Directeur général / de la Ministre (admin > Discours) #}
+
+{% block title %}Mot {% if discours.type_discours == 'dg' %}du Directeur général{% else %}de la Ministre{% endif %} — ADPME Congo{% endblock %}
+{% block meta_description %}{{ discours.extrait|truncatechars:160 }}{% endblock %}
+{% block og_title %}Mot {% if discours.type_discours == 'dg' %}du Directeur général{% else %}de la Ministre{% endif %} — ADPME{% endblock %}
+{% block og_description %}{{ discours.extrait|truncatechars:200 }}{% endblock %}
+{% block og_type %}article{% endblock %}
+{% block og_image %}{% if discours.photo %}{{ request.scheme }}://{{ request.get_host }}{{ discours.photo.url }}{% else %}{{ block.super }}{% endif %}{% endblock %}
+
+{% block page_hero %}
+{% for r in menu_principal %}{% if r.id == rubrique_id %}
+{% if discours.type_discours == 'dg' %}
+{% include "v3/components/page_hero.html" with titre="Mot du Directeur général" parent_titre=r.titre parent_url=r.liens.0.href %}
+{% else %}
+{% include "v3/components/page_hero.html" with titre="Mot de la Ministre" parent_titre=r.titre parent_url=r.liens.0.href %}
+{% endif %}
+{% endif %}{% endfor %}
+{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container layout-sidebar">
+        <article>
+            <div class="discours__auteur">
+                {% if discours.photo %}
+                <img src="{{ discours.photo.url }}" alt="{{ discours.nom_auteur }}" width="96" height="96">
+                {% else %}
+                <span class="discours__auteur-vide">{% icon "utilisateur" %}</span>
+                {% endif %}
+                <p><strong>{{ discours.nom_auteur }}</strong><br><span class="text-doux">{{ discours.fonction }}</span></p>
+            </div>
+            <blockquote class="discours__extrait">{{ discours.extrait|linebreaksbr }}</blockquote>
+            <div class="prose">{{ discours.contenu_complet|safe }}</div>
+        </article>
+        {% include "v3/includes/aside_rubrique.html" %}
+    </div>
+</section>
+{% endblock %}
+
