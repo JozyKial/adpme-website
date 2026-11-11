@@ -1,14 +1,62 @@
-{% load ui %}
-{# ADPME Congo — v3/includes/footer.html — v1 (provisoire, remplacé en phase 2 par le footer en colonnes + QR code) #}
-<footer style="background:var(--fond-sombre);color:rgba(255,255,255,.85);padding-block:var(--sp-7);margin-top:var(--sp-8);">
-    <div class="container cluster" style="justify-content:space-between;">
-        <p class="mb-0">&copy; {% now "Y" %} {% if agence %}{{ agence.nom_agence }}{% else %}ADPME{% endif %} — République du Congo</p>
-        {% if agence.phone or agence.email_contact %}
-        <p class="mb-0 cluster">
-            {% if agence.phone %}<span>{% icon "telephone" %} {{ agence.phone }}</span>{% endif %}
-            {% if agence.email_contact %}<span>{% icon "email" %} {{ agence.email_contact }}</span>{% endif %}
-        </p>
-        {% endif %}
+{% load static ui %}
+{% comment %} ADPME Congo — v3/includes/footer.html — v2
+   Footer en colonnes : agence + coordonnées, une colonne par rubrique du menu (adpme/navigation.py),
+   accès directs, QR code vers le site.
+{% endcomment %}
+<footer class="site-footer">
+    <div class="filet-drapeau"></div>
+    <div class="container site-footer__grille">
+
+        <div class="site-footer__agence">
+            <a class="site-footer__logo" href="{% url 'accueil' %}">
+                <img src="{% static 'assets/images/logo/adpme.png' %}" alt="ADPME — accueil" width="160" height="128" loading="lazy">
+            </a>
+            {% if agence.slogan %}<p>{{ agence.slogan }}</p>{% endif %}
+            <ul class="site-footer__contact">
+                {% if agence.adresse %}<li>{% icon "lieu" %}<span>{{ agence.adresse }}</span></li>{% endif %}
+                {% if agence.phone %}<li>{% icon "telephone" %}<a href="tel:{{ agence.phone|tel_lien }}">{{ agence.phone }}</a></li>{% endif %}
+                {% if agence.email_contact %}<li>{% icon "email" %}<a href="mailto:{{ agence.email_contact }}">{{ agence.email_contact }}</a></li>{% endif %}
+                {% if agence.horaires %}<li>{% icon "horloge" %}<span>{{ agence.horaires }}</span></li>{% endif %}
+            </ul>
+            {% if reseaux %}
+            <ul class="site-footer__reseaux">
+                {% for r in reseaux %}
+                <li><a href="{{ r.url }}" target="_blank" rel="noopener" aria-label="{{ r.libelle }} (nouvel onglet)">{% icon r.icone %}</a></li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+
+        {% for rubrique in menu_principal %}{% if rubrique.liens %}
+        <nav class="site-footer__colonne" aria-labelledby="pied-{{ rubrique.id }}">
+            <h2 class="site-footer__titre" id="pied-{{ rubrique.id }}">{{ rubrique.titre }}</h2>
+            <ul>
+                {% for lien in rubrique.liens %}<li><a href="{{ lien.href }}">{{ lien.titre }}</a></li>{% endfor %}
+            </ul>
+        </nav>
+        {% endif %}{% endfor %}
+
+        <nav class="site-footer__colonne" aria-labelledby="pied-acces">
+            <h2 class="site-footer__titre" id="pied-acces">Accès directs</h2>
+            <ul>
+                {% for rubrique in menu_principal %}{% if not rubrique.liens %}<li><a href="{{ rubrique.href }}">{{ rubrique.titre }}</a></li>{% endif %}{% endfor %}
+                <li><a href="{% url 'recherche' %}">Recherche</a></li>
+                <li><a href="{% url 'contact' %}">Contact</a></li>
+            </ul>
+        </nav>
+
+        <div class="site-footer__qr">
+            <h2 class="site-footer__titre">Le site sur mobile</h2>
+            {% qr_svg request.scheme|add:"://"|add:request.get_host|add:"/" label="QR code : adresse du site de l'ADPME" %}
+            <p class="site-footer__qr-texte">Scannez ce code pour ouvrir le site sur votre téléphone.</p>
+        </div>
+    </div>
+
+    <div class="site-footer__bas">
+        <div class="container site-footer__bas-inner">
+            <p>&copy; {% now "Y" %} {% if agence %}{{ agence.nom_agence }}{% else %}ADPME{% endif %} — République du Congo</p>
+            <p><a href="#contenu">Haut de page</a></p>
+        </div>
     </div>
 </footer>
 

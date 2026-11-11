@@ -1,18 +1,103 @@
 {% load static ui %}
-{# ADPME Congo — v3/includes/header.html — v1 (provisoire, remplacé en phase 2 par la barre de contact + méga-menu) #}
+{% comment %} ADPME Congo — v3/includes/header.html — v2
+   Barre de contact + en-tête collant + méga-menu + panneau de recherche.
+   Le contenu du menu se modifie dans adpme/navigation.py, les coordonnées dans l'admin (AgenceInfo).
+{% endcomment %}
 <div class="filet-drapeau"></div>
-<header class="site-header-provisoire">
-    <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:var(--sp-4);min-height:var(--h-header);">
-        <a href="{% url 'accueil' %}" aria-label="ADPME — accueil">
-            <img src="{% static 'assets/images/logo/adpme.png' %}" alt="ADPME" width="160" height="128" style="width:110px;height:auto;">
+
+<div class="topbar">
+    <div class="container topbar__inner">
+        <ul class="topbar__contacts">
+            {% if agence.phone %}
+            <li><a href="tel:{{ agence.phone|tel_lien }}">{% icon "telephone" %}<span>{{ agence.phone }}</span></a></li>
+            {% endif %}
+            {% if agence.email_contact %}
+            <li class="topbar__masquable"><a href="mailto:{{ agence.email_contact }}">{% icon "email" %}<span>{{ agence.email_contact }}</span></a></li>
+            {% endif %}
+            {% if agence.horaires %}
+            <li class="topbar__masquable">{% icon "horloge" %}<span>{{ agence.horaires }}</span></li>
+            {% endif %}
+        </ul>
+        <div class="topbar__droite">
+            {% if agence.whatsapp %}
+            <a class="topbar__whatsapp" href="https://wa.me/{{ agence.whatsapp|wa_lien }}" target="_blank" rel="noopener">
+                {% icon "whatsapp" %}<span>WhatsApp</span>
+            </a>
+            {% endif %}
+            {% if reseaux %}
+            <ul class="topbar__reseaux">
+                {% for r in reseaux %}
+                <li><a href="{{ r.url }}" target="_blank" rel="noopener" aria-label="{{ r.libelle }} (nouvel onglet)">{% icon r.icone %}</a></li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<header class="site-header" data-header>
+    <div class="container site-header__inner">
+        <a class="site-header__logo" href="{% url 'accueil' %}">
+            <img src="{% static 'assets/images/logo/adpme.png' %}" alt="ADPME — Agence de Développement des Très Petites, Petites et Moyennes Entreprises — accueil" width="160" height="128">
         </a>
-        <nav aria-label="Navigation principale" class="cluster text-sm">
-            <a href="{% url 'a_propos' %}">L'agence</a>
-            <a href="{% url 'programme' %}">Programmes</a>
-            <a href="{% url 'actualite' %}">Actualités</a>
-            <a href="{% url 'faq' %}">FAQ</a>
-            <a href="{% url 'contact' %}" class="btn btn--primaire btn--sm">Nous contacter</a>
+
+        <nav class="nav" id="nav-principale" aria-label="Navigation principale">
+            <ul class="nav__liste">
+                {% for rubrique in menu_principal %}
+                <li class="nav__item">
+                    {% if rubrique.liens %}
+                    <button type="button" class="nav__lien{% if rubrique.actif %} est-actif{% endif %}" aria-expanded="false" aria-controls="mega-{{ rubrique.id }}" data-mega-bouton>
+                        {{ rubrique.titre }} {% icon "chevron-bas" %}
+                    </button>
+                    <div class="mega" id="mega-{{ rubrique.id }}" hidden>
+                        <div class="container mega__inner">
+                            <p class="mega__titre">{{ rubrique.titre }}</p>
+                            <ul class="mega__liens">
+                                {% for lien in rubrique.liens %}
+                                <li>
+                                    <a class="mega__lien" href="{{ lien.href }}"{% if lien.actif %} aria-current="page"{% endif %}>
+                                        <span class="mega__icone">{% icon lien.icone %}</span>
+                                        <span>{{ lien.titre }}</span>
+                                    </a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            <div class="mega__aide">
+                                <p class="mega__aide-titre">Besoin d'un renseignement&nbsp;?</p>
+                                {% if agence.phone %}<p><a href="tel:{{ agence.phone|tel_lien }}">{% icon "telephone" %} {{ agence.phone }}</a></p>{% endif %}
+                                {% if agence.email_contact %}<p><a href="mailto:{{ agence.email_contact }}">{% icon "email" %} {{ agence.email_contact }}</a></p>{% endif %}
+                                <a class="btn btn--secondaire btn--sm" href="{% url 'contact' %}">Écrire à l'agence</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <a class="nav__lien" href="{{ rubrique.href }}"{% if rubrique.actif %} aria-current="page"{% endif %}>{{ rubrique.titre }}</a>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+            <a class="btn btn--primaire btn--bloc nav__contact-mobile" href="{% url 'contact' %}">Nous contacter</a>
         </nav>
+
+        <div class="site-header__actions">
+            <button type="button" class="bouton-icone" aria-expanded="false" aria-controls="recherche-panneau" data-recherche-bouton>
+                {% icon "recherche" %}<span class="sr-only">Rechercher sur le site</span>
+            </button>
+            <a class="btn btn--primaire site-header__contact" href="{% url 'contact' %}">Nous contacter</a>
+            <button type="button" class="bouton-icone site-header__burger" aria-expanded="false" aria-controls="nav-principale" data-burger>
+                <span class="site-header__burger-ouvrir">{% icon "menu" %}</span>
+                <span class="site-header__burger-fermer">{% icon "fermer" %}</span>
+                <span>Menu</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="recherche-panneau" id="recherche-panneau" hidden>
+        <form class="container recherche-form" action="{% url 'recherche' %}" method="get" role="search">
+            <label class="sr-only" for="q-entete">Rechercher sur le site</label>
+            <input class="input" id="q-entete" type="search" name="q" placeholder="Rechercher une page, une actualité, une question…" minlength="2" maxlength="100" required>
+            <button type="submit" class="btn btn--primaire">{% icon "recherche" %}<span>Rechercher</span></button>
+        </form>
     </div>
 </header>
 

@@ -16,6 +16,8 @@ class AgenceInfo(models.Model):
     adresse         = models.CharField(max_length=100, blank=True, null=True)
     phone           = models.CharField(max_length=50, blank=True, null=True)
     email_contact   = models.EmailField(blank=True, null=True)
+    whatsapp        = models.CharField(max_length=30, blank=True, null=True,help_text="Numéro WhatsApp au format international, ex. +242 06 000 00 00. Laisser vide pour masquer le bouton WhatsApp.")
+    horaires        = models.CharField(max_length=120, blank=True, null=True,help_text="Ex. : Lundi – vendredi, 8h – 16h. Laisser vide pour ne rien afficher.")
     liens_sociaux   = models.JSONField(blank=True, null=True, help_text="Ex: {'facebook':'url','linkedin':'url'}")
     carte_embed_url = models.URLField(blank=True, null=True, help_text="URL d'intégration Google Maps")
 

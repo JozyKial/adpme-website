@@ -1,14 +1,7 @@
 # ==========================================================================
 # ADPME Congo — templatetags/ui.py — v1
-# Balises de gabarit pour l'interface v3.
-#   {% load ui %}
-#   {% icon "telephone" %}                       -> icône décorative
-#   {% icon "recherche" label="Rechercher" %}    -> icône porteuse de sens
-#   {% icon "fleche-droite" classe="mon-style" %}
-# Icônes au trait (grille 24x24), tracés inspirés de Lucide (licence ISC).
-# Pour ajouter une icône : ajouter une entrée dans ICONES (ou ICONES_PLEINES
-# pour les logos remplis).
 # ==========================================================================
+from functools import lru_cache
 from django import template
 from django.utils.html import format_html, mark_safe
 
@@ -87,4 +80,34 @@ def tel_lien(numero):
     if not numero:
         return ""
     return "".join(c for c in str(numero) if c.isdigit() or c == "+")
+
+
+
+
+@register.filter
+def wa_lien(numero):
+    """'+242 06 123 45 67' -> '242061234567' (format attendu par https://wa.me/)."""
+    return "".join(c for c in str(numero or "") if c.isdigit())
+
+
+@lru_cache(maxsize=32)
+def _qr_svg(donnees):
+    import segno
+    return segno.make(donnees, error="m").svg_inline(
+        scale=1, border=2, dark="#17201a", light="#ffffff",
+        omitsize=True, svgclass="qr__svg", lineclass=None,
+    )
+
+
+@register.simple_tag
+def qr_svg(donnees, label="QR code"):
+    """QR code en SVG (net à toutes les tailles). Vide si segno n'est pas installé."""
+    if not donnees:
+        return ""
+    try:
+        svg = _qr_svg(str(donnees))
+    except ImportError:
+        return ""
+    return format_html('<span class="qr" role="img" aria-label="{}">{}</span>', label, mark_safe(svg))
+
 

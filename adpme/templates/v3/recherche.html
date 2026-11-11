@@ -1,0 +1,63 @@
+{% extends "v3/base.html" %}
+{% load ui %}
+{# ADPME Congo — v3/recherche.html — v1 : résultats de recherche (pages, actualités, FAQ) #}
+
+{% block title %}{% if q %}Recherche : {{ q }}{% else %}Recherche{% endif %} — ADPME Congo{% endblock %}
+{% block extra_head %}<meta name="robots" content="noindex, follow">{% endblock %}
+
+{% block page_hero %}
+{% include "v3/components/page_hero.html" with titre="Rechercher sur le site" %}
+{% endblock %}
+
+{% block content %}
+<section class="section section--compacte">
+    <div class="container">
+        <form class="recherche-form recherche-form--page" action="{% url 'recherche' %}" method="get" role="search">
+            <label class="sr-only" for="q-page">Rechercher sur le site</label>
+            <input class="input" id="q-page" type="search" name="q" value="{{ q }}" placeholder="Rechercher une page, une actualité, une question…" minlength="2" maxlength="100" required>
+            <button type="submit" class="btn btn--primaire">{% icon "recherche" %}<span>Rechercher</span></button>
+        </form>
+
+        {% if q %}
+        <p class="recherche-resume" role="status">
+            {% if total %}{{ total }} résultat{{ total|pluralize }} pour « <strong>{{ q }}</strong> »{% else %}Aucun résultat pour « <strong>{{ q }}</strong> ».{% endif %}
+        </p>
+        {% endif %}
+
+        {% if pages %}
+        <h2 class="recherche-titre">Pages</h2>
+        <div class="grid grid--3">
+            {% for p in pages %}
+            {% include "v3/components/tuile.html" with titre=p.titre desc=p.rubrique url=p.href icone=p.icone %}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if actualites %}
+        <h2 class="recherche-titre">Actualités</h2>
+        <div class="grid grid--3">
+            {% for post in actualites %}{% include "v3/components/card_actualite.html" %}{% endfor %}
+        </div>
+        {% endif %}
+
+        {% if faqs %}
+        <h2 class="recherche-titre">Questions fréquentes</h2>
+        <div class="accordion container--etroit" style="margin-inline:0;padding:0;">
+            {% for faq in faqs %}{% include "v3/components/accordion_item.html" with question=faq.question reponse=faq.reponse %}{% endfor %}
+        </div>
+        {% endif %}
+
+        {% if q and not total %}
+        <div class="etat-vide mt-6">
+            <p>Essayez un autre mot, ou consultez directement :</p>
+            <p class="cluster" style="justify-content:center;">
+                <a class="btn btn--contour btn--sm" href="{% url 'faq' %}">La FAQ</a>
+                <a class="btn btn--contour btn--sm" href="{% url 'actualite' %}">Les actualités</a>
+                <a class="btn btn--primaire btn--sm" href="{% url 'contact' %}">Nous contacter</a>
+            </p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+

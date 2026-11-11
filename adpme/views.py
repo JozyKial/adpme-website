@@ -2,7 +2,7 @@ import logging
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.http import FileResponse, Http404, HttpResponse
-from django.db.models import F
+from django.db.models import F, Q
 from .models import (
     BlogActualite,
     Category,
@@ -171,5 +171,43 @@ def StyleguideView(request):
     }
     return render(request, "v3/styleguide.html", context)
 
+
+
+
+# ── Refonte v3 : recherche (version simple, enrichie en phase 5) ──────
+def RechercheView(request):
+    """Recherche dans les pages du menu, les actualités publiées et la FAQ."""
+    from .navigation import MENU_PRINCIPAL
+
+    q = request.GET.get('q', '').strip()[:100]
+    pages, actualites, faqs = [], [], []
+
+    if len(q) >= 2:
+        terme = q.lower()
+        for rubrique in MENU_PRINCIPAL:
+            for lien in rubrique.get('liens', [rubrique]):
+                if terme in lien['titre'].lower() or terme in rubrique['titre'].lower():
+                    pages.append({
+                        'titre': lien['titre'],
+                        'rubrique': rubrique['titre'] if 'liens' in rubrique else '',
+                        'href': reverse(lien['url']),
+                        'icone': lien.get('icone', 'document'),
+                    })
+        actualites = (BlogActualite.objects
+                      .filter(published=True)
+                      .filter(Q(title__icontains=q) | Q(content__icontains=q))
+                      .select_related('category')[:12])
+        faqs = (FAQ.objects
+                .filter(active=True)
+                .filter(Q(question__icontains=q) | Q(reponse__icontains=q))[:10])
+
+    context = {
+        'q': q,
+        'pages': pages,
+        'actualites': actualites,
+        'faqs': faqs,
+        'total': len(pages) + len(actualites) + len(faqs),
+    }
+    return render(request, 'v3/recherche.html', context)
 
 

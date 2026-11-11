@@ -18,7 +18,7 @@ class AgenceInfoAdmin(admin.ModelAdmin):
             'fields': ('mission', 'vision', 'valeurs')
         }),
         ('Coordonnées', {
-            'fields': ('adresse', 'phone', 'email_contact', 'carte_embed_url')
+            'fields': ('adresse', 'phone', 'whatsapp', 'email_contact', 'horaires', 'carte_embed_url')
         }),
         ('Réseaux sociaux', {
             'description': 'Format JSON : {"facebook": "https://...", "linkedin": "https://..."}',
