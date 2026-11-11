@@ -1,0 +1,48 @@
+{% extends "v3/base.html" %}
+{% load ui %}
+{# ADPME Congo — v3/documents.html — v1 : documents à télécharger (admin > Documents) #}
+
+{% block title %}Documents à télécharger — ADPME Congo{% endblock %}
+{% block meta_description %}Textes, guides pratiques, formulaires et rapports de l'ADPME à télécharger.{% endblock %}
+
+{% block page_hero %}
+{% url 'faq' as url_faq %}
+{% include "v3/components/page_hero.html" with titre="Documents à télécharger" intro="Textes, guides pratiques, formulaires et rapports publiés par l'agence." parent_titre="Ressources" parent_url=url_faq %}
+{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container layout-sidebar">
+        <div>
+            {% if categories|length > 1 %}
+            <nav class="filtres" aria-label="Filtrer par catégorie">
+                <a href="{% url 'documents' %}"{% if not categorie_active %} aria-current="page"{% endif %}>Tous</a>
+                {% for cle, nom in categories %}
+                <a href="{% url 'documents' %}?categorie={{ cle }}"{% if categorie_active == cle %} aria-current="page"{% endif %}>{{ nom }}</a>
+                {% endfor %}
+            </nav>
+            {% endif %}
+
+            {% if documents %}
+            <ul class="doc-liste">
+                {% for doc in documents %}
+                <li class="doc">
+                    <span class="doc__type">{{ doc.extension|default:"—" }}</span>
+                    <span class="doc__infos">
+                        <a class="doc__titre" href="{{ doc.fichier.url }}" target="_blank" rel="noopener">{{ doc.titre }}</a>
+                        {% if doc.description %}<span class="doc__desc">{{ doc.description }}</span>{% endif %}
+                        <span class="doc__meta">{{ doc.get_categorie_display }} · {{ doc.date_publication|date:"j F Y" }}{% if doc.taille %} · {{ doc.taille }}{% endif %}</span>
+                    </span>
+                    {% icon "telecharger" %}
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="etat-vide">Aucun document publié pour le moment.</p>
+            {% endif %}
+        </div>
+        {% include "v3/includes/aside_rubrique.html" %}
+    </div>
+</section>
+{% endblock %}
+

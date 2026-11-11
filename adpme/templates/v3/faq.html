@@ -1,0 +1,40 @@
+{% extends "v3/base.html" %}
+{% load ui %}
+{# ADPME Congo — v3/faq.html — v1 : questions fréquentes (admin > FAQ) avec filtre instantané #}
+
+{% block title %}Questions fréquentes — ADPME Congo{% endblock %}
+{% block meta_description %}Les réponses aux questions les plus posées à l'ADPME : services, programmes, accompagnement des entrepreneurs.{% endblock %}
+
+{% block page_hero %}
+{% url 'faq' as url_faq %}
+{% include "v3/components/page_hero.html" with titre="Questions fréquentes" intro="Les réponses aux questions les plus souvent posées à l'agence." parent_titre="Ressources" parent_url=url_faq %}
+{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container layout-sidebar">
+        <div>
+            {% if faqs %}
+            <div class="faq-filtre">
+                <label for="faq-filtre">Rechercher dans les questions</label>
+                <input class="input" id="faq-filtre" type="search" placeholder="Ex. : formation, financement…" data-faq-filtre>
+                <p class="text-sm text-doux" role="status" data-faq-statut></p>
+            </div>
+            <div class="accordion" data-faq-liste>
+                {% for faq in faqs %}
+                <div data-faq-item>{% include "v3/components/accordion_item.html" with question=faq.question reponse=faq.reponse ouvert=forloop.first %}</div>
+                {% endfor %}
+            </div>
+            <div class="etat-vide mt-6" hidden data-faq-vide>
+                <p>Aucune question ne correspond. Posez-nous directement votre question :</p>
+                <a class="btn btn--primaire btn--sm" href="{% url 'contact' %}">Nous contacter</a>
+            </div>
+            {% else %}
+            <p class="etat-vide">Les questions fréquentes seront bientôt publiées.</p>
+            {% endif %}
+        </div>
+        {% include "v3/includes/aside_rubrique.html" %}
+    </div>
+</section>
+{% endblock %}
+

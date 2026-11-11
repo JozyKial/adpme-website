@@ -4,6 +4,8 @@ from django.template.defaultfilters import slugify
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 from ckeditor_uploader.fields import RichTextUploadingField
+from django.core.validators import FileExtensionValidator
+
 
 User = get_user_model()
 
@@ -278,4 +280,74 @@ class Page(models.Model):
     def __str__(self):
         return self.titre
 
-    
+
+
+
+# ==========================================================================
+# Refonte v3 — Phase 4b : antennes et documents téléchargeables
+# ==========================================================================
+
+class Antenne(models.Model):
+    nom         = models.CharField(max_length=150, verbose_name="Nom", help_text="Ex. : Antenne de Pointe-Noire")
+    ville       = models.CharField(max_length=100, verbose_name="Ville ou département")
+    adresse     = models.CharField(max_length=255, blank=True, verbose_name="Adresse")
+    telephone   = models.CharField(max_length=40, blank=True, verbose_name="Téléphone")
+    email       = models.EmailField(blank=True, verbose_name="E-mail")
+    horaires    = models.CharField(max_length=120, blank=True, verbose_name="Horaires")
+    lien_carte  = models.URLField(blank=True, verbose_name="Lien Google Maps",
+                                  help_text="Lien « Partager » de Google Maps (ouvre l'itinéraire).")
+    ordre       = models.PositiveIntegerField(default=0, verbose_name="Ordre")
+    actif       = models.BooleanField(default=True, verbose_name="Affichée")
+
+    class Meta:
+        ordering            = ["ordre", "nom"]
+        verbose_name        = "Antenne"
+        verbose_name_plural = "Antennes"
+
+    def __str__(self):
+        return self.nom
+
+
+class Document(models.Model):
+    CATEGORIES = [
+        ("textes", "Textes juridiques et réglementaires"),
+        ("guides", "Guides pratiques"),
+        ("formulaires", "Formulaires"),
+        ("rapports", "Rapports et études"),
+        ("autres", "Autres documents"),
+    ]
+
+    titre       = models.CharField(max_length=255, verbose_name="Titre")
+    description = models.CharField(max_length=300, blank=True, verbose_name="Description courte")
+    categorie   = models.CharField(max_length=20, choices=CATEGORIES, default="autres", verbose_name="Catégorie")
+    fichier     = models.FileField(
+        upload_to="documents/%Y/", verbose_name="Fichier",
+        validators=[FileExtensionValidator(["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "odt", "ods", "zip"])],
+        help_text="PDF conseillé. Formats acceptés : PDF, Word, Excel, PowerPoint, OpenDocument, ZIP.")
+    date_publication = models.DateField(default=timezone.now, verbose_name="Date de publication")
+    actif       = models.BooleanField(default=True, verbose_name="Publié")
+
+    class Meta:
+        ordering            = ["-date_publication", "titre"]
+        verbose_name        = "Document"
+        verbose_name_plural = "Documents"
+
+    def __str__(self):
+        return self.titre
+
+    @property
+    def extension(self):
+        return self.fichier.name.rsplit(".", 1)[-1].upper() if "." in self.fichier.name else ""
+
+    @property
+    def taille(self):
+        """Taille lisible (ex. « 1,2 Mo ») ; vide si le fichier est introuvable."""
+        try:
+            octets = self.fichier.size
+        except (OSError, ValueError):
+            return ""
+        for unite in ("o", "Ko", "Mo", "Go"):
+            if octets < 1024 or unite == "Go":
+                return f"{octets:.0f} {unite}" if unite == "o" else f"{octets:.1f} {unite}".replace(".", ",")
+            octets /= 1024
+

@@ -1,5 +1,5 @@
 # ==========================================================================
-# ADPME Congo — navigation.py — v3
+# ADPME Congo — navigation.py — v4
 # Menu principal du site : C'EST ICI qu'on modifie le méga-menu ET les
 # colonnes du footer (une seule source pour les deux).
 #
@@ -33,7 +33,15 @@ MENU_PRINCIPAL = [
     {"id": "programmes", "titre": "Programmes", "url": "programme", "icone": "drapeau"},
     {"id": "actualites", "titre": "Actualités", "url": "actualite", "icone": "calendrier",
      "aussi": ("actu_detail",)},
-    {"id": "faq", "titre": "FAQ", "url": "faq", "icone": "question"},
+
+    {
+        "id": "ressources",
+        "titre": "Ressources",
+        "liens": [
+            {"titre": "Questions fréquentes", "url": "faq", "icone": "question"},
+            {"titre": "Documents à télécharger", "url": "documents", "icone": "document"},
+        ],
+    },
 ]
 
 

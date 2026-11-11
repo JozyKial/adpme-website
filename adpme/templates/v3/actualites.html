@@ -1,0 +1,35 @@
+{% extends "v3/base.html" %}
+{% load ui %}
+{# ADPME Congo — v3/actualites.html — v1 : liste des actualités, filtre par catégorie #}
+
+{% block title %}{% if categorie_active %}{{ categorie_active.name }} — {% endif %}Actualités{% if posts.number > 1 %} (page {{ posts.number }}){% endif %} — ADPME Congo{% endblock %}
+{% block meta_description %}Les actualités de l'ADPME : programmes, formations, événements et accompagnement des entrepreneurs en République du Congo.{% endblock %}
+
+{% block page_hero %}
+{% include "v3/components/page_hero.html" with titre="Actualités" intro="Les nouvelles de l'agence : programmes, formations, événements et rencontres avec les entrepreneurs." %}
+{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        {% if categories|length > 1 %}
+        <nav class="filtres" aria-label="Filtrer par catégorie">
+            <a href="{% url 'actualite' %}"{% if not categorie_active %} aria-current="page"{% endif %}>Toutes</a>
+            {% for c in categories %}
+            <a href="{% url 'actualite' %}?categorie={{ c.slug }}"{% if categorie_active.pk == c.pk %} aria-current="page"{% endif %}>{{ c.name }}</a>
+            {% endfor %}
+        </nav>
+        {% endif %}
+
+        {% if posts %}
+        <div class="grid grid--3">
+            {% for post in posts %}{% include "v3/components/card_actualite.html" %}{% endfor %}
+        </div>
+        {% include "v3/components/pagination.html" with page=posts %}
+        {% else %}
+        <p class="etat-vide">Aucune actualité publiée{% if categorie_active %} dans cette catégorie{% endif %} pour le moment.</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+

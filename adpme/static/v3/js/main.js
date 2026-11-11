@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ADPME Congo — main.js — v3
+   ADPME Congo — main.js — v4
    JavaScript maison, sans dépendance. Chaque fonction s'active seulement si
    l'élément HTML correspondant (attribut data-…) est présent sur la page.
    ========================================================================== */
@@ -203,12 +203,64 @@
     });
   }
 
+  /* ── FAQ : filtre instantané des questions ─────────────────────────── */
+  function initFiltreFaq() {
+    var champ = document.querySelector("[data-faq-filtre]");
+    if (!champ) return;
+    var items = Array.prototype.slice.call(document.querySelectorAll("[data-faq-item]"));
+    var statut = document.querySelector("[data-faq-statut]");
+    var vide = document.querySelector("[data-faq-vide]");
+
+    function normaliser(texte) {
+      return texte.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    }
+    var textes = items.map(function (item) { return normaliser(item.textContent); });
+
+    champ.addEventListener("input", function () {
+      var terme = normaliser(champ.value.trim());
+      var visibles = 0;
+      items.forEach(function (item, i) {
+        var garde = !terme || textes[i].indexOf(terme) !== -1;
+        item.hidden = !garde;
+        if (garde) visibles++;
+        var details = item.querySelector("details");
+        if (details && terme) details.open = garde && visibles <= 3;
+      });
+      if (statut) statut.textContent = terme ? visibles + " question(s) trouvée(s)" : "";
+      if (vide) vide.hidden = visibles > 0;
+    });
+  }
+
+  /* ── Bouton « Copier le lien » ─────────────────────────────────────── */
+  function initCopierLien() {
+    document.querySelectorAll("[data-copier]").forEach(function (bouton) {
+      bouton.addEventListener("click", function () {
+        var texte = bouton.querySelector("[data-copier-texte]");
+        var lien = bouton.getAttribute("data-copier");
+        function confirmer(message) {
+          if (!texte) return;
+          var initial = texte.textContent;
+          texte.textContent = message;
+          window.setTimeout(function () { texte.textContent = initial; }, 2000);
+        }
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(lien).then(function () { confirmer("Lien copié !"); },
+                                                   function () { confirmer("Copie impossible"); });
+        } else {
+          window.prompt("Copiez ce lien :", lien);
+        }
+      });
+    });
+  }
+
   /* ── Démarrage ─────────────────────────────────────────────────────── */
   function init() {
     initAlertes();
     initDefilement();
     initEntete();
     initCarrousel();
+    initFiltreFaq();
+    initCopierLien();
   }
 
   if (document.readyState === "loading") {

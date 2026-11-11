@@ -1,0 +1,69 @@
+{% extends "v3/base.html" %}
+{% load ui %}
+{# ADPME Congo — v3/actualite_detail.html — v1 : article d'actualité #}
+
+{% block title %}{{ post.title }} — ADPME Congo{% endblock %}
+{% block meta_description %}{{ post.content|striptags|truncatechars:160 }}{% endblock %}
+{% block og_type %}article{% endblock %}
+{% block og_title %}{{ post.title }}{% endblock %}
+{% block og_description %}{{ post.content|striptags|truncatechars:200 }}{% endblock %}
+{% block og_image %}{% if post.image %}{{ request.scheme }}://{{ request.get_host }}{{ post.image.url }}{% else %}{{ block.super }}{% endif %}{% endblock %}
+{% block twitter_title %}{{ post.title }}{% endblock %}
+{% block twitter_description %}{{ post.content|striptags|truncatechars:200 }}{% endblock %}
+{% block twitter_image %}{% if post.image %}{{ request.scheme }}://{{ request.get_host }}{{ post.image.url }}{% else %}{{ block.super }}{% endif %}{% endblock %}
+
+{% block page_hero %}
+<section class="page-hero page-hero--article">
+    <div class="container container--etroit">
+        <nav class="breadcrumb" aria-label="Fil d'Ariane">
+            <ol>
+                <li><a href="{% url 'accueil' %}">Accueil</a></li>
+                <li><a href="{% url 'actualite' %}">Actualités</a></li>
+                <li><span aria-current="page">{{ post.title|truncatechars:50 }}</span></li>
+            </ol>
+        </nav>
+        <p class="article__meta">
+            {% if post.category %}<a class="badge badge--violet" href="{% url 'actualite' %}?categorie={{ post.category.slug }}">{{ post.category.name }}</a>{% endif %}
+            <span>{% icon "calendrier" %} <time datetime="{{ post.date_publication|date:'Y-m-d' }}">{{ post.date_publication|date:"j F Y" }}</time></span>
+            {% if not post.published %}<span class="badge badge--alerte">Brouillon (visible par l'équipe uniquement)</span>{% endif %}
+        </p>
+        <h1>{{ post.title }}</h1>
+    </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<article class="section">
+    <div class="container container--etroit">
+        {% if post.image %}
+        <figure class="article__image"><img src="{{ post.image.url }}" alt="" fetchpriority="high"></figure>
+        {% endif %}
+        <div class="prose article__contenu">{{ post.content|safe }}</div>
+
+        <div class="partage" aria-labelledby="partage-titre">
+            <p class="partage__titre" id="partage-titre">Partager cet article</p>
+            <ul class="partage__liens">
+                <li><a href="https://www.facebook.com/sharer/sharer.php?u={{ url_absolue|urlencode }}" target="_blank" rel="noopener" aria-label="Partager sur Facebook (nouvel onglet)">{% icon "facebook" %}</a></li>
+                <li><a href="https://wa.me/?text={{ post.title|urlencode }}%20{{ url_absolue|urlencode }}" target="_blank" rel="noopener" aria-label="Partager sur WhatsApp (nouvel onglet)">{% icon "whatsapp" %}</a></li>
+                <li><a href="https://www.linkedin.com/sharing/share-offsite/?url={{ url_absolue|urlencode }}" target="_blank" rel="noopener" aria-label="Partager sur LinkedIn (nouvel onglet)">{% icon "linkedin" %}</a></li>
+                <li><a href="https://twitter.com/intent/tweet?url={{ url_absolue|urlencode }}&amp;text={{ post.title|urlencode }}" target="_blank" rel="noopener" aria-label="Partager sur X (nouvel onglet)">{% icon "x-twitter" %}</a></li>
+                <li><button type="button" class="partage__copier" data-copier="{{ url_absolue }}">{% icon "lien-externe" %}<span data-copier-texte>Copier le lien</span></button></li>
+            </ul>
+        </div>
+
+        <p class="mt-6"><a class="btn btn--lien" href="{% url 'actualite' %}"><span class="icon-retour">{% icon "fleche-droite" %}</span> Toutes les actualités</a></p>
+    </div>
+</article>
+
+{% if lies %}
+<section class="section section--alt" aria-labelledby="titre-lies">
+    <div class="container">
+        {% include "v3/components/section_header.html" with surtitre="À lire aussi" titre="D'autres actualités" id="titre-lies" %}
+        <div class="grid grid--3">
+            {% for post in lies %}{% include "v3/components/card_actualite.html" %}{% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}
+

@@ -1,0 +1,97 @@
+{% extends "v3/base.html" %}
+{% load ui %}
+{% comment %} ADPME Congo — v3/contact.html — v1
+   Formulaire (ContactForm) + coordonnées (admin > Informations de l'agence) + carte + antennes (admin > Antennes).
+{% endcomment %}
+
+{% block title %}Contact — ADPME Congo{% endblock %}
+{% block meta_description %}Contactez l'ADPME à Brazzaville : formulaire, téléphone, adresse et horaires d'accueil.{% endblock %}
+
+{% block page_hero %}
+{% include "v3/components/page_hero.html" with titre="Nous contacter" intro="Une question, un projet ? Écrivez-nous ou venez nous rencontrer." %}
+{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container contact">
+        <div class="contact__formulaire">
+            <h2>Écrire à l'agence</h2>
+            <p class="text-doux">Les champs marqués d'un <span class="requis" aria-hidden="true">*</span> sont obligatoires.</p>
+            <form class="form" method="post" action="{% url 'contact' %}" novalidate>
+                {% csrf_token %}
+                {% if form.non_field_errors %}<div class="alert alert--error" role="alert"><p>{{ form.non_field_errors|join:" " }}</p></div>{% endif %}
+                <div class="form__ligne">
+                    {% include "v3/components/form_field.html" with field=form.nom %}
+                    {% include "v3/components/form_field.html" with field=form.email %}
+                </div>
+                {% include "v3/components/form_field.html" with field=form.sujet %}
+                {% include "v3/components/form_field.html" with field=form.message %}
+                <div class="champ-piege" aria-hidden="true">
+                    <label for="site_web">Ne pas remplir ce champ</label>
+                    <input type="text" id="site_web" name="site_web" tabindex="-1" autocomplete="off">
+                </div>
+                <div><button type="submit" class="btn btn--primaire btn--lg">{% icon "message" %} Envoyer le message</button></div>
+            </form>
+        </div>
+
+        <aside class="contact__coordonnees" aria-labelledby="titre-coordonnees">
+            <h2 id="titre-coordonnees">Coordonnées</h2>
+            <ul class="coordonnees">
+                {% if agence.adresse %}
+                <li>{% icon "lieu" %}<div><strong>Adresse</strong><span>{{ agence.adresse }}</span></div></li>
+                {% endif %}
+                {% if agence.phone %}
+                <li>{% icon "telephone" %}<div><strong>Téléphone</strong><a href="tel:{{ agence.phone|tel_lien }}">{{ agence.phone }}</a></div></li>
+                {% endif %}
+                {% if agence.whatsapp %}
+                <li>{% icon "whatsapp" %}<div><strong>WhatsApp</strong><a href="https://wa.me/{{ agence.whatsapp|wa_lien }}" target="_blank" rel="noopener">{{ agence.whatsapp }}</a></div></li>
+                {% endif %}
+                {% if agence.email_contact %}
+                <li>{% icon "email" %}<div><strong>E-mail</strong><a href="mailto:{{ agence.email_contact }}">{{ agence.email_contact }}</a></div></li>
+                {% endif %}
+                {% if agence.horaires %}
+                <li>{% icon "horloge" %}<div><strong>Horaires d'accueil</strong><span>{{ agence.horaires }}</span></div></li>
+                {% endif %}
+            </ul>
+            {% if reseaux %}
+            <p class="contact__reseaux-titre">Suivez l'agence</p>
+            <ul class="contact__reseaux">
+                {% for r in reseaux %}
+                <li><a href="{{ r.url }}" target="_blank" rel="noopener" aria-label="{{ r.libelle }} (nouvel onglet)">{% icon r.icone %}</a></li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </aside>
+    </div>
+</section>
+
+{% if agence.carte_embed_url %}
+<section class="carte" aria-label="Plan d'accès">
+    <iframe src="{{ agence.carte_embed_url }}" title="Plan d'accès à la Direction générale de l'ADPME" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+</section>
+{% endif %}
+
+{% if antennes %}
+<section class="section section--alt" aria-labelledby="titre-antennes">
+    <div class="container">
+        {% include "v3/components/section_header.html" with surtitre="Près de chez vous" titre="Nos antennes" id="titre-antennes" %}
+        <div class="grid grid--3">
+            {% for a in antennes %}
+            <article class="antenne">
+                <h3 class="antenne__nom">{{ a.nom }}</h3>
+                <p class="antenne__ville">{% icon "lieu" %} {{ a.ville }}</p>
+                <ul class="coordonnees coordonnees--compactes">
+                    {% if a.adresse %}<li>{% icon "batiment" %}<span>{{ a.adresse }}</span></li>{% endif %}
+                    {% if a.telephone %}<li>{% icon "telephone" %}<a href="tel:{{ a.telephone|tel_lien }}">{{ a.telephone }}</a></li>{% endif %}
+                    {% if a.email %}<li>{% icon "email" %}<a href="mailto:{{ a.email }}">{{ a.email }}</a></li>{% endif %}
+                    {% if a.horaires %}<li>{% icon "horloge" %}<span>{{ a.horaires }}</span></li>{% endif %}
+                </ul>
+                {% if a.lien_carte %}<a class="btn btn--contour btn--sm" href="{{ a.lien_carte }}" target="_blank" rel="noopener">Itinéraire {% icon "lien-externe" %}</a>{% endif %}
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}
+

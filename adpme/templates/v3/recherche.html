@@ -1,6 +1,6 @@
 {% extends "v3/base.html" %}
 {% load ui %}
-{# ADPME Congo — v3/recherche.html — v1 : résultats de recherche (pages, actualités, FAQ) #}
+{# ADPME Congo — v3/recherche.html — v2 : résultats de recherche (pages, actualités, FAQ) #}
 
 {% block title %}{% if q %}Recherche : {{ q }}{% else %}Recherche{% endif %} — ADPME Congo{% endblock %}
 {% block extra_head %}<meta name="robots" content="noindex, follow">{% endblock %}
@@ -45,6 +45,22 @@
         <div class="accordion container--etroit" style="margin-inline:0;padding:0;">
             {% for faq in faqs %}{% include "v3/components/accordion_item.html" with question=faq.question reponse=faq.reponse %}{% endfor %}
         </div>
+        {% endif %}
+
+        {% if documents %}
+            <h2 class="recherche-titre">Documents</h2>
+            <ul class="doc-liste">
+                {% for doc in documents %}
+                <li class="doc">
+                    <span class="doc__type">{{ doc.extension|default:"—" }}</span>
+                    <span class="doc__infos">
+                        <a class="doc__titre" href="{{ doc.fichier.url }}" target="_blank" rel="noopener">{{ doc.titre }}</a>
+                        <span class="doc__meta">{{ doc.get_categorie_display }} · {{ doc.date_publication|date:"j F Y" }}</span>
+                    </span>
+                    {% icon "telecharger" %}
+                </li>
+                {% endfor %}
+            </ul>
         {% endif %}
 
         {% if q and not total %}

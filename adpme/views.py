@@ -8,7 +8,8 @@ from .models import (
     Category,
     FAQ, Discours,
     Slide, Programme, Parcours, ChiffreCle, Partenaire,
-    Page,
+    Page, Antenne, Document,
+
 )
 
 from django.core.mail import send_mail
@@ -50,36 +51,48 @@ def Categorie(request, slug):
 
     return render(request,"adpme/categorie.html", context)
 
-
 def Blog_detail(request, slug):
-    post        = get_object_or_404(BlogActualite, blog_slug=slug)
-    posts       = BlogActualite.objects.filter(published=True).exclude(id=post.id).order_by('-created_on')[:5]
-    cat         = Category.objects.filter(category__published=True).distinct()
+    """Article d'actualité. Un brouillon n'est visible que par l'équipe (connectée à l'admin)."""
+    articles = BlogActualite.objects.select_related('category', 'author')
+    if not request.user.is_staff:
+        articles = articles.filter(published=True)
+    post = get_object_or_404(articles, blog_slug=slug)
 
+    lies = (BlogActualite.objects.filter(published=True, category=post.category)
+            .exclude(id=post.id).order_by('-date_publication')[:3])
+    if not lies:
+        lies = BlogActualite.objects.filter(published=True).exclude(id=post.id).order_by('-date_publication')[:3]
 
     context = {
-        'posts' : posts,
-        'cat'   : cat,
-        'post'  : post
+        'post': post,
+        'lies': lies,
+        'url_absolue': request.build_absolute_uri(),
     }
-
-    return render(request, "adpme/detail_actualite.html", context)
+    return render(request, "v3/actualite_detail.html", context)
 
 
 def ActualiteView(request):
-    posts_list = BlogActualite.objects.filter(published=True).order_by('-created_on')
-    cat        = Category.objects.filter(category__published=True).distinct()
+    """Liste des actualités publiées, filtrable par catégorie (?categorie=slug)."""
+    posts_list  = (BlogActualite.objects.filter(published=True)
+                   .select_related('category')
+                   .order_by('-date_publication', '-id'))
+    categories  = Category.objects.filter(category__published=True).distinct().order_by('name')
 
-    paginator   = Paginator(posts_list, 6)
-    page        = request.GET.get('page', 1)
-    posts       = paginator.get_page(page)   
+    categorie_active = None
+    slug = request.GET.get('categorie')
+    if slug:
+        categorie_active = categories.filter(slug=slug).first()
+        if categorie_active:
+            posts_list = posts_list.filter(category=categorie_active)
 
+    posts = Paginator(posts_list, 9).get_page(request.GET.get('page', 1))
     context = {
-        'cat'   : cat,
-        'posts' : posts,
+        'posts': posts,
+        'categories': categories,
+        'categorie_active': categorie_active,
+        'qs_extra': f"&categorie={categorie_active.slug}" if categorie_active else "",
     }
-
-    return render(request,"adpme/actualite.html", context)
+    return render(request, "v3/actualites.html", context)
 
 
 def _page_contenu(request, cle, ancien_gabarit, rubrique_id, extra=None):
@@ -127,11 +140,16 @@ def ProgrammeDetailView(request, slug):
 def BlogActualiteView(request):
     return render(request,"adpme/BlogActualite.html")
 
-logger = logging.getLogger(__name__)
+
 def ContactView(request):
     form = ContactForm()
 
     if request.method == 'POST':
+        # Piège à robots : ce champ est invisible pour les humains.
+        if request.POST.get('site_web'):
+            messages.success(request, "Votre message a bien été envoyé.")
+            return redirect('contact')
+
         form = ContactForm(request.POST)
         if form.is_valid():
             nom             = form.cleaned_data['nom']
@@ -147,18 +165,44 @@ def ContactView(request):
                     recipient_list  = [settings.CONTACT_EMAIL],
                     fail_silently   = False,
                 )
-                messages.success(request, "votre message a bien été envoyé. Nous répondrons dans les plus brefs délais.")
-                form = ContactForm()
+                messages.success(request, "Votre message a bien été envoyé. Nous vous répondrons dans les plus brefs délais.")
+                return redirect('contact')
             except Exception as e:
                 logger.error(f"Erreur envoi email contact : {e}")
                 messages.error(request, "Une erreur est survenue lors de l'envoi. Veuillez réessayer ou nous contacter directement par téléphone.")
 
-    return render(request, "adpme/contact.html",{'form':form})
+    context = {
+        'form': form,
+        'antennes': Antenne.objects.filter(actif=True),
+    }
+    return render(request, "v3/contact.html", context)
 
 
 def FaqView(request):
     faqs = FAQ.objects.filter(active=True)
-    return render(request, "adpme/faq.html", {'faqs':faqs})
+    return render(request, "v3/faq.html", {'faqs': faqs, 'rubrique_id': 'ressources'})
+
+
+def DocumentsView(request):
+    """Documents à télécharger, filtrables par catégorie (?categorie=guides)."""
+    documents = Document.objects.filter(actif=True)
+    presentes = set(documents.values_list('categorie', flat=True))
+    categories = [(cle, nom) for cle, nom in Document.CATEGORIES if cle in presentes]
+
+    categorie_active = request.GET.get('categorie')
+    if categorie_active in presentes:
+        documents = documents.filter(categorie=categorie_active)
+    else:
+        categorie_active = None
+
+    context = {
+        'documents': documents,
+        'categories': categories,
+        'categorie_active': categorie_active,
+        'rubrique_id': 'ressources',
+    }
+    return render(request, "v3/documents.html", context)
+
 
 def DiscoursDGView(request):
     discours = get_object_or_404(Discours, type_discours='dg')
@@ -199,7 +243,7 @@ def RechercheView(request):
     from .navigation import MENU_PRINCIPAL
 
     q = request.GET.get('q', '').strip()[:100]
-    pages, actualites, faqs = [], [], []
+    pages, actualites, faqs, documents = [], [], [], []
 
     if len(q) >= 2:
         terme = q.lower()
@@ -220,12 +264,17 @@ def RechercheView(request):
                 .filter(active=True)
                 .filter(Q(question__icontains=q) | Q(reponse__icontains=q))[:10])
 
+        documents = (Document.objects
+                     .filter(actif=True)
+                     .filter(Q(titre__icontains=q) | Q(description__icontains=q))[:10])
+
     context = {
-        'q': q,
-        'pages': pages,
+        'q'         : q,
+        'pages'     : pages,
         'actualites': actualites,
-        'faqs': faqs,
-        'total': len(pages) + len(actualites) + len(faqs),
+        'faqs'      : faqs,
+        'documents' : documents,
+        'total'     : len(pages) + len(actualites) + len(faqs) + len(documents),
     }
     return render(request, 'v3/recherche.html', context)
 

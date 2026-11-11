@@ -6,7 +6,8 @@ from .models import (
     ActualiteEnImage,
     FAQ, Discours,
     Slide, Programme, Parcours, ParcoursLien, ChiffreCle, Partenaire,
-    Page,
+    Page, Antenne, Document,
+
 )
 from django.utils.html import format_html
 
@@ -155,4 +156,25 @@ class PageAdmin(admin.ModelAdmin):
         # L'identifiant est figé une fois la page créée : le site s'en sert pour la retrouver.
         return ("cle",) if obj else ()
     
+
+
+
+# ==========================================================================
+# Refonte v3 — Phase 4b : antennes et documents
+# ==========================================================================
+
+@admin.register(Antenne)
+class AntenneAdmin(admin.ModelAdmin):
+    list_display  = ("nom", "ville", "telephone", "ordre", "actif")
+    list_editable = ("ordre", "actif")
+
+
+@admin.register(Document)
+class DocumentAdmin(admin.ModelAdmin):
+    list_display  = ("titre", "categorie", "date_publication", "actif")
+    list_editable = ("actif",)
+    list_filter   = ("categorie", "actif")
+    search_fields = ("titre", "description")
+    date_hierarchy = "date_publication"
+
 

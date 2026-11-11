@@ -1,0 +1,127 @@
+/* ==========================================================================
+   ADPME Congo — pages.css — v1
+   Pages intérieures : filtres, article d'actualité, partage, FAQ, contact,
+   antennes, documents. Dépend de tokens.css, base.css, components.css.
+   ========================================================================== */
+
+/* ── 1. Filtres (catégories d'actualités, de documents) ────────────────── */
+.filtres {
+  display: flex; flex-wrap: wrap; gap: var(--sp-2);
+  margin-bottom: var(--sp-6);
+}
+.filtres a {
+  display: inline-flex; align-items: center;
+  min-height: 40px;
+  padding: 0 var(--sp-4);
+  border: 1px solid var(--ligne-forte);
+  border-radius: var(--rayon-pill);
+  background: var(--fond);
+  color: var(--encre);
+  font-size: var(--fs-sm); font-weight: var(--fw-medium);
+  text-decoration: none;
+}
+.filtres a:hover { border-color: var(--c-primaire); color: var(--c-primaire); }
+.filtres a[aria-current="page"] { background: var(--c-primaire); border-color: var(--c-primaire); color: #fff; }
+
+/* ── 2. Article d'actualité ────────────────────────────────────────────── */
+.page-hero--article h1 { font-size: var(--fs-2xl); margin-bottom: 0; }
+.article__meta {
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2) var(--sp-4);
+  margin-bottom: var(--sp-3);
+  font-size: var(--fs-sm);
+  color: rgba(255, 255, 255, .9);
+}
+.article__meta > span { display: inline-flex; align-items: center; gap: var(--sp-2); }
+.article__meta .badge { text-decoration: none; }
+.article__image { margin: 0 0 var(--sp-6); }
+.article__image img { width: 100%; border-radius: var(--rayon-lg); }
+.article__contenu { max-width: none; }
+.icon-retour { display: inline-flex; transform: rotate(180deg); }
+
+/* Partage */
+.partage {
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-3) var(--sp-5);
+  margin-top: var(--sp-7);
+  padding-top: var(--sp-5);
+  border-top: 1px solid var(--ligne);
+}
+.partage__titre { margin: 0; font-weight: var(--fw-bold); color: var(--encre); }
+.partage__liens { display: flex; flex-wrap: wrap; gap: var(--sp-2); list-style: none; margin: 0; padding: 0; }
+.partage__liens li { margin: 0; }
+.partage__liens a, .partage__copier {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--sp-2);
+  min-width: 42px; height: 42px;
+  padding: 0 var(--sp-3);
+  border: 1px solid var(--ligne);
+  border-radius: var(--rayon-pill);
+  background: var(--fond);
+  color: var(--encre);
+  font-size: var(--fs-sm); font-weight: var(--fw-medium);
+  text-decoration: none;
+}
+.partage__liens a:hover, .partage__copier:hover { border-color: var(--c-primaire); color: var(--c-primaire); }
+
+/* ── 3. FAQ : champ de filtre ──────────────────────────────────────────── */
+.faq-filtre { display: grid; gap: var(--sp-2); margin-bottom: var(--sp-5); }
+.faq-filtre label { font-weight: var(--fw-bold); color: var(--encre); }
+.faq-filtre p { margin: 0; min-height: 1.4em; }
+
+/* ── 4. Contact ────────────────────────────────────────────────────────── */
+.contact {
+  display: grid; gap: var(--sp-7);
+  grid-template-columns: minmax(0, 1fr);
+}
+@media (min-width: 992px) {
+  .contact { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); }
+}
+.contact__formulaire h2, .contact__coordonnees h2 { font-size: var(--fs-xl); }
+.contact__coordonnees {
+  align-self: start;
+  padding: var(--sp-6);
+  border-radius: var(--rayon-lg);
+  background: var(--vert-50);
+}
+.coordonnees { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-4); }
+.coordonnees li { display: flex; align-items: flex-start; gap: var(--sp-3); margin: 0; }
+.coordonnees > li > .icon { margin-top: 0.2em; color: var(--c-primaire); }
+.coordonnees div { display: flex; flex-direction: column; }
+.coordonnees strong { font-size: var(--fs-sm); color: var(--encre); }
+.coordonnees a { color: var(--texte); text-decoration: none; }
+.coordonnees a:hover { color: var(--c-primaire); text-decoration: underline; }
+.coordonnees--compactes { gap: var(--sp-2); margin-bottom: var(--sp-4); font-size: var(--fs-sm); }
+
+.contact__reseaux-titre { margin: var(--sp-5) 0 var(--sp-2); font-weight: var(--fw-bold); color: var(--encre); }
+.contact__reseaux { display: flex; gap: var(--sp-2); list-style: none; margin: 0; padding: 0; }
+.contact__reseaux li { margin: 0; }
+.contact__reseaux a {
+  display: grid; place-items: center;
+  width: 40px; height: 40px;
+  border: 1px solid var(--ligne-forte); border-radius: 50%;
+  color: var(--vert-800);
+}
+.contact__reseaux a:hover { background: var(--c-primaire); border-color: var(--c-primaire); color: #fff; }
+
+/* Champ piège anti-robots : invisible pour les humains */
+.champ-piege { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+
+/* Carte */
+.carte { line-height: 0; background: var(--fond-alt); }
+.carte iframe { width: 100%; height: clamp(300px, 45vh, 460px); border: 0; }
+
+/* Antennes */
+.antenne {
+  display: flex; flex-direction: column;
+  height: 100%;
+  padding: var(--sp-5);
+  border: 1px solid var(--ligne);
+  border-top: 4px solid var(--violet-500);
+  border-radius: var(--rayon-lg);
+  background: var(--fond);
+}
+.antenne__nom { font-size: var(--fs-lg); margin-bottom: var(--sp-1); }
+.antenne__ville { display: flex; align-items: center; gap: var(--sp-2); margin-bottom: var(--sp-4); color: var(--violet-700); font-weight: var(--fw-medium); }
+.antenne .btn { margin-top: auto; align-self: flex-start; }
+
+/* ── 5. Documents ──────────────────────────────────────────────────────── */
+.doc__desc { display: block; margin: 2px 0; font-size: var(--fs-sm); color: var(--texte); }
+

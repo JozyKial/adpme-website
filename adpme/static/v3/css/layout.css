@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ADPME Congo — layout.css — v1
+   ADPME Congo — layout.css — v2
    Grandes zones du site : barre de contact, en-tête, méga-menu, recherche,
    footer. Dépend de tokens.css, base.css, components.css.
    Point de bascule ordinateur / mobile du menu : 1100px.
@@ -248,8 +248,8 @@
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
   padding-block: var(--sp-8) var(--sp-7);
 }
-@media (min-width: 1100px) {
-  .site-footer__grille { grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr; }
+@media (min-width: 1200px) {
+  .site-footer__grille { grid-template-columns: 1.4fr repeat(4, minmax(0, 1fr)) auto; }
 }
 
 .site-footer__logo {
