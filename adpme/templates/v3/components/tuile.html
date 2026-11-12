@@ -1,8 +1,8 @@
 {% load ui %}
-{% comment %} ADPME Congo — v3/components/tuile.html — v1 : accès rapide « Je veux… »
-   Paramètres : titre, url, desc, icone
+{% comment %} ADPME Congo — v3/components/tuile.html — v2 : accès rapide « Je veux… »
+   Paramètres : titre, url, desc, icone, couleur (optionnel : vert, jaune ou rouge)
 {% endcomment %}
-<a class="tuile" href="{{ url }}">
+<a class="tuile{% if couleur %} tuile--{{ couleur }}{% endif %}" href="{{ url }}">
     <span class="tuile__icone">{% icon icone|default:"fleche-droite" %}</span>
     <span class="tuile__texte">
         <span class="tuile__titre">{{ titre }}</span>
@@ -10,4 +10,3 @@
     </span>
     <span class="tuile__fleche">{% icon "chevron-droite" %}</span>
 </a>
-

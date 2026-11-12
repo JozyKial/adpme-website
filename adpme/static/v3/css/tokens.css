@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ADPME Congo — tokens.css — v1
+   ADPME Congo — tokens.css — v2
    Variables de design : couleurs, typographie, espacements, rayons, ombres.
    Modifier une valeur ici la change partout sur le site.
    ========================================================================== */
@@ -23,6 +23,15 @@
   --drapeau-vert:  #009543;
   --drapeau-jaune: #fbde4a;
   --drapeau-rouge: #dc241f;
+
+  
+  /* Teintes « drapeau » lisibles (icônes sur fond clair) */
+  --accent-vert:       #007a37;
+  --accent-vert-fond:  #e6f4ec;
+  --accent-jaune:      #a8840a;
+  --accent-jaune-fond: #fff6d6;
+  --accent-rouge:      #c8211b;
+  --accent-rouge-fond: #fdecea;
 
   /* ── Neutres ────────────────────────────────────────────────────────── */
   --encre:       #17201a;  /* titres */

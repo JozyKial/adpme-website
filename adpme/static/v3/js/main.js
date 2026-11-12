@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ADPME Congo — main.js — v4
+   ADPME Congo — main.js — v5
    JavaScript maison, sans dépendance. Chaque fonction s'active seulement si
    l'élément HTML correspondant (attribut data-…) est présent sur la page.
    ========================================================================== */
@@ -253,6 +253,46 @@
     });
   }
 
+
+    /* ── Chiffres clés : compteur animé à l'apparition ─────────────────── */
+  function initCompteurs() {
+    var elements = document.querySelectorAll("[data-compteur]");
+    if (!elements.length || !("IntersectionObserver" in window)) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    function animer(el) {
+      var final = el.textContent.trim();
+      /* Ex. « 1 250 », « 85 % », « +300 », « 2,5 » : on anime la partie numérique */
+      var m = final.match(/^([^0-9]*)([0-9](?:[0-9\s\u00a0\u202f]*[0-9])?(?:,[0-9]+)?)(.*)$/);
+      if (!m) return;
+      var decimales = (m[2].split(",")[1] || "").length;
+      var cible = parseFloat(m[2].replace(/[\s\u00a0\u202f]/g, "").replace(",", "."));
+      if (isNaN(cible) || cible === 0) return;
+      var duree = 1200, debut = null;
+      function format(v) {
+        return v.toLocaleString("fr-FR", { minimumFractionDigits: decimales, maximumFractionDigits: decimales });
+      }
+      function etape(t) {
+        if (!debut) debut = t;
+        var p = Math.min((t - debut) / duree, 1);
+        var v = cible * (1 - Math.pow(1 - p, 3));
+        el.textContent = m[1] + format(v) + m[3];
+        if (p < 1) { window.requestAnimationFrame(etape); } else { el.textContent = final; }
+      }
+      window.requestAnimationFrame(etape);
+    }
+
+    var observateur = new IntersectionObserver(function (entrees) {
+      entrees.forEach(function (entree) {
+        if (entree.isIntersecting) {
+          observateur.unobserve(entree.target);
+          animer(entree.target);
+        }
+      });
+    }, { threshold: 0.4 });
+    elements.forEach(function (el) { observateur.observe(el); });
+  }
+
   /* ── Démarrage ─────────────────────────────────────────────────────── */
   function init() {
     initAlertes();
@@ -261,6 +301,7 @@
     initCarrousel();
     initFiltreFaq();
     initCopierLien();
+    initCompteurs();
   }
 
   if (document.readyState === "loading") {

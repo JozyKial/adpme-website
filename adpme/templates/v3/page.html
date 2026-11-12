@@ -1,6 +1,6 @@
 {% extends "v3/base.html" %}
 {% load ui %}
-{# ADPME Congo — v3/page.html — v1 : page de contenu gérée dans l'admin (modèle Page) #}
+{# ADPME Congo — v3/page.html — v2 : page de contenu gérée dans l'admin (modèle Page) #}
 
 {% block title %}{{ page.titre }} — ADPME Congo{% endblock %}
 {% block meta_description %}{% firstof page.meta_description page.intro page.titre %}{% endblock %}
@@ -26,15 +26,6 @@
     </div>
 </section>
 
-{% if chiffres %}
-<section class="section section--vert" aria-labelledby="titre-chiffres">
-    <div class="container">
-        {% include "v3/components/section_header.html" with surtitre="En chiffres" titre="L'action de l'agence" id="titre-chiffres" %}
-        <div class="grid grid--4">
-            {% for c in chiffres %}{% include "v3/components/stat.html" with valeur=c.valeur libelle=c.libelle source=c.source %}{% endfor %}
-        </div>
-    </div>
-</section>
-{% endif %}
+{% include "v3/components/chiffres.html" %}
 {% endblock %}
 

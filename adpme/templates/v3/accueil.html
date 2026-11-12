@@ -1,6 +1,6 @@
 {% extends "v3/base.html" %}
 {% load static ui %}
-{% comment %} ADPME Congo — v3/accueil.html — v1
+{% comment %} ADPME Congo — v3/accueil.html — v2
    Page d'accueil. Chaque bloc ne s'affiche que s'il a du contenu dans l'admin :
    Slides, Parcours, Programmes, Chiffres clés, Discours (DG), Actualités, Partenaires.
    Les accès rapides se modifient dans adpme/navigation.py (ACCES_RAPIDES).
@@ -61,7 +61,8 @@
             <h2 class="acces__titre" id="titre-acces">Que souhaitez-vous faire&nbsp;?</h2>
             <div class="grid grid--3">
                 {% for a in acces_rapides %}
-                {% include "v3/components/tuile.html" with titre=a.titre desc=a.desc url=a.href icone=a.icone %}
+                {% cycle "vert" "jaune" "rouge" "jaune" "rouge" "vert" as couleur silent %}
+                {% include "v3/components/tuile.html" with titre=a.titre desc=a.desc url=a.href icone=a.icone couleur=couleur %}
                 {% endfor %}
             </div>
         </div>
@@ -112,18 +113,7 @@
 {% endif %}
 
 {# ── 5. Chiffres clés ─────────────────────────────────────────────── #}
-{% if chiffres %}
-<section class="section section--vert" aria-labelledby="titre-chiffres">
-    <div class="container">
-        {% include "v3/components/section_header.html" with surtitre="En chiffres" titre="L'action de l'agence" id="titre-chiffres" %}
-        <div class="grid grid--4">
-            {% for c in chiffres %}
-            {% include "v3/components/stat.html" with valeur=c.valeur libelle=c.libelle source=c.source %}
-            {% endfor %}
-        </div>
-    </div>
-</section>
-{% endif %}
+{% include "v3/components/chiffres.html" %}
 
 {# ── 6. Mot du Directeur général ──────────────────────────────────── #}
 {% if discours_dg %}
