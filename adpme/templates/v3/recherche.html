@@ -1,6 +1,6 @@
 {% extends "v3/base.html" %}
 {% load ui %}
-{# ADPME Congo — v3/recherche.html — v3 : résultats de recherche (pages, actualités, FAQ, documents) ; textes : admin > Textes du site > Recherche #}
+{# ADPME Congo — v3/recherche.html — v4 : résultats de recherche (pages, actualités, FAQ, documents, opportunités) ; textes : admin > Textes du site > Recherche #}
 
 {% block title %}{% texte "recherche.titre_page" %}{% if q %} : {{ q }}{% endif %} — {% texte "general.titre_suffixe" %}{% endblock %}
 {% block extra_head %}<meta name="robots" content="noindex, follow">{% endblock %}
@@ -62,6 +62,13 @@
             </li>
             {% endfor %}
         </ul>
+        {% endif %}
+
+        {% if offres %}
+        <h2 class="recherche-titre">{% texte "recherche.groupe_offres" %}</h2>
+        <div class="offres">
+            {% for o in offres %}{% include "v3/components/carte_offre.html" %}{% endfor %}
+        </div>
         {% endif %}
 
         {% if q and not total %}

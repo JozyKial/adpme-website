@@ -1,0 +1,123 @@
+/* ==========================================================================
+   ADPME Congo — v3/css/opportunites.css — v1
+   Phase 4c : pages « Opportunités » (offres, emplois, appels à candidatures)
+   et bandeau d'inscription à la lettre d'information (pied de page).
+   Dépend de tokens.css, base.css, components.css.
+   ========================================================================== */
+
+/* ── 1. Messages en haut de page ──────────────────────────────────────── */
+.messages { padding-top: var(--sp-5); }
+.messages:not(:has(.alert)) { display: none; }
+
+/* ── 2. Onglets et bascule « en cours / clôturées » ───────────────────── */
+.filtres__nombre {
+  display: inline-grid; place-items: center;
+  min-width: 1.6em; height: 1.6em;
+  margin-left: var(--sp-2);
+  padding: 0 var(--sp-1);
+  border-radius: var(--rayon-pill);
+  background: var(--fond-alt);
+  color: var(--texte-doux);
+  font-size: var(--fs-xs);
+}
+.filtres a[aria-current="page"] .filtres__nombre { background: rgba(255, 255, 255, .22); color: #fff; }
+
+.statut-bascule {
+  display: inline-flex;
+  margin: calc(-1 * var(--sp-3)) 0 var(--sp-6);
+  padding: 3px;
+  border: 1px solid var(--ligne);
+  border-radius: var(--rayon-pill);
+  background: var(--fond-alt);
+}
+.statut-bascule a {
+  padding: var(--sp-1) var(--sp-4);
+  border-radius: var(--rayon-pill);
+  color: var(--texte-doux);
+  font-size: var(--fs-sm); font-weight: var(--fw-medium);
+  text-decoration: none;
+}
+.statut-bascule a:hover { color: var(--encre); }
+.statut-bascule a[aria-current="page"] { background: var(--fond); color: var(--encre); box-shadow: var(--ombre-sm); }
+
+/* ── 3. Carte d'une opportunité ───────────────────────────────────────── */
+.offres { display: grid; gap: var(--sp-4); }
+.offres--grille { grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); }
+
+.offre {
+  position: relative;
+  display: flex; flex-direction: column; gap: var(--sp-3);
+  padding: var(--sp-5);
+  border: 1px solid var(--ligne);
+  border-left: 4px solid var(--c-primaire);
+  border-radius: var(--rayon-lg);
+  background: var(--fond);
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.offre:hover { border-color: var(--c-primaire); box-shadow: var(--ombre); }
+.offre--close { border-left-color: var(--ligne-forte); }
+.offre--close .offre__titre a { color: var(--texte-doux); }
+
+.offre__badges { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+.offre__titre { margin: 0; font-size: var(--fs-lg); line-height: var(--lh-serre); }
+.offre__titre a { color: var(--encre); text-decoration: none; }
+.offre__titre a:hover { color: var(--c-primaire); }
+.offre__resume { margin: 0; color: var(--texte); }
+
+.offre__meta {
+  display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-5);
+  margin: 0; padding: 0; list-style: none;
+  font-size: var(--fs-sm); color: var(--texte-doux);
+}
+.offre__meta li { display: inline-flex; align-items: center; gap: var(--sp-1); margin: 0; }
+.offre__meta .icon { color: var(--violet-700); }
+.offre__echeance { color: var(--encre); }
+.offre__lien { align-self: flex-start; }
+
+/* ── 4. Fiche d'une opportunité ───────────────────────────────────────── */
+.offre-fiche__titre { margin-top: var(--sp-7); font-size: var(--fs-xl); }
+.offre-fiche__infos { display: grid; gap: var(--sp-3); margin: 0; }
+.offre-fiche__infos div { display: grid; gap: 2px; }
+.offre-fiche__infos dt { font-size: var(--fs-xs); font-weight: var(--fw-bold); text-transform: uppercase; letter-spacing: .05em; color: var(--texte-doux); }
+.offre-fiche__infos dd { margin: 0; color: var(--encre); overflow-wrap: anywhere; }
+
+/* ── 5. Bandeau « lettre d'information » (haut du pied de page) ───────── */
+.lettre {
+  border-bottom: 1px solid rgba(255, 255, 255, .12);
+  background: linear-gradient(110deg, var(--vert-800), var(--violet-800));
+  color: rgba(255, 255, 255, .9);
+  scroll-margin-top: calc(var(--h-header, 80px) + var(--sp-4));
+}
+.lettre__inner {
+  display: grid; gap: var(--sp-5);
+  padding-block: var(--sp-7);
+}
+@media (min-width: 900px) {
+  .lettre__inner { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); align-items: center; gap: var(--sp-7); }
+}
+.lettre__titre {
+  display: flex; align-items: center; gap: var(--sp-2);
+  margin: 0 0 var(--sp-2);
+  font-size: var(--fs-xl);
+  color: #fff;
+}
+.lettre__titre .icon { width: 1.1em; height: 1.1em; color: var(--violet-100); }
+.lettre__texte p { margin: 0; }
+
+.lettre__form { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+.lettre__form .input { flex: 1 1 240px; border-color: transparent; }
+.lettre__form .btn { flex: 0 0 auto; background: #fff; color: var(--vert-800); }
+.lettre__form .btn:hover { background: var(--vert-50); color: var(--vert-900); }
+.lettre__mention { margin: var(--sp-2) 0 0; font-size: var(--fs-xs); color: rgba(255, 255, 255, .72); }
+
+.lettre__message {
+  display: flex; align-items: center; gap: var(--sp-2);
+  margin: 0 0 var(--sp-3);
+  padding: var(--sp-2) var(--sp-3);
+  border-radius: var(--rayon);
+  background: rgba(255, 255, 255, .14);
+  color: #fff;
+  font-weight: var(--fw-medium);
+}
+.lettre__message--error { background: rgba(220, 36, 31, .35); }
+

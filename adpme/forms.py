@@ -1,7 +1,7 @@
 # ==========================================================================
-# ADPME Congo — forms.py — v2
-# Formulaire de contact. Libellés et exemples modifiables dans
-# admin > Textes du site > Page « Contact » et formulaire.
+# ADPME Congo — forms.py — v3
+# Formulaire de contact et inscription à la lettre d'information.
+# Libellés et exemples modifiables dans admin > Textes du site.
 # ==========================================================================
 from django import forms
 
@@ -21,4 +21,10 @@ class ContactForm(forms.Form):
             champ.label = texte_admin(f"contact.champ_{nom}")
             champ.widget.attrs['placeholder'] = texte_admin(f"contact.champ_{nom}_exemple")
 
-            
+
+class NewsletterForm(forms.Form):
+    email = forms.EmailField(max_length=254)
+    # Piège à robots : champ invisible pour les humains, il doit rester vide.
+    site_web = forms.CharField(required=False)
+
+    

@@ -1,0 +1,33 @@
+{% extends "v3/base.html" %}
+{% load ui %}
+{% comment %} ADPME Congo — v3/newsletter_desinscription.html — v1
+   Désinscription de la lettre d'information (lien personnel : /lettre-information/desinscription/<jeton>/).
+   Textes : admin > Textes du site > Lettre d'information.
+{% endcomment %}
+
+{% block title %}{% texte "newsletter.desinscription_titre" %} — {% texte "general.titre_suffixe" %}{% endblock %}
+{% block extra_head %}<meta name="robots" content="noindex, nofollow">{% endblock %}
+
+{% block page_hero %}
+{% texte "newsletter.desinscription_titre" as t_titre %}
+{% include "v3/components/page_hero.html" with titre=t_titre %}
+{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container container--etroit">
+        {% if termine or not abonne.actif %}
+        <div class="alert alert--success" role="status">{% icon "check" %}<p>{% texte "newsletter.desinscription_ok" %}</p></div>
+        <p class="mt-6"><a class="btn btn--contour" href="{% url 'accueil' %}">{% texte "communs.fil_accueil" %}</a></p>
+        {% else %}
+        <p>{% texte "newsletter.desinscription_texte" %}</p>
+        <p><strong>{{ abonne.email }}</strong></p>
+        <form method="post" class="mt-6">
+            {% csrf_token %}
+            <button type="submit" class="btn btn--primaire">{% texte "newsletter.desinscription_bouton" %}</button>
+        </form>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+

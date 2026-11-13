@@ -1,7 +1,8 @@
 # ==========================================================================
-# ADPME Congo — views.py — v5
+# ADPME Congo — views.py — v6
 # Vues. Lot 2 : listes (accès rapides, services, étapes) et messages du
 # formulaire de contact lus depuis l'admin.
+# Phase 4c : opportunités (offres, emplois, appels) et lettre d'information.
 # ==========================================================================
 import logging
 from django.shortcuts import render, get_object_or_404, redirect
@@ -14,15 +15,19 @@ from .models import (
     FAQ, Discours,
     Slide, Programme, Parcours, ChiffreCle, Partenaire,
     Page, Antenne, Document, BlocAccueil, Element,
+    Offre, Abonne,
 )
 
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib import messages
-from .forms import ContactForm
+from .forms import ContactForm, NewsletterForm
 from .textes import texte_admin
 
 from django.core.paginator import Paginator
+from django.utils import timezone
+from django.utils.http import url_has_allowed_host_and_scheme
+from django.views.decorators.http import require_POST
 
 def _elements(liste):
     """Éléments d'une liste de l'admin (accès rapides, services, étapes), avec leur lien."""
@@ -274,11 +279,11 @@ def StyleguideView(request):
 
 # ── Refonte v3 : recherche (version simple, enrichie en phase 5) ──────
 def RechercheView(request):
-    """Recherche dans les pages du menu, les actualités publiées et la FAQ."""
+    """Recherche dans les pages du menu, les actualités, la FAQ, les documents et les opportunités."""
     from .navigation import MENU_PRINCIPAL
 
     q = request.GET.get('q', '').strip()[:100]
-    pages, actualites, faqs, documents = [], [], [], []
+    pages, actualites, faqs, documents, offres = [], [], [], [], []
 
     if len(q) >= 2:
         terme = q.lower()
@@ -301,6 +306,9 @@ def RechercheView(request):
         documents = (Document.objects
                      .filter(actif=True)
                      .filter(Q(titre__icontains=q) | Q(description__icontains=q))[:10])
+        offres = (Offre.objects
+                  .filter(actif=True)
+                  .filter(Q(titre__icontains=q) | Q(resume__icontains=q) | Q(contenu__icontains=q))[:10])
 
     context = {
         'q': q,
@@ -308,7 +316,102 @@ def RechercheView(request):
         'actualites': actualites,
         'faqs': faqs,
         'documents': documents,
-        'total': len(pages) + len(actualites) + len(faqs) + len(documents),
+        'offres': offres,
+        'total': len(pages) + len(actualites) + len(faqs) + len(documents) + len(offres),
     }
     return render(request, 'v3/recherche.html', context)
+
+
+
+# ── Refonte v3 — Phase 4c : opportunités ──────────────────────────────
+TYPES_PAR_SLUG = {slug: cle for cle, slug in Offre.SLUGS_TYPES.items()}
+
+
+def OffresView(request, type_slug=None):
+    """Liste des opportunités, par rubrique (/opportunites/appels-offres/…) et par statut (?statut=cloturees)."""
+    type_offre = None
+    if type_slug:
+        type_offre = TYPES_PAR_SLUG.get(type_slug)
+        if type_offre is None:
+            raise Http404()
+
+    aujourdhui = timezone.localdate()
+    ouvertes = Q(date_limite__isnull=True) | Q(date_limite__gte=aujourdhui)
+    offres = Offre.objects.filter(actif=True)
+    if type_offre:
+        offres = offres.filter(type_offre=type_offre)
+
+    cloturees = request.GET.get('statut') == 'cloturees'
+    offres = offres.exclude(ouvertes) if cloturees else offres.filter(ouvertes)
+
+    # Nombre d'opportunités en cours par rubrique (affiché sur les onglets)
+    en_cours = Offre.objects.filter(actif=True).filter(ouvertes)
+    onglets = [{'cle': None, 'slug': None, 'nombre': en_cours.count(), 'actif': type_offre is None}]
+    for cle, slug in Offre.SLUGS_TYPES.items():
+        onglets.append({'cle': cle, 'slug': slug, 'nombre': en_cours.filter(type_offre=cle).count(),
+                        'actif': type_offre == cle})
+
+    page = Paginator(offres, 10).get_page(request.GET.get('page', 1))
+    context = {
+        'offres': page,
+        'onglets': onglets,
+        'type_offre': type_offre,
+        'type_slug': type_slug,
+        'cloturees': cloturees,
+        'qs_extra': "&statut=cloturees" if cloturees else "",
+    }
+    return render(request, "v3/offres.html", context)
+
+
+def OffreDetailView(request, slug):
+    offre = get_object_or_404(Offre, slug=slug, actif=True)
+    aujourdhui = timezone.localdate()
+    autres = (Offre.objects.filter(actif=True)
+              .filter(Q(date_limite__isnull=True) | Q(date_limite__gte=aujourdhui))
+              .exclude(pk=offre.pk)[:3])
+    return render(request, "v3/offre_detail.html", {'offre': offre, 'autres': autres})
+
+
+# ── Refonte v3 — Phase 4c : lettre d'information ──────────────────────
+def _retour(request):
+    """Page d'où vient le visiteur (si elle appartient au site), sinon l'accueil."""
+    precedente = request.META.get('HTTP_REFERER', '')
+    if precedente and url_has_allowed_host_and_scheme(precedente, allowed_hosts={request.get_host()},
+                                                      require_https=request.is_secure()):
+        return precedente.split('#')[0]
+    return reverse('accueil')
+
+
+@require_POST
+def NewsletterInscriptionView(request):
+    retour = _retour(request)
+    form = NewsletterForm(request.POST)
+    if request.POST.get('site_web'):
+        # Robot : on fait comme si tout allait bien, sans rien enregistrer.
+        messages.success(request, texte_admin("newsletter.succes"), extra_tags="newsletter")
+    elif form.is_valid():
+        email = form.cleaned_data['email'].strip().lower()
+        abonne, cree = Abonne.objects.get_or_create(email=email, defaults={'origine': retour[:200]})
+        if cree:
+            messages.success(request, texte_admin("newsletter.succes"), extra_tags="newsletter")
+        elif not abonne.actif:
+            abonne.actif = True
+            abonne.save(update_fields=['actif', 'date_maj'])
+            messages.success(request, texte_admin("newsletter.succes"), extra_tags="newsletter")
+        else:
+            messages.info(request, texte_admin("newsletter.deja"), extra_tags="newsletter")
+    else:
+        messages.error(request, texte_admin("newsletter.erreur"), extra_tags="newsletter")
+    return redirect(retour + "#lettre-information")
+
+
+def NewsletterDesinscriptionView(request, jeton):
+    """Lien de désinscription (à placer dans chaque envoi) : confirmation en un clic."""
+    abonne = get_object_or_404(Abonne, jeton=jeton)
+    termine = False
+    if request.method == 'POST':
+        abonne.actif = False
+        abonne.save(update_fields=['actif', 'date_maj'])
+        termine = True
+    return render(request, "v3/newsletter_desinscription.html", {'abonne': abonne, 'termine': termine})
 

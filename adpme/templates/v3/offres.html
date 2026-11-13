@@ -1,0 +1,57 @@
+{% extends "v3/base.html" %}
+{% load static ui %}
+{% comment %} ADPME Congo — v3/offres.html — v1
+   Opportunités : appels d'offres, emplois et stages, appels à candidatures (admin > Opportunités).
+   Une adresse par rubrique (/opportunites/appels-offres/…) ; ?statut=cloturees pour les offres closes.
+   Textes : admin > Textes du site > Pages « Opportunités ».
+{% endcomment %}
+
+{% block title %}{% if type_offre %}{% texte "opportunites.type_"|add:type_offre %} — {% endif %}{% texte "opportunites.titre_page" %}{% if cloturees %} ({% texte "opportunites.statut_cloturees" %}){% endif %} — {% texte "general.titre_suffixe" %}{% endblock %}
+{% block meta_description %}{% texte "opportunites.meta_description" %}{% endblock %}
+{% block extra_head %}{% if cloturees or offres.number > 1 %}<meta name="robots" content="noindex, follow">{% endif %}{% endblock %}
+
+{% block page_hero %}
+{% if type_offre %}
+{% url 'offres' as url_offres %}{% texte "opportunites.titre" as t_parent %}{% texte "opportunites.type_"|add:type_offre as t_titre %}{% texte "opportunites.intro" as t_intro %}
+{% include "v3/components/page_hero.html" with titre=t_titre intro=t_intro parent_titre=t_parent parent_url=url_offres %}
+{% else %}
+{% texte "opportunites.titre" as t_titre %}{% texte "opportunites.intro" as t_intro %}
+{% include "v3/components/page_hero.html" with titre=t_titre intro=t_intro %}
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <nav class="filtres" aria-label="Rubriques">
+            {% for onglet in onglets %}
+            {% if onglet.slug %}{% url 'offres_type' onglet.slug as url_onglet %}{% else %}{% url 'offres' as url_onglet %}{% endif %}
+            <a href="{{ url_onglet }}"{% if onglet.actif %} aria-current="page"{% endif %}>
+                {% if onglet.cle %}{% texte "opportunites.type_"|add:onglet.cle %}{% else %}{% texte "opportunites.onglet_toutes" %}{% endif %}
+                <span class="filtres__nombre">{{ onglet.nombre }}</span>
+            </a>
+            {% endfor %}
+        </nav>
+
+        {% if type_slug %}{% url 'offres_type' type_slug as url_base %}{% else %}{% url 'offres' as url_base %}{% endif %}
+        <p class="statut-bascule">
+            <a href="{{ url_base }}"{% if not cloturees %} aria-current="page"{% endif %}>{% texte "opportunites.statut_en_cours" %}</a>
+            <a href="{{ url_base }}?statut=cloturees"{% if cloturees %} aria-current="page"{% endif %}>{% texte "opportunites.statut_cloturees" %}</a>
+        </p>
+
+        {% if offres %}
+        <div class="offres">
+            {% for o in offres %}{% include "v3/components/carte_offre.html" %}{% endfor %}
+        </div>
+        {% include "v3/components/pagination.html" with page=offres %}
+        {% else %}
+        <div class="etat-vide">
+            <p>{% if cloturees %}{% texte "opportunites.vide_cloturees" %}{% else %}{% texte "opportunites.vide_en_cours" %}{% endif %}</p>
+            {% if not cloturees %}<p class="text-sm text-doux">{% texte "opportunites.vide_newsletter" %}</p>
+            <a class="btn btn--primaire btn--sm" href="#lettre-information">{% texte "newsletter.bouton" %}</a>{% endif %}
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+

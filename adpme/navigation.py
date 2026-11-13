@@ -1,5 +1,5 @@
 # ==========================================================================
-# ADPME Congo — navigation.py — v5
+# ADPME Congo — navigation.py — v7
 # Menu principal du site : C'EST ICI qu'on modifie le méga-menu ET les
 # colonnes du footer (une seule source pour les deux).
 #
@@ -34,7 +34,8 @@ MENU_PRINCIPAL = [
     {"id": "programmes", "titre": "Programmes", "url": "programme", "icone": "drapeau"},
     {"id": "actualites", "titre": "Actualités", "url": "actualite", "icone": "calendrier",
      "aussi": ("actu_detail",)},
-
+    {"id": "opportunites", "titre": "Opportunités", "url": "offres", "icone": "mallette",
+     "aussi": ("offres_type", "offre_detail")},
     {
         "id": "ressources",
         "titre": "Ressources",
@@ -44,8 +45,6 @@ MENU_PRINCIPAL = [
         ],
     },
 ]
-
-
 
 
 # --------------------------------------------------------------------------
@@ -62,8 +61,6 @@ ACCES_RAPIDES = [
 ]
 
 
-
-
 # --------------------------------------------------------------------------
 # Page « Dispositifs d'accompagnement »
 #   OFFRE_SERVICES : les 4 services (l'introduction vient de la Page de l'admin
@@ -74,7 +71,7 @@ OFFRE_SERVICES = [
     {
         "titre": "Information et orientation", "url": "information", "page": "information", "icone": "boussole",
         "resume": "Trouver le bon interlocuteur et le bon dispositif pour votre projet.",
-        "points": ["Opportunités économiques", "Aide à la création et à la formalisation d'entreprise",
+        "points": ["Opportunités économiques", "Formalisation des entreprises",
                    "Mécanismes de financement", "Programmes de formation et d'accompagnement"],
     },
     {
@@ -99,13 +96,10 @@ OFFRE_SERVICES = [
 
 ETAPES_PARCOURS = [
     {"titre": "Accueil et orientation", "texte": "Identification de vos besoins et orientation vers les dispositifs adaptés."},
-    {"titre": "Diagnostic", "texte": "Évaluation de la maturité du projet et de l'entreprise, et définition d'un parcours personnalisé."},
+    {"titre": "Diagnostic", "texte": "Évaluation de la maturité de l'entreprise et définition d'un parcours personnalisé."},
     {"titre": "Conseil et structuration", "texte": "Plan d'affaires, organisation de l'activité, modèle économique."},
     {"titre": "Formation", "texte": "Renforcement des compétences entrepreneuriales, techniques et managériales."},
     {"titre": "Formalisation et accès aux dispositifs", "texte": "Démarches de formalisation, financements et programmes d'appui."},
-    {"titre": "Suivi post-création", "texte": "Suivi technique pour anticiper les difficultés et consolider l'activité."},
+    {"titre": "Suivi de l'entreprise", "texte": "Suivi technique pour anticiper les difficultés et consolider l'activité."},
     {"titre": "Croissance et pérennisation", "texte": "Productivité, innovation, accès aux marchés et compétitivité."},
 ]
-
-
-

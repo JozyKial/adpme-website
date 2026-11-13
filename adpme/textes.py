@@ -1,5 +1,5 @@
 # ==========================================================================
-# ADPME Congo — textes.py — v2
+# ADPME Congo — textes.py — v3
 # Registre des « Textes du site » modifiables dans l'admin.
 #
 # Chaque entrée : "clé": (page, libellé affiché dans l'admin, texte par défaut)
@@ -23,6 +23,8 @@ PAGES = [
     ("contact", "Page « Contact » et formulaire"),
     ("recherche", "Page « Recherche »"),
     ("agence", "Pages de l'agence et des services, discours"),
+    ("opportunites", "Pages « Opportunités » (offres, emplois, appels)"),
+    ("newsletter", "Lettre d'information (inscription, désinscription)"),
 ]
 
 TEXTES = {
@@ -228,6 +230,7 @@ TEXTES = {
     "recherche.groupe_actualites": ("recherche", "Titre du groupe « actualités »", "Actualités"),
     "recherche.groupe_faq": ("recherche", "Titre du groupe « questions »", "Questions fréquentes"),
     "recherche.groupe_documents": ("recherche", "Titre du groupe « documents »", "Documents"),
+    "recherche.groupe_offres": ("recherche", "Titre du groupe « opportunités »", "Opportunités"),
     "recherche.suggestion": ("recherche", "Message de suggestion si aucun résultat", "Essayez un autre mot, ou consultez directement :"),
     "recherche.lien_faq": ("recherche", "Suggestion : bouton FAQ", "La FAQ"),
     "recherche.lien_actualites": ("recherche", "Suggestion : bouton actualités", "Les actualités"),
@@ -237,6 +240,64 @@ TEXTES = {
     "agence.mis_a_jour": ("agence", "Pages : mention de date (suivie de la date)", "Mis à jour le"),
     "agence.mot_dg": ("agence", "Titre de la page « Mot du Directeur général »", "Mot du Directeur général"),
     "agence.mot_ministre": ("agence", "Titre de la page « Mot de la Ministre »", "Mot de la Ministre"),
+
+    # ── Opportunités ─────────────────────────────────────────────────────
+    "opportunites.titre_page": ("opportunites", "Liste : titre de la page (onglet du navigateur et Google)", "Opportunités"),
+    "opportunites.meta_description": ("opportunites", "Liste : description pour Google",
+        "Appels d'offres, offres d'emploi et de stage, appels à candidatures : les opportunités publiées par "
+        "l'ADPME en République du Congo."),
+    "opportunites.titre": ("opportunites", "Liste : titre principal", "Opportunités"),
+    "opportunites.intro": ("opportunites", "Liste : introduction",
+        "Appels d'offres, offres d'emploi et de stage, appels à candidatures : retrouvez ici les opportunités "
+        "publiées par l'agence."),
+    "opportunites.onglet_toutes": ("opportunites", "Onglet « toutes les opportunités »", "Toutes"),
+    "opportunites.type_appel_offres": ("opportunites", "Nom de la rubrique « appels d'offres »", "Appels d'offres"),
+    "opportunites.type_emploi": ("opportunites", "Nom de la rubrique « emplois et stages »", "Emplois et stages"),
+    "opportunites.type_candidature": ("opportunites", "Nom de la rubrique « appels à candidatures »", "Appels à candidatures"),
+    "opportunites.statut_en_cours": ("opportunites", "Filtre « en cours »", "En cours"),
+    "opportunites.statut_cloturees": ("opportunites", "Filtre « clôturées »", "Clôturées"),
+    "opportunites.badge_ouverte": ("opportunites", "Étiquette d'une opportunité ouverte", "Ouvert"),
+    "opportunites.badge_close": ("opportunites", "Étiquette d'une opportunité clôturée", "Clôturé"),
+    "opportunites.date_limite": ("opportunites", "Libellé de la date limite", "Date limite"),
+    "opportunites.publie_le": ("opportunites", "Libellé de la date de publication", "Publié le"),
+    "opportunites.reference": ("opportunites", "Libellé de la référence", "Référence"),
+    "opportunites.lieu": ("opportunites", "Libellé du lieu", "Lieu"),
+    "opportunites.vide_en_cours": ("opportunites", "Message s'il n'y a aucune opportunité en cours",
+        "Aucune opportunité en cours dans cette rubrique pour le moment."),
+    "opportunites.vide_cloturees": ("opportunites", "Message s'il n'y a aucune opportunité clôturée",
+        "Aucune opportunité clôturée dans cette rubrique."),
+    "opportunites.vide_newsletter": ("opportunites", "Invitation à s'inscrire quand la liste est vide",
+        "Inscrivez-vous à la lettre d'information, en bas de page, pour être informé des prochaines publications."),
+    "opportunites.carte_lien": ("opportunites", "Liste : texte du lien vers le détail", "Voir le détail"),
+    "opportunites.fiche_infos": ("opportunites", "Fiche : titre de l'encadré d'informations", "En bref"),
+    "opportunites.fiche_modalites": ("opportunites", "Fiche : titre de la section « comment postuler »", "Comment postuler"),
+    "opportunites.fiche_document": ("opportunites", "Fiche : bouton de téléchargement du dossier", "Télécharger le dossier"),
+    "opportunites.fiche_lien": ("opportunites", "Fiche : bouton vers le lien externe", "Consulter l'annonce en ligne"),
+    "opportunites.fiche_contact": ("opportunites", "Fiche : libellé de l'e-mail de contact", "Contact"),
+    "opportunites.fiche_close": ("opportunites", "Fiche : message quand l'opportunité est clôturée",
+        "Cette opportunité est clôturée : les candidatures et offres ne sont plus acceptées."),
+    "opportunites.fiche_retour": ("opportunites", "Fiche : lien de retour vers la liste", "Toutes les opportunités"),
+    "opportunites.autres_surtitre": ("opportunites", "Fiche : surtitre des autres opportunités", "Opportunités"),
+    "opportunites.autres_titre": ("opportunites", "Fiche : titre des autres opportunités", "Autres opportunités en cours"),
+
+    # ── Lettre d'information ─────────────────────────────────────────────
+    "newsletter.titre": ("newsletter", "Pied de page : titre du bloc d'inscription", "Restez informé"),
+    "newsletter.texte": ("newsletter", "Pied de page : texte du bloc d'inscription",
+        "Recevez les appels à candidatures, les opportunités et les actualités de l'ADPME."),
+    "newsletter.champ": ("newsletter", "Champ e-mail : texte d'exemple", "Votre adresse e-mail"),
+    "newsletter.bouton": ("newsletter", "Bouton d'inscription", "S'inscrire"),
+    "newsletter.mention": ("newsletter", "Mention sous le formulaire",
+        "Votre adresse sert uniquement à l'envoi des informations de l'ADPME. Désinscription possible à tout moment."),
+    "newsletter.succes": ("newsletter", "Message après une inscription réussie",
+        "Merci ! Votre inscription à la lettre d'information de l'ADPME est enregistrée."),
+    "newsletter.deja": ("newsletter", "Message si l'adresse est déjà inscrite", "Cette adresse est déjà inscrite. Merci de votre fidélité !"),
+    "newsletter.erreur": ("newsletter", "Message si l'adresse est invalide", "Veuillez saisir une adresse e-mail valide."),
+    "newsletter.desinscription_titre": ("newsletter", "Désinscription : titre de la page", "Se désinscrire"),
+    "newsletter.desinscription_texte": ("newsletter", "Désinscription : question de confirmation",
+        "Vous ne recevrez plus la lettre d'information de l'ADPME à l'adresse suivante :"),
+    "newsletter.desinscription_bouton": ("newsletter", "Désinscription : bouton de confirmation", "Confirmer la désinscription"),
+    "newsletter.desinscription_ok": ("newsletter", "Désinscription : message de confirmation",
+        "Votre désinscription est enregistrée. Vous pouvez vous réinscrire à tout moment."),
 }
 
 

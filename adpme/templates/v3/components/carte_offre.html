@@ -1,0 +1,21 @@
+{% load ui %}
+{% comment %} ADPME Congo — v3/components/carte_offre.html — v1
+   Carte d'une opportunité (liste, recherche, fiche). Paramètre : o (objet Offre)
+   Textes : admin > Textes du site > Pages « Opportunités ».
+{% endcomment %}
+<article class="offre{% if not o.est_ouverte %} offre--close{% endif %}">
+    <div class="offre__badges">
+        <span class="badge badge--violet">{% texte "opportunites.type_"|add:o.type_offre %}</span>
+        {% if o.est_ouverte %}<span class="badge">{% texte "opportunites.badge_ouverte" %}</span>{% else %}<span class="badge badge--neutre">{% texte "opportunites.badge_close" %}</span>{% endif %}
+    </div>
+    <h3 class="offre__titre"><a href="{% url 'offre_detail' o.slug %}" class="card__lien-etendu">{{ o.titre }}</a></h3>
+    <p class="offre__resume">{{ o.resume }}</p>
+    <ul class="offre__meta">
+        {% if o.date_limite %}<li class="offre__echeance">{% icon "horloge" %}<span>{% texte "opportunites.date_limite" %} : <strong><time datetime="{{ o.date_limite|date:'Y-m-d' }}">{{ o.date_limite|date:"j F Y" }}</time></strong></span></li>{% endif %}
+        {% if o.lieu %}<li>{% icon "lieu" %}<span>{{ o.lieu }}</span></li>{% endif %}
+        {% if o.reference %}<li>{% icon "document" %}<span>{% texte "opportunites.reference" %} : {{ o.reference }}</span></li>{% endif %}
+        <li>{% icon "calendrier" %}<span>{% texte "opportunites.publie_le" %} <time datetime="{{ o.date_publication|date:'Y-m-d' }}">{{ o.date_publication|date:"j F Y" }}</time></span></li>
+    </ul>
+    <span class="btn btn--lien offre__lien" aria-hidden="true">{% texte "opportunites.carte_lien" %} {% icon "fleche-droite" %}</span>
+</article>
+

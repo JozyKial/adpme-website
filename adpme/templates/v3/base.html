@@ -1,5 +1,5 @@
 {% load static ui %}<!DOCTYPE html>
-{# ADPME Congo — v3/base.html — v5 : textes par défaut modifiables dans admin > Textes du site > Général #}
+{# ADPME Congo — v3/base.html — v6 : textes par défaut dans admin > Textes du site > Général ; ajout de opportunites.css #}
 <html lang="fr">
 <head>
     <meta charset="utf-8">
@@ -34,6 +34,7 @@
     <link rel="stylesheet" href="{% static 'v3/css/components.css' %}">
     <link rel="stylesheet" href="{% static 'v3/css/layout.css' %}">
     <link rel="stylesheet" href="{% static 'v3/css/pages.css' %}">
+    <link rel="stylesheet" href="{% static 'v3/css/opportunites.css' %}">
     {% block extra_css %}{% endblock %}
 
     {% block schema_org %}{% endblock %}

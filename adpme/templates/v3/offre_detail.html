@@ -1,0 +1,68 @@
+{% extends "v3/base.html" %}
+{% load static ui %}
+{% comment %} ADPME Congo — v3/offre_detail.html — v1
+   Fiche d'une opportunité (admin > Opportunités). Textes : admin > Textes du site > Pages « Opportunités ».
+{% endcomment %}
+
+{% block title %}{{ offre.titre }} — {% texte "opportunites.type_"|add:offre.type_offre %} — {% texte "general.titre_suffixe" %}{% endblock %}
+{% block meta_description %}{{ offre.resume|truncatechars:160 }}{% endblock %}
+{% block og_type %}article{% endblock %}
+{% block og_title %}{{ offre.titre }}{% endblock %}
+{% block og_description %}{{ offre.resume|truncatechars:200 }}{% endblock %}
+
+{% block page_hero %}
+{% url 'offres_type' offre.slug_type as url_type %}{% texte "opportunites.type_"|add:offre.type_offre as t_parent %}
+{% include "v3/components/page_hero.html" with titre=offre.titre intro=offre.resume parent_titre=t_parent parent_url=url_type %}
+{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container layout-sidebar">
+        <article>
+            {% if not offre.est_ouverte %}
+            <div class="alert alert--warning" role="status">{% icon "info" %}<p>{% texte "opportunites.fiche_close" %}</p></div>
+            {% endif %}
+            <div class="prose">{{ offre.contenu|safe }}</div>
+            {% if offre.modalites %}
+            <h2 class="offre-fiche__titre">{% texte "opportunites.fiche_modalites" %}</h2>
+            <div class="prose">{{ offre.modalites|safe }}</div>
+            {% endif %}
+            <p class="mt-6"><a class="btn btn--lien" href="{% url 'offres' %}"><span class="icon-retour">{% icon "fleche-droite" %}</span> {% texte "opportunites.fiche_retour" %}</a></p>
+        </article>
+
+        <aside class="encadre" aria-labelledby="offre-infos">
+            <p class="encadre__libelle" id="offre-infos">{% texte "opportunites.fiche_infos" %}</p>
+            <div class="offre__badges">
+                <span class="badge badge--violet">{% texte "opportunites.type_"|add:offre.type_offre %}</span>
+                {% if offre.est_ouverte %}<span class="badge">{% texte "opportunites.badge_ouverte" %}</span>{% else %}<span class="badge badge--neutre">{% texte "opportunites.badge_close" %}</span>{% endif %}
+            </div>
+            <dl class="offre-fiche__infos">
+                {% if offre.date_limite %}<div><dt>{% texte "opportunites.date_limite" %}</dt><dd><time datetime="{{ offre.date_limite|date:'Y-m-d' }}">{{ offre.date_limite|date:"j F Y" }}</time></dd></div>{% endif %}
+                {% if offre.lieu %}<div><dt>{% texte "opportunites.lieu" %}</dt><dd>{{ offre.lieu }}</dd></div>{% endif %}
+                {% if offre.reference %}<div><dt>{% texte "opportunites.reference" %}</dt><dd>{{ offre.reference }}</dd></div>{% endif %}
+                <div><dt>{% texte "opportunites.publie_le" %}</dt><dd><time datetime="{{ offre.date_publication|date:'Y-m-d' }}">{{ offre.date_publication|date:"j F Y" }}</time></dd></div>
+                {% if offre.email_contact %}<div><dt>{% texte "opportunites.fiche_contact" %}</dt><dd><a href="mailto:{{ offre.email_contact }}">{{ offre.email_contact }}</a></dd></div>{% endif %}
+            </dl>
+            {% if offre.fichier %}
+            <a class="btn btn--primaire btn--bloc" href="{{ offre.fichier.url }}" target="_blank" rel="noopener">{% icon "telecharger" %} {% texte "opportunites.fiche_document" %}{% if offre.extension %} ({{ offre.extension }}){% endif %}</a>
+            {% endif %}
+            {% if offre.lien_externe %}
+            <a class="btn btn--contour btn--bloc" href="{{ offre.lien_externe }}" target="_blank" rel="noopener">{% texte "opportunites.fiche_lien" %} {% icon "lien-externe" %}</a>
+            {% endif %}
+        </aside>
+    </div>
+</section>
+
+{% if autres %}
+<section class="section section--alt" aria-labelledby="titre-autres">
+    <div class="container">
+        {% texte "opportunites.autres_surtitre" as t_surtitre %}{% texte "opportunites.autres_titre" as t_titre %}
+        {% include "v3/components/section_header.html" with surtitre=t_surtitre titre=t_titre id="titre-autres" %}
+        <div class="offres offres--grille">
+            {% for o in autres %}{% include "v3/components/carte_offre.html" %}{% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}
+

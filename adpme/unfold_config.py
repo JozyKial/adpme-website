@@ -1,5 +1,5 @@
 # ==========================================================================
-# ADPME Congo — unfold_config.py — v3
+# ADPME Congo — unfold_config.py — v4
 # Fonctions appelées par le thème d'administration Unfold (voir UNFOLD dans
 # settings.py) : badge d'environnement, icône, menu latéral, tableau de bord.
 # ==========================================================================
@@ -55,6 +55,15 @@ NAVIGATION = [
         ],
     },
     {
+        "title": "Opportunités et lettre",
+        "separator": True,
+        "collapsible": False,
+        "items": [
+            _lien("Opportunités (offres, emplois, appels)", "work", "offre"),
+            _lien("Abonnés à la lettre d'information", "mail", "abonne"),
+        ],
+    },
+    {
         "title": "Page d'accueil",
         "separator": True,
         "collapsible": True,
@@ -104,8 +113,9 @@ def tableau_de_bord(request, context):
     """Données de la page d'accueil de l'administration (templates/admin/index.html)."""
     from django.db.models import Q
     from django.urls import reverse
+    from django.utils import timezone
 
-    from .models import AgenceInfo, BlocAccueil, BlogActualite, ChiffreCle, Document, FAQ, Programme
+    from .models import Abonne, AgenceInfo, BlocAccueil, BlogActualite, ChiffreCle, Document, FAQ, Offre, Programme
 
     agence = AgenceInfo.objects.first()
     vigilance = []
@@ -139,11 +149,16 @@ def tableau_de_bord(request, context):
              "lien": reverse("admin:adpme_programme_changelist"), "icone": "rocket_launch"},
             {"titre": "Documents publiés", "valeur": Document.objects.filter(actif=True).count(),
              "lien": reverse("admin:adpme_document_changelist"), "icone": "folder_open"},
-            {"titre": "Questions fréquentes", "valeur": FAQ.objects.filter(active=True).count(),
-             "lien": reverse("admin:adpme_faq_changelist"), "icone": "help"},
+            {"titre": "Opportunités en cours",
+             "valeur": Offre.objects.filter(actif=True).filter(
+                 Q(date_limite__isnull=True) | Q(date_limite__gte=timezone.localdate())).count(),
+             "lien": reverse("admin:adpme_offre_changelist"), "icone": "work"},
+            {"titre": "Abonnés à la lettre", "valeur": Abonne.objects.filter(actif=True).count(),
+             "lien": reverse("admin:adpme_abonne_changelist") + "?actif__exact=1", "icone": "mail"},
         ],
         "raccourcis": [
             {"titre": "Publier une actualité", "lien": reverse("admin:adpme_blogactualite_add"), "icone": "add_circle"},
+            {"titre": "Publier une opportunité", "lien": reverse("admin:adpme_offre_add"), "icone": "work"},
             {"titre": "Ajouter un document", "lien": reverse("admin:adpme_document_add"), "icone": "upload_file"},
             {"titre": "Modifier les textes du site", "lien": reverse("admin:adpme_textesite_changelist"), "icone": "edit_note"},
             {"titre": "Modifier une page", "lien": reverse("admin:adpme_page_changelist"), "icone": "article"},

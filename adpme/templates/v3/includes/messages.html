@@ -1,14 +1,17 @@
 {% load ui %}
-{# ADPME Congo — v3/includes/messages.html — v1 : messages Django (succès, erreur…) #}
+{% comment %} ADPME Congo — v3/includes/messages.html — v2 : messages Django (succès, erreur…)
+   Les messages de la lettre d'information (étiquette « newsletter ») s'affichent dans le pied de page,
+   à côté du formulaire d'inscription (voir includes/footer.html).
+{% endcomment %}
 {% if messages %}
-<div class="container" style="padding-top: var(--sp-5);">
-    {% for message in messages %}
-    <div class="alert alert--{{ message.tags|default:'info' }}" role="{% if message.tags == 'error' %}alert{% else %}status{% endif %}" data-alerte>
-        {% if message.tags == 'success' %}{% icon "check" %}{% else %}{% icon "info" %}{% endif %}
+<div class="container messages">
+    {% for message in messages %}{% if "newsletter" not in message.extra_tags %}
+    <div class="alert alert--{{ message.level_tag|default:'info' }}" role="{% if message.level_tag == 'error' %}alert{% else %}status{% endif %}" data-alerte>
+        {% if message.level_tag == 'success' %}{% icon "check" %}{% else %}{% icon "info" %}{% endif %}
         <p>{{ message }}</p>
         <button type="button" class="alert__fermer" data-alerte-fermer aria-label="Fermer ce message">{% icon "fermer" %}</button>
     </div>
-    {% endfor %}
+    {% endif %}{% endfor %}
 </div>
 {% endif %}
 

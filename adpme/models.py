@@ -1,7 +1,11 @@
 # ==========================================================================
-# ADPME Congo — models.py — v4
+# ADPME Congo — models.py — v5
 # Modèles. Lot 2 : TexteSite (textes du site) et Element (listes modifiables).
+# Phase 4c : Offre (appels d'offres, emplois et stages, appels à candidatures)
+# et Abonne (lettre d'information).
 # ==========================================================================
+import uuid
+
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from autoslug import AutoSlugField
@@ -457,5 +461,81 @@ class Element(models.Model):
     def liste_points(self):
         return [ligne.strip(" -•\t") for ligne in self.points.splitlines() if ligne.strip(" -•\t")]
 
+
+# ==========================================================================
+# Refonte v3 — Phase 4c : opportunités et lettre d'information
+# ==========================================================================
+
+class Offre(models.Model):
+    TYPES = [
+        ("appel_offres", "Appel d'offres"),
+        ("emploi", "Emploi ou stage"),
+        ("candidature", "Appel à candidatures (programme, concours, financement…)"),
+    ]
+    # Adresse de chaque rubrique sur le site : /opportunites/<slug>/
+    SLUGS_TYPES = {"appel_offres": "appels-offres", "emploi": "emplois-stages", "candidature": "appels-candidatures"}
+
+    type_offre  = models.CharField(max_length=20, choices=TYPES, verbose_name="Type")
+    titre       = models.CharField(max_length=255, verbose_name="Titre")
+    slug        = AutoSlugField(populate_from="titre", unique=True)
+    reference   = models.CharField(max_length=80, blank=True, verbose_name="Référence",
+                                   help_text="Ex. : AO-2026-001. Facultatif.")
+    resume      = models.TextField(max_length=300, verbose_name="Résumé (affiché dans la liste)")
+    contenu     = RichTextUploadingField(verbose_name="Description complète")
+    modalites   = RichTextUploadingField(blank=True, verbose_name="Comment postuler ou soumissionner",
+                                         help_text="Pièces à fournir, lieu et mode de dépôt…")
+    lieu        = models.CharField(max_length=150, blank=True, verbose_name="Lieu",
+                                   help_text="Ex. : Brazzaville, ou « Tout le territoire ».")
+    date_publication = models.DateField(default=timezone.now, verbose_name="Date de publication")
+    date_limite = models.DateField(blank=True, null=True, verbose_name="Date limite",
+                                   help_text="Après cette date, l'offre passe automatiquement dans « Clôturées ». "
+                                             "Vide : pas de date limite.")
+    fichier     = models.FileField(
+        upload_to="opportunites/%Y/", blank=True, verbose_name="Dossier à télécharger",
+        validators=[FileExtensionValidator(["pdf", "doc", "docx", "xls", "xlsx", "odt", "zip"])],
+        help_text="TDR, dossier d'appel d'offres, fiche de poste… PDF conseillé.")
+    lien_externe = models.URLField(blank=True, verbose_name="Lien externe",
+                                   help_text="Formulaire en ligne ou annonce publiée ailleurs. Facultatif.")
+    email_contact = models.EmailField(blank=True, verbose_name="E-mail de contact ou de dépôt")
+    actif       = models.BooleanField(default=True, verbose_name="Publiée")
+
+    class Meta:
+        ordering            = ["-date_publication", "-id"]
+        verbose_name        = "Opportunité"
+        verbose_name_plural = "Opportunités (offres, emplois, appels)"
+
+    def __str__(self):
+        return self.titre
+
+    @property
+    def est_ouverte(self):
+        return self.date_limite is None or self.date_limite >= timezone.localdate()
+
+    @property
+    def slug_type(self):
+        return self.SLUGS_TYPES.get(self.type_offre, "")
+
+    @property
+    def extension(self):
+        return self.fichier.name.rsplit(".", 1)[-1].upper() if self.fichier and "." in self.fichier.name else ""
+
+
+class Abonne(models.Model):
+    email       = models.EmailField(unique=True, verbose_name="Adresse e-mail")
+    actif       = models.BooleanField(default=True, verbose_name="Inscrit",
+                                      help_text="Décoché : la personne s'est désinscrite.")
+    origine     = models.CharField(max_length=200, blank=True, verbose_name="Page d'inscription")
+    jeton       = models.UUIDField(default=uuid.uuid4, unique=True, editable=False,
+                                   verbose_name="Jeton de désinscription")
+    date_inscription = models.DateTimeField(auto_now_add=True, verbose_name="Inscrit le")
+    date_maj    = models.DateTimeField(auto_now=True, verbose_name="Modifié le")
+
+    class Meta:
+        ordering            = ["-date_inscription"]
+        verbose_name        = "Abonné à la lettre d'information"
+        verbose_name_plural = "Abonnés à la lettre d'information"
+
+    def __str__(self):
+        return self.email
 
     

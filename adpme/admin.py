@@ -1,10 +1,15 @@
 # ==========================================================================
-# ADPME Congo — admin.py — v3
+# ADPME Congo — admin.py — v4
 # Interface d'administration (thème Unfold aux couleurs de l'ADPME).
+# v4 : opportunités et abonnés à la lettre d'information (phase 4c).
 # Toutes les classes héritent de unfold.admin.ModelAdmin pour profiter du
 # nouveau design. Le menu latéral se règle dans settings.py (UNFOLD).
 # ==========================================================================
+import csv
+
 from django.contrib import admin
+from django.http import HttpResponse
+from django.utils import timezone
 from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import Group, User
@@ -22,6 +27,7 @@ from .models import (
     Slide, Programme, Parcours, ParcoursLien, ChiffreCle, Partenaire,
     Page, Antenne, Document, BlocAccueil,
     TexteSite, Element,
+    Offre, Abonne,
 )
 from .textes import defaut
 
@@ -277,5 +283,61 @@ class ElementAdmin(ModelAdmin):
     list_filter   = ("liste", "actif")
     search_fields = ("titre", "texte")
     fields        = ("liste", "titre", "texte", "points", "page", "icone", "ordre", "actif")
+
+
+# ==========================================================================
+# Opportunités et lettre d'information (phase 4c)
+# ==========================================================================
+@admin.register(Offre)
+class OffreAdmin(ModelAdmin):
+    list_display   = ("titre", "type_offre", "statut", "date_publication", "date_limite", "actif")
+    list_editable  = ("actif",)
+    list_filter    = ("type_offre", "actif")
+    search_fields  = ("titre", "reference", "resume")
+    date_hierarchy = "date_publication"
+    warn_unsaved_form = True
+    fieldsets = (
+        (None, {"fields": ("type_offre", "titre", "reference", "resume")}),
+        ("Contenu", {"fields": ("contenu", "modalites")}),
+        ("Informations pratiques", {"fields": ("lieu", "date_publication", "date_limite", "email_contact")}),
+        ("Pièce jointe et lien", {"fields": ("fichier", "lien_externe")}),
+        ("Affichage", {"fields": ("actif",)}),
+    )
+
+    @display(description="Statut", label={"En cours": "success", "Clôturée": "info"})
+    def statut(self, obj):
+        return "En cours" if obj.est_ouverte else "Clôturée"
+
+
+@admin.register(Abonne)
+class AbonneAdmin(ModelAdmin):
+    list_display    = ("email", "date_inscription", "actif", "origine")
+    list_filter     = ("actif",)
+    search_fields   = ("email",)
+    readonly_fields = ("date_inscription", "date_maj", "lien_desinscription")
+    fields          = ("email", "actif", "origine", "date_inscription", "date_maj", "lien_desinscription")
+    actions         = ["exporter_csv"]
+
+    @display(description="Lien de désinscription personnel")
+    def lien_desinscription(self, obj):
+        if not obj.pk:
+            return "—"
+        from django.urls import reverse
+        return reverse("newsletter_desinscription", args=[obj.jeton])
+
+    @admin.action(description="Exporter les abonnés sélectionnés (fichier CSV pour Excel)")
+    def exporter_csv(self, request, queryset):
+        reponse = HttpResponse(content_type="text/csv; charset=utf-8")
+        nom = f"abonnes-adpme-{timezone.localdate():%Y-%m-%d}.csv"
+        reponse["Content-Disposition"] = f'attachment; filename="{nom}"'
+        reponse.write("﻿")  # pour qu'Excel lise correctement les accents
+        ecrivain = csv.writer(reponse, delimiter=";")
+        ecrivain.writerow(["E-mail", "Inscrit", "Date d'inscription", "Lien de désinscription"])
+        base = request.build_absolute_uri("/").rstrip("/")
+        for a in queryset:
+            ecrivain.writerow([a.email, "oui" if a.actif else "non",
+                               timezone.localtime(a.date_inscription).strftime("%d/%m/%Y %H:%M"),
+                               base + self.lien_desinscription(a)])
+        return reponse
 
     

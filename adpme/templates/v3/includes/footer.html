@@ -1,10 +1,34 @@
 {% load static ui %}
-{% comment %} ADPME Congo — v3/includes/footer.html — v3
-   Footer en colonnes : agence + coordonnées, une colonne par rubrique du menu (adpme/navigation.py),
+{% comment %} ADPME Congo — v3/includes/footer.html — v4
+   Bandeau d'inscription à la lettre d'information (textes : admin > Textes du site > Lettre d'information),
+   puis footer en colonnes : agence + coordonnées, une colonne par rubrique du menu (adpme/navigation.py),
    accès directs, QR code vers le site.
 {% endcomment %}
 <footer class="site-footer">
     <div class="filet-drapeau"></div>
+
+    <section class="lettre" id="lettre-information" aria-labelledby="lettre-titre">
+        <div class="container lettre__inner">
+            <div class="lettre__texte">
+                <h2 class="lettre__titre" id="lettre-titre">{% icon "email" %} {% texte "newsletter.titre" %}</h2>
+                <p>{% texte "newsletter.texte" %}</p>
+            </div>
+            <div>
+                {% for message in messages %}{% if "newsletter" in message.extra_tags %}
+                <p class="lettre__message lettre__message--{{ message.level_tag }}" role="{% if message.level_tag == 'error' %}alert{% else %}status{% endif %}">{% if message.level_tag == 'error' %}{% icon "info" %}{% else %}{% icon "check" %}{% endif %} {{ message }}</p>
+                {% endif %}{% endfor %}
+                <form class="lettre__form" action="{% url 'newsletter_inscription' %}" method="post">
+                    {% csrf_token %}
+                    <label class="sr-only" for="lettre-email">{% texte "newsletter.champ" %}</label>
+                    <input class="input" id="lettre-email" type="email" name="email" placeholder="{% texte "newsletter.champ" %}" autocomplete="email" maxlength="254" required>
+                    <div class="champ-piege" aria-hidden="true"><label for="lettre-site">Ne pas remplir ce champ</label><input type="text" id="lettre-site" name="site_web" tabindex="-1" autocomplete="off"></div>
+                    <button type="submit" class="btn btn--primaire">{% texte "newsletter.bouton" %}</button>
+                </form>
+                <p class="lettre__mention">{% texte "newsletter.mention" %}</p>
+            </div>
+        </div>
+    </section>
+
     <div class="container site-footer__grille">
 
         <div class="site-footer__agence">
