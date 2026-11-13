@@ -1,6 +1,10 @@
+# ==========================================================================
+# ADPME Congo — views.py — v4
+# Vues. Lot 2 : listes (accès rapides, services, étapes) lues depuis l'admin.
+# ==========================================================================
 import logging
 from django.shortcuts import render, get_object_or_404, redirect
-from django.urls import reverse
+from django.urls import NoReverseMatch, reverse
 from django.http import FileResponse, Http404, HttpResponse
 from django.db.models import F, Q
 from .models import (
@@ -8,8 +12,7 @@ from .models import (
     Category,
     FAQ, Discours,
     Slide, Programme, Parcours, ChiffreCle, Partenaire,
-    Page, Antenne, Document,
-
+    Page, Antenne, Document, BlocAccueil, Element,
 )
 
 from django.core.mail import send_mail
@@ -19,24 +22,47 @@ from .forms import ContactForm
 
 from django.core.paginator import Paginator
 
+def _elements(liste):
+    """Éléments d'une liste de l'admin (accès rapides, services, étapes), avec leur lien."""
+    elements = []
+    for e in Element.objects.filter(liste=liste, actif=True):
+        try:
+            e.href = reverse(e.page) if e.page else ""
+        except NoReverseMatch:
+            e.href = ""
+        elements.append(e)
+    return elements
+
+
 def AccueilView(request):
     """Page d'accueil v3 : chaque bloc ne s'affiche que s'il a du contenu dans l'admin."""
-    from .navigation import ACCES_RAPIDES
-
-    acces = [{**a, "href": reverse(a["url"])} for a in ACCES_RAPIDES]
     context = {
-        'slides'            : Slide.objects.filter(actif=True),
-        'acces_rapides'     : acces,
-        'parcours'          : Parcours.objects.filter(actif=True).prefetch_related('liens'),
-        'programmes'        : Programme.objects.filter(actif=True, sur_accueil=True)[:6],
-        'chiffres'          : ChiffreCle.objects.filter(actif=True),
-        'discours_dg'       : Discours.objects.filter(type_discours='dg').first(),
-        'actualites'        : (BlogActualite.objects.filter(published=True)
+        'slides': Slide.objects.filter(actif=True),
+        'acces_rapides': _elements("acces"),
+        'parcours': Parcours.objects.filter(actif=True).prefetch_related('liens'),
+        'programmes': Programme.objects.filter(actif=True, sur_accueil=True)[:6],
+        'chiffres': ChiffreCle.objects.filter(actif=True),
+        'discours_dg': Discours.objects.filter(type_discours='dg').first(),
+        'actualites': (BlogActualite.objects.filter(published=True)
                        .select_related('category')
                        .order_by('-date_publication', '-id')[:3]),
-        'partenaires'       : Partenaire.objects.filter(actif=True),
+        'partenaires': Partenaire.objects.filter(actif=True),
+        'blocs': {b.cle: b for b in BlocAccueil.objects.filter(actif=True)},
     }
     return render(request, "v3/accueil.html", context)
+
+
+def DispositifsView(request):
+    """Vue d'ensemble de l'offre d'accompagnement : services, parcours, programmes, ressources.
+    Services et étapes : admin > Listes ; textes : admin > Textes du site."""
+    context = {
+        'services': _elements("service"),
+        'etapes': _elements("etape"),
+        'programmes': Programme.objects.filter(actif=True),
+        'partenaires': Partenaire.objects.filter(actif=True),
+        'rubrique_id': 'services',
+    }
+    return render(request, "v3/dispositifs.html", context)
 
 
 def Categorie(request, slug):
@@ -50,6 +76,7 @@ def Categorie(request, slug):
     }
 
     return render(request,"adpme/categorie.html", context)
+
 
 def Blog_detail(request, slug):
     """Article d'actualité. Un brouillon n'est visible que par l'équipe (connectée à l'admin)."""
@@ -140,7 +167,7 @@ def ProgrammeDetailView(request, slug):
 def BlogActualiteView(request):
     return render(request,"adpme/BlogActualite.html")
 
-
+logger = logging.getLogger(__name__)
 def ContactView(request):
     form = ContactForm()
 
@@ -212,6 +239,9 @@ def DiscoursMinistreView(request):
     discours = get_object_or_404(Discours, type_discours='ministre')
     return render(request, "v3/discours.html", {'discours': discours, 'rubrique_id': 'agence'})
 
+
+
+
 # ── Refonte v3 : guide des composants (local uniquement) ──────────────
 def StyleguideView(request):
     """Page de contrôle visuel des composants v3. 404 en production."""
@@ -235,6 +265,9 @@ def StyleguideView(request):
         'icones': list(ICONES) + list(ICONES_PLEINES),
     }
     return render(request, "v3/styleguide.html", context)
+
+
+
 
 
 # ── Refonte v3 : recherche (version simple, enrichie en phase 5) ──────
@@ -263,19 +296,17 @@ def RechercheView(request):
         faqs = (FAQ.objects
                 .filter(active=True)
                 .filter(Q(question__icontains=q) | Q(reponse__icontains=q))[:10])
-
         documents = (Document.objects
                      .filter(actif=True)
                      .filter(Q(titre__icontains=q) | Q(description__icontains=q))[:10])
 
     context = {
-        'q'         : q,
-        'pages'     : pages,
+        'q': q,
+        'pages': pages,
         'actualites': actualites,
-        'faqs'      : faqs,
-        'documents' : documents,
-        'total'     : len(pages) + len(actualites) + len(faqs) + len(documents),
+        'faqs': faqs,
+        'documents': documents,
+        'total': len(pages) + len(actualites) + len(faqs) + len(documents),
     }
     return render(request, 'v3/recherche.html', context)
-
 

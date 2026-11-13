@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ADPME Congo — components.css — v4
+   ADPME Congo — components.css — v5
    Composants réutilisables. Chaque bloc correspond à un gabarit dans
    templates/v3/components/. Dépend de tokens.css et base.css.
    ========================================================================== */
@@ -497,5 +497,90 @@
   color: rgba(255, 255, 255, .62);
 }
 .chiffre__libelle + .chiffre__source { border-top: 1px solid rgba(255, 255, 255, .12); margin-top: var(--sp-4); }
+
+
+
+/* ── 21. Bloc « texte + image » (accueil) ──────────────────────────────── */
+.split {
+  display: grid; gap: var(--sp-7); align-items: center;
+  grid-template-columns: minmax(0, 1fr);
+}
+@media (min-width: 960px) {
+  .split { grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: var(--sp-8); }
+  .split--inverse .split__visuel { order: -1; }
+}
+.split__titre { font-size: var(--fs-2xl); margin-bottom: var(--sp-4); }
+.split__intro { font-size: var(--fs-lg); color: var(--texte); margin-bottom: var(--sp-5); text-align: justify; hyphens: auto; }
+.split__action { margin: var(--sp-6) 0 0; }
+
+.pastille {
+  display: inline-flex; align-items: center; gap: var(--sp-2);
+  margin-bottom: var(--sp-4);
+  padding: var(--sp-1) var(--sp-4);
+  border: 1px solid var(--vert-100);
+  border-radius: var(--rayon-pill);
+  background: var(--vert-50);
+  color: var(--vert-800);
+  font-size: var(--fs-sm); font-weight: var(--fw-medium);
+}
+
+/* Visuel (photo, ou motif si aucune image n'est saisie) */
+.visuel {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  border-radius: 28px;
+  background: var(--vert-800);
+  box-shadow: var(--ombre-lg);
+}
+.visuel img { width: 100%; height: 100%; object-fit: cover; }
+.visuel__vide {
+  display: grid; place-items: center;
+  width: 100%; height: 100%;
+  color: rgba(255, 255, 255, .85);
+  background:
+    radial-gradient(circle at 80% 15%, rgba(148, 134, 187, .55), transparent 45%),
+    radial-gradient(rgba(255, 255, 255, .1) 1px, transparent 1px) 0 0 / 20px 20px,
+    linear-gradient(135deg, var(--vert-900), var(--vert-700) 60%, var(--violet-700));
+}
+.visuel__vide .icon { width: 96px; height: 96px; stroke-width: 1.4; }
+/* Décor de lignes blanches, façon plan d'architecte */
+.visuel--lignes::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300' fill='none' stroke='white' stroke-opacity='.75' stroke-width='1'%3E%3Cpath d='M170 300V120l230-70'/%3E%3Cpath d='M210 300V160l170-52v192'/%3E%3Cpath d='M250 300V200l110-34v134'/%3E%3C/svg%3E") right bottom / 70% auto no-repeat;
+  pointer-events: none;
+}
+.visuel__legende {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: var(--sp-8) var(--sp-6) var(--sp-5);
+  background: linear-gradient(transparent, rgba(10, 20, 12, .85));
+  color: #fff;
+}
+.visuel__legende p { margin: var(--sp-2) 0 0; font-size: var(--fs-xl); font-weight: var(--fw-bold); line-height: 1.25; }
+.visuel__badge {
+  display: inline-block;
+  padding: 2px var(--sp-3);
+  border-radius: var(--rayon-pill);
+  background: var(--drapeau-jaune);
+  color: var(--encre);
+  font-size: var(--fs-sm); font-weight: var(--fw-bold);
+}
+
+/* Liste à coches */
+.liste-check { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-3); }
+.liste-check li { display: flex; align-items: flex-start; gap: var(--sp-3); margin: 0; }
+.liste-check .icon {
+  flex-shrink: 0;
+  width: 22px; height: 22px;
+  margin-top: 0.1em;
+  padding: 4px;
+  border-radius: 50%;
+  background: var(--c-primaire); color: #fff;
+  stroke-width: 3;
+}
+.liste-check--compacte { gap: var(--sp-2); font-size: var(--fs-sm); }
+.liste-check--compacte .icon { width: 18px; height: 18px; padding: 3px; }
+
 
 

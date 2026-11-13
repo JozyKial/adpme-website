@@ -28,7 +28,8 @@ urlpatterns = [
     # Refonte v3 — guide des composants (DEBUG uniquement)
     path('styleguide/', views.StyleguideView, name="styleguide"),
 
-        path('recherche/', views.RechercheView, name="recherche"),
+    path('recherche/', views.RechercheView, name="recherche"),
+    path('dispositifs-accompagnement/', views.DispositifsView, name="dispositifs"),
     
 ]
 #+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 

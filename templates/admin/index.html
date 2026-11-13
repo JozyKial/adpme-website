@@ -1,0 +1,117 @@
+{% extends 'admin/base.html' %}
+{% load i18n %}
+{% comment %} ADPME Congo — templates/admin/index.html — v1
+   Tableau de bord de l'administration (thème Unfold).
+   Les données viennent de adpme/unfold_config.py > tableau_de_bord().
+{% endcomment %}
+
+{% block title %}Tableau de bord | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block branding %}
+    {% include "unfold/helpers/site_branding.html" %}
+{% endblock %}
+
+{% block content %}
+<style>
+    .tdb { --tdb-bord: #e5e7eb; --tdb-fond: #fff; --tdb-doux: #6b7280; --tdb-vert: #336633; --tdb-vert-clair: #eef5ee; --tdb-alerte: #fdf6e3; --tdb-alerte-bord: #e9c46a;
+           display: grid; gap: 1.5rem; }
+    .dark .tdb { --tdb-bord: #374151; --tdb-fond: #111827; --tdb-doux: #9ca3af; --tdb-vert-clair: #1c2a1c; --tdb-alerte: #2a2414; --tdb-alerte-bord: #8a6d1f; }
+    .tdb h2 { font-size: 1rem; font-weight: 600; margin: 0 0 .75rem; }
+    .tdb__intro p { color: var(--tdb-doux); margin: .25rem 0 0; }
+    .tdb__intro h1 { font-size: 1.5rem; font-weight: 700; margin: 0; }
+    .tdb__indicateurs { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+    .tdb__carte { background: var(--tdb-fond); border: 1px solid var(--tdb-bord); border-radius: .75rem; padding: 1rem 1.25rem; text-decoration: none; color: inherit; display: block; transition: border-color .15s, box-shadow .15s; }
+    a.tdb__carte:hover { border-color: var(--tdb-vert); box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+    .tdb__carte-tete { display: flex; align-items: center; gap: .5rem; color: var(--tdb-doux); font-size: .875rem; }
+    .tdb__carte-tete .material-symbols-outlined { color: var(--tdb-vert); font-size: 1.25rem; }
+    .tdb__valeur { font-size: 2rem; font-weight: 700; line-height: 1.2; margin-top: .25rem; }
+    .tdb__colonnes { display: grid; gap: 1.5rem; grid-template-columns: 1fr; }
+    @media (min-width: 1024px) { .tdb__colonnes { grid-template-columns: 2fr 1fr; } }
+    .tdb__tableau { width: 100%; border-collapse: collapse; font-size: .875rem; }
+    .tdb__tableau th { text-align: left; color: var(--tdb-doux); font-weight: 600; padding: .5rem; border-bottom: 1px solid var(--tdb-bord); }
+    .tdb__tableau td { padding: .6rem .5rem; border-bottom: 1px solid var(--tdb-bord); vertical-align: top; }
+    .tdb__tableau tr:last-child td { border-bottom: 0; }
+    .tdb__tableau a { color: inherit; font-weight: 600; text-decoration: none; }
+    .tdb__tableau a:hover { color: var(--tdb-vert); text-decoration: underline; }
+    .tdb__badge { display: inline-block; font-size: .75rem; padding: .1rem .5rem; border-radius: 999px; white-space: nowrap; }
+    .tdb__badge--ok { background: var(--tdb-vert-clair); color: var(--tdb-vert); }
+    .dark .tdb__badge--ok { color: #8fc78f; }
+    .tdb__badge--brouillon { background: var(--tdb-alerte); color: #8a6d1f; }
+    .dark .tdb__badge--brouillon { color: #e9c46a; }
+    .tdb__raccourcis { list-style: none; margin: 0; padding: 0; display: grid; gap: .5rem; }
+    .tdb__raccourcis a { display: flex; align-items: center; gap: .6rem; padding: .6rem .75rem; border-radius: .5rem; text-decoration: none; color: inherit; border: 1px solid var(--tdb-bord); }
+    .tdb__raccourcis a:hover { border-color: var(--tdb-vert); background: var(--tdb-vert-clair); }
+    .tdb__raccourcis .material-symbols-outlined { color: var(--tdb-vert); font-size: 1.25rem; }
+    .tdb__vigilance { list-style: none; margin: 0; padding: 0; display: grid; gap: .5rem; }
+    .tdb__vigilance a { display: flex; gap: .6rem; padding: .6rem .75rem; border-radius: .5rem; background: var(--tdb-alerte); border: 1px solid var(--tdb-alerte-bord); text-decoration: none; color: inherit; font-size: .875rem; }
+    .tdb__vigilance .material-symbols-outlined { font-size: 1.15rem; color: #b08900; }
+    .tdb__vide { color: var(--tdb-doux); font-size: .875rem; margin: 0; }
+    .tdb__pile { display: grid; gap: 1.5rem; align-content: start; }
+</style>
+
+<div class="tdb">
+    <div class="tdb__intro">
+        <h1>Bonjour{% if request.user.first_name %} {{ request.user.first_name }}{% endif %}</h1>
+        <p>Bienvenue dans l'administration du site de l'ADPME. Choisissez une action ou une rubrique dans le menu de gauche.</p>
+    </div>
+
+    <section aria-label="Indicateurs">
+        <div class="tdb__indicateurs">
+            {% for i in indicateurs %}
+            <a class="tdb__carte" href="{{ i.lien }}">
+                <div class="tdb__carte-tete"><span class="material-symbols-outlined" aria-hidden="true">{{ i.icone }}</span>{{ i.titre }}</div>
+                <div class="tdb__valeur">{{ i.valeur }}</div>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+
+    <div class="tdb__colonnes">
+        <section class="tdb__carte">
+            <h2>Dernières actualités</h2>
+            {% if derniers_articles %}
+            <table class="tdb__tableau">
+                <thead><tr><th>Titre</th><th>Catégorie</th><th>Date</th><th>État</th></tr></thead>
+                <tbody>
+                {% for a in derniers_articles %}
+                <tr>
+                    <td><a href="{% url 'admin:adpme_blogactualite_change' a.pk %}">{{ a.title|truncatechars:70 }}</a></td>
+                    <td>{{ a.category }}</td>
+                    <td>{{ a.date_publication|date:"d/m/Y" }}</td>
+                    <td>{% if a.published %}<span class="tdb__badge tdb__badge--ok">Publié</span>{% else %}<span class="tdb__badge tdb__badge--brouillon">Brouillon</span>{% endif %}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p class="tdb__vide">Aucun article pour le moment.</p>
+            {% endif %}
+        </section>
+
+        <div class="tdb__pile">
+            <section class="tdb__carte">
+                <h2>Actions rapides</h2>
+                <ul class="tdb__raccourcis">
+                    {% for r in raccourcis %}
+                    <li><a href="{{ r.lien }}"{% if r.lien == "/" %} target="_blank" rel="noopener"{% endif %}><span class="material-symbols-outlined" aria-hidden="true">{{ r.icone }}</span>{{ r.titre }}</a></li>
+                    {% endfor %}
+                </ul>
+            </section>
+
+            <section class="tdb__carte">
+                <h2>Points de vigilance</h2>
+                {% if vigilance %}
+                <ul class="tdb__vigilance">
+                    {% for message, lien in vigilance %}
+                    <li><a href="{{ lien }}"><span class="material-symbols-outlined" aria-hidden="true">warning</span><span>{{ message }}</span></a></li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="tdb__vide">Rien à signaler : le site est complet.</p>
+                {% endif %}
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

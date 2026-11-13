@@ -1,7 +1,7 @@
 {% load static ui %}
-{% comment %} ADPME Congo — v3/includes/header.html — v2
+{% comment %} ADPME Congo — v3/includes/header.html — v3
    Barre de contact + en-tête collant + méga-menu + panneau de recherche.
-   Le contenu du menu se modifie dans adpme/navigation.py, les coordonnées dans l'admin (AgenceInfo).
+   Libellés du menu et textes : admin > Textes du site. Coordonnées : admin > Informations de l'agence.
 {% endcomment %}
 <div class="filet-drapeau"></div>
 
@@ -63,10 +63,10 @@
                                 {% endfor %}
                             </ul>
                             <div class="mega__aide">
-                                <p class="mega__aide-titre">Besoin d'un renseignement&nbsp;?</p>
+                                <p class="mega__aide-titre">{% texte "general.menu_aide_titre" %}</p>
                                 {% if agence.phone %}<p><a href="tel:{{ agence.phone|tel_lien }}">{% icon "telephone" %} {{ agence.phone }}</a></p>{% endif %}
                                 {% if agence.email_contact %}<p><a href="mailto:{{ agence.email_contact }}">{% icon "email" %} {{ agence.email_contact }}</a></p>{% endif %}
-                                <a class="btn btn--secondaire btn--sm" href="{% url 'contact' %}">Écrire à l'agence</a>
+                                <a class="btn btn--secondaire btn--sm" href="{% url 'contact' %}">{% texte "general.menu_aide_bouton" %}</a>
                             </div>
                         </div>
                     </div>
@@ -76,14 +76,14 @@
                 </li>
                 {% endfor %}
             </ul>
-            <a class="btn btn--primaire btn--bloc nav__contact-mobile" href="{% url 'contact' %}">Nous contacter</a>
+            <a class="btn btn--primaire btn--bloc nav__contact-mobile" href="{% url 'contact' %}">{% texte "general.bouton_contact" %}</a>
         </nav>
 
         <div class="site-header__actions">
             <button type="button" class="bouton-icone" aria-expanded="false" aria-controls="recherche-panneau" data-recherche-bouton>
                 {% icon "recherche" %}<span class="sr-only">Rechercher sur le site</span>
             </button>
-            <a class="btn btn--primaire site-header__contact" href="{% url 'contact' %}">Nous contacter</a>
+            <a class="btn btn--primaire site-header__contact" href="{% url 'contact' %}">{% texte "general.bouton_contact" %}</a>
             <button type="button" class="bouton-icone site-header__burger" aria-expanded="false" aria-controls="nav-principale" data-burger>
                 <span class="site-header__burger-ouvrir">{% icon "menu" %}</span>
                 <span class="site-header__burger-fermer">{% icon "fermer" %}</span>
@@ -95,9 +95,8 @@
     <div class="recherche-panneau" id="recherche-panneau" hidden>
         <form class="container recherche-form" action="{% url 'recherche' %}" method="get" role="search">
             <label class="sr-only" for="q-entete">Rechercher sur le site</label>
-            <input class="input" id="q-entete" type="search" name="q" placeholder="Rechercher une page, une actualité, une question…" minlength="2" maxlength="100" required>
+            <input class="input" id="q-entete" type="search" name="q" placeholder="{% texte "general.recherche_placeholder" %}" minlength="2" maxlength="100" required>
             <button type="submit" class="btn btn--primaire">{% icon "recherche" %}<span>Rechercher</span></button>
         </form>
     </div>
 </header>
-

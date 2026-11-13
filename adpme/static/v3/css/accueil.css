@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ADPME Congo — accueil.css — v1
+   ADPME Congo — accueil.css — v2
    Styles propres à la page d'accueil (chargés uniquement sur cette page).
    ========================================================================== */
 
@@ -195,4 +195,50 @@
 .partenaires li > img { width: 100%; }
 .partenaires a:hover img, .partenaires a:focus-visible img { filter: none; opacity: 1; }
 .partenaires a:hover { border-color: var(--c-primaire); }
+
+
+/* ── 6. Bandeau « Nos priorités » ──────────────────────────────────────── */
+.priorites {
+  position: relative;
+  overflow: hidden;
+  padding-block: var(--sp-8);
+  color: #fff;
+  background: var(--vert-800);
+}
+.priorites__image {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.priorites::before {
+  content: "";
+  position: absolute; inset: 0; z-index: 1;
+  background:
+    radial-gradient(rgba(255, 255, 255, .07) 1px, transparent 1px) 0 0 / 22px 22px,
+    linear-gradient(100deg, rgba(31, 61, 31, .96) 0%, rgba(51, 102, 51, .9) 55%, rgba(95, 82, 145, .85) 100%);
+}
+.priorites__contenu { position: relative; z-index: 2; }
+.priorites__titre { color: #fff; margin-bottom: var(--sp-5); }
+.priorites__texte { max-width: 70ch; color: rgba(255, 255, 255, .9); }
+.priorites__liste {
+  display: grid; gap: var(--sp-4) var(--sp-7);
+  grid-template-columns: minmax(0, 1fr);
+  list-style: none; margin: 0; padding: 0;
+}
+@media (min-width: 768px) {
+  .priorites__liste { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+.priorites__liste li {
+  display: flex; align-items: center; gap: var(--sp-3);
+  margin: 0;
+  font-size: var(--fs-lg); font-weight: var(--fw-bold);
+}
+.priorites__liste .icon {
+  flex-shrink: 0;
+  width: 26px; height: 26px; padding: 5px;
+  border-radius: 50%;
+  background: var(--drapeau-jaune); color: var(--vert-900);
+  stroke-width: 3;
+}
+
 

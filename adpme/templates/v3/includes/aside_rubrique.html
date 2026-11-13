@@ -1,5 +1,5 @@
 {% load ui %}
-{% comment %} ADPME Congo — v3/includes/aside_rubrique.html — v1
+{% comment %} ADPME Congo — v3/includes/aside_rubrique.html — v2
    Colonne latérale des pages intérieures : liens de la rubrique (adpme/navigation.py) + contact.
    Paramètre : rubrique_id ("agence", "services"…)
 {% endcomment %}
@@ -16,10 +16,9 @@
     {% endif %}{% endfor %}
 
     <div class="encadre">
-        <p class="encadre__libelle">Besoin d'un renseignement&nbsp;?</p>
+        <p class="encadre__libelle">{% texte "communs.aside_titre" %}</p>
         {% if agence.phone %}<p><a href="tel:{{ agence.phone|tel_lien }}">{% icon "telephone" %} {{ agence.phone }}</a></p>{% endif %}
         {% if agence.horaires %}<p class="text-sm text-doux">{{ agence.horaires }}</p>{% endif %}
-        <a class="btn btn--primaire btn--bloc" href="{% url 'contact' %}">Nous contacter</a>
+        <a class="btn btn--primaire btn--bloc" href="{% url 'contact' %}">{% texte "communs.aside_bouton" %}</a>
     </div>
 </aside>
-

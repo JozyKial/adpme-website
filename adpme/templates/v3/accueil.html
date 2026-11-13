@@ -1,12 +1,13 @@
 {% extends "v3/base.html" %}
 {% load static ui %}
-{% comment %} ADPME Congo — v3/accueil.html — v2
+{% comment %} ADPME Congo — v3/accueil.html — v4
    Page d'accueil. Chaque bloc ne s'affiche que s'il a du contenu dans l'admin :
-   Slides, Parcours, Programmes, Chiffres clés, Discours (DG), Actualités, Partenaires.
-   Les accès rapides se modifient dans adpme/navigation.py (ACCES_RAPIDES).
+   Slides, Blocs de la page d'accueil, Parcours, Programmes, Chiffres clés, Discours (DG),
+   Actualités, Partenaires.
+   Accès rapides : admin > Listes. Titres des sections : admin > Textes du site > Page d'accueil.
 {% endcomment %}
 
-{% block title %}{% if agence %}{{ agence.nom_agence }}{% else %}ADPME{% endif %} — Agence de Développement des TPME | Congo{% endblock %}
+{% block title %}{% texte "accueil.titre_page" %}{% endblock %}
 {% block body_class %}page-accueil{% endblock %}
 {% block extra_css %}<link rel="stylesheet" href="{% static 'v3/css/accueil.css' %}">{% endblock %}
 
@@ -43,12 +44,12 @@
 {% else %}
 <section class="hero hero--defaut">
     <div class="container hero__contenu">
-        <p class="hero__surtitre">République du Congo</p>
-        <h1 class="hero__titre">Agence de Développement des Très Petites, Petites et Moyennes Entreprises</h1>
+        <p class="hero__surtitre">{% texte "accueil.hero_surtitre" %}</p>
+        <h1 class="hero__titre">{% texte "accueil.hero_titre" %}</h1>
         {% if agence.slogan %}<p class="hero__texte">{{ agence.slogan }}</p>{% endif %}
         <p class="hero__actions">
-            <a class="btn btn--blanc btn--lg" href="{% url 'information' %}">M'informer et m'orienter</a>
-            <a class="btn btn--contour-blanc btn--lg" href="{% url 'contact' %}">Nous contacter</a>
+            <a class="btn btn--blanc btn--lg" href="{% url 'information' %}">{% texte "accueil.hero_bouton1" %}</a>
+            <a class="btn btn--contour-blanc btn--lg" href="{% url 'contact' %}">{% texte "accueil.hero_bouton2" %}</a>
         </p>
     </div>
 </section>
@@ -58,11 +59,11 @@
 <section class="acces" aria-labelledby="titre-acces">
     <div class="container">
         <div class="acces__panneau">
-            <h2 class="acces__titre" id="titre-acces">Que souhaitez-vous faire&nbsp;?</h2>
+            <h2 class="acces__titre" id="titre-acces">{% texte "accueil.acces_titre" %}</h2>
             <div class="grid grid--3">
                 {% for a in acces_rapides %}
                 {% cycle "vert" "jaune" "rouge" "jaune" "rouge" "vert" as couleur silent %}
-                {% include "v3/components/tuile.html" with titre=a.titre desc=a.desc url=a.href icone=a.icone couleur=couleur %}
+                {% include "v3/components/tuile.html" with titre=a.titre desc=a.texte url=a.href icone=a.icone|default:"fleche-droite" couleur=couleur %}
                 {% endfor %}
             </div>
         </div>
@@ -104,7 +105,8 @@
 {% if parcours %}
 <section class="section" aria-labelledby="titre-parcours">
     <div class="container">
-        {% include "v3/components/section_header.html" with surtitre="Votre parcours" titre="Vous êtes…" id="titre-parcours" centre=True %}
+        {% texte "accueil.parcours_surtitre" as t_surtitre %}{% texte "accueil.parcours_titre" as t_titre %}
+        {% include "v3/components/section_header.html" with surtitre=t_surtitre titre=t_titre id="titre-parcours" centre=True %}
         <div class="grid grid--3">
             {% for profil in parcours %}
             <article class="profil">
@@ -130,8 +132,9 @@
 <section class="section section--alt" aria-labelledby="titre-programmes">
     <div class="container">
         <div class="section-header__ligne">
-            {% include "v3/components/section_header.html" with surtitre="Nos programmes" titre="Les programmes portés par l'agence" id="titre-programmes" %}
-            <a class="btn btn--contour" href="{% url 'programme' %}">Tous les programmes {% icon "fleche-droite" %}</a>
+            {% texte "accueil.programmes_surtitre" as t_surtitre %}{% texte "accueil.programmes_titre" as t_titre %}
+            {% include "v3/components/section_header.html" with surtitre=t_surtitre titre=t_titre id="titre-programmes" %}
+            <a class="btn btn--contour" href="{% url 'programme' %}">{% texte "accueil.programmes_bouton" %} {% icon "fleche-droite" %}</a>
         </div>
         <div class="grid grid--3">
             {% for p in programmes %}
@@ -142,7 +145,6 @@
     </div>
 </section>
 {% endif %}
-
 
 {# ── 4b. Développez vos compétences ───────────────────────────────── #}
 {% if blocs.competences %}
@@ -170,7 +172,7 @@
                 <p class="section-header__surtitre" id="titre-mot-dg">Mot du {{ discours_dg.get_type_discours_display }}</p>
                 <blockquote class="mot__citation">{{ discours_dg.extrait|linebreaksbr }}</blockquote>
                 <p class="mot__auteur"><strong>{{ discours_dg.nom_auteur }}</strong><br><span>{{ discours_dg.fonction }}</span></p>
-                <a class="btn btn--lien" href="{% url 'discours_dg' %}">Lire le message complet {% icon "fleche-droite" %}</a>
+                <a class="btn btn--lien" href="{% url 'discours_dg' %}">{% texte "accueil.mot_lien" %} {% icon "fleche-droite" %}</a>
             </div>
         </div>
     </div>
@@ -182,8 +184,9 @@
 <section class="section section--alt" aria-labelledby="titre-actus">
     <div class="container">
         <div class="section-header__ligne">
-            {% include "v3/components/section_header.html" with surtitre="Actualités" titre="Les dernières nouvelles de l'agence" id="titre-actus" %}
-            <a class="btn btn--contour" href="{% url 'actualite' %}">Toutes les actualités {% icon "fleche-droite" %}</a>
+            {% texte "accueil.actus_surtitre" as t_surtitre %}{% texte "accueil.actus_titre" as t_titre %}
+            {% include "v3/components/section_header.html" with surtitre=t_surtitre titre=t_titre id="titre-actus" %}
+            <a class="btn btn--contour" href="{% url 'actualite' %}">{% texte "accueil.actus_bouton" %} {% icon "fleche-droite" %}</a>
         </div>
         <div class="grid grid--3">
             {% for post in actualites %}{% include "v3/components/card_actualite.html" %}{% endfor %}
@@ -196,7 +199,8 @@
 {% if partenaires %}
 <section class="section section--compacte" aria-labelledby="titre-partenaires">
     <div class="container">
-        {% include "v3/components/section_header.html" with surtitre="Ils nous accompagnent" titre="Nos partenaires" id="titre-partenaires" centre=True %}
+        {% texte "accueil.partenaires_surtitre" as t_surtitre %}{% texte "accueil.partenaires_titre" as t_titre %}
+        {% include "v3/components/section_header.html" with surtitre=t_surtitre titre=t_titre id="titre-partenaires" centre=True %}
         <ul class="partenaires">
             {% for p in partenaires %}
             <li>
@@ -214,7 +218,8 @@
 <section class="section">
     <div class="container">
         {% url 'contact' as url_contact %}{% url 'faq' as url_faq %}
-        {% include "v3/components/cta_band.html" with titre="Un projet, une question ?" texte="Écrivez-nous, appelez l'agence ou consultez les questions fréquentes." bouton_texte="Nous contacter" bouton_url=url_contact bouton2_texte="Consulter la FAQ" bouton2_url=url_faq %}
+        {% texte "accueil.cta_titre" as t_titre %}{% texte "accueil.cta_texte" as t_texte %}{% texte "accueil.cta_bouton1" as t_b1 %}{% texte "accueil.cta_bouton2" as t_b2 %}
+        {% include "v3/components/cta_band.html" with titre=t_titre texte=t_texte bouton_texte=t_b1 bouton_url=url_contact bouton2_texte=t_b2 bouton2_url=url_faq %}
     </div>
 </section>
 

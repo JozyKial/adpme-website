@@ -1,5 +1,5 @@
 {% load static ui %}
-{% comment %} ADPME Congo — v3/includes/footer.html — v2
+{% comment %} ADPME Congo — v3/includes/footer.html — v3
    Footer en colonnes : agence + coordonnées, une colonne par rubrique du menu (adpme/navigation.py),
    accès directs, QR code vers le site.
 {% endcomment %}
@@ -37,24 +37,24 @@
         {% endif %}{% endfor %}
 
         <nav class="site-footer__colonne" aria-labelledby="pied-acces">
-            <h2 class="site-footer__titre" id="pied-acces">Accès directs</h2>
+            <h2 class="site-footer__titre" id="pied-acces">{% texte "general.pied_acces" %}</h2>
             <ul>
                 {% for rubrique in menu_principal %}{% if not rubrique.liens %}<li><a href="{{ rubrique.href }}">{{ rubrique.titre }}</a></li>{% endif %}{% endfor %}
-                <li><a href="{% url 'recherche' %}">Recherche</a></li>
-                <li><a href="{% url 'contact' %}">Contact</a></li>
+                <li><a href="{% url 'recherche' %}">{% texte "menu.recherche" %}</a></li>
+                <li><a href="{% url 'contact' %}">{% texte "menu.contact" %}</a></li>
             </ul>
         </nav>
 
         <div class="site-footer__qr">
-            <h2 class="site-footer__titre">Le site sur mobile</h2>
+            <h2 class="site-footer__titre">{% texte "general.pied_qr_titre" %}</h2>
             {% qr_svg request.scheme|add:"://"|add:request.get_host|add:"/" label="QR code : adresse du site de l'ADPME" %}
-            <p class="site-footer__qr-texte">Scannez ce code pour ouvrir le site sur votre téléphone.</p>
+            <p class="site-footer__qr-texte">{% texte "general.pied_qr_texte" %}</p>
         </div>
     </div>
 
     <div class="site-footer__bas">
         <div class="container site-footer__bas-inner">
-            <p>&copy; {% now "Y" %} {% if agence %}{{ agence.nom_agence }}{% else %}ADPME{% endif %} — République du Congo</p>
+            <p>&copy; {% now "Y" %} {% if agence %}{{ agence.nom_agence }}{% else %}ADPME{% endif %} — {% texte "general.pied_mention" %}</p>
             <p><a href="#contenu">Haut de page</a></p>
         </div>
     </div>

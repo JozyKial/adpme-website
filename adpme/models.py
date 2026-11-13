@@ -1,11 +1,14 @@
+# ==========================================================================
+# ADPME Congo — models.py — v4
+# Modèles. Lot 2 : TexteSite (textes du site) et Element (listes modifiables).
+# ==========================================================================
+from django.core.validators import FileExtensionValidator
 from django.db import models
 from autoslug import AutoSlugField
 from django.template.defaultfilters import slugify
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 from ckeditor_uploader.fields import RichTextUploadingField
-from django.core.validators import FileExtensionValidator
-
 
 User = get_user_model()
 
@@ -18,8 +21,12 @@ class AgenceInfo(models.Model):
     adresse         = models.CharField(max_length=100, blank=True, null=True)
     phone           = models.CharField(max_length=50, blank=True, null=True)
     email_contact   = models.EmailField(blank=True, null=True)
-    whatsapp        = models.CharField(max_length=30, blank=True, null=True,help_text="Numéro WhatsApp au format international, ex. +242 06 000 00 00. Laisser vide pour masquer le bouton WhatsApp.")
-    horaires        = models.CharField(max_length=120, blank=True, null=True,help_text="Ex. : Lundi – vendredi, 8h – 16h. Laisser vide pour ne rien afficher.")
+    whatsapp        = models.CharField(
+        max_length=30, blank=True, null=True,
+        help_text="Numéro WhatsApp au format international, ex. +242 06 000 00 00. Laisser vide pour masquer le bouton WhatsApp.")
+    horaires        = models.CharField(
+        max_length=120, blank=True, null=True,
+        help_text="Ex. : Lundi – vendredi, 8h – 16h. Laisser vide pour ne rien afficher.")
     liens_sociaux   = models.JSONField(blank=True, null=True, help_text="Ex: {'facebook':'url','linkedin':'url'}")
     carte_embed_url = models.URLField(blank=True, null=True, help_text="URL d'intégration Google Maps")
 
@@ -35,7 +42,7 @@ class Category(models.Model):
     slug   = AutoSlugField(populate_from = "name", unique=True, null=True, default=None)
 
     class Meta:
-        verbose_name        = "Categorie"
+        verbose_name        = "Catégorie"
         verbose_name_plural = "Catégories"
 
     def save(self, *args, **kwargs):
@@ -76,8 +83,8 @@ class BlogActualite(models.Model):
 
 
     class Meta:
-        ordering            = ['-date_publication']
-        verbose_name        = "Actualite"
+        ordering = ['-date_publication']
+        verbose_name        = "Actualité"
         verbose_name_plural = "Actualités"
     
     def __str__(self):
@@ -128,6 +135,7 @@ class Discours(models.Model):
 
 
 
+    
 
 # ==========================================================================
 # Refonte v3 — Phase 3 : contenus de la page d'accueil (tous gérés dans l'admin)
@@ -254,8 +262,6 @@ class Partenaire(models.Model):
 
     def __str__(self):
         return self.nom
-    
-
 
 
 # ==========================================================================
@@ -281,8 +287,6 @@ class Page(models.Model):
 
     def __str__(self):
         return self.titre
-
-
 
 
 # ==========================================================================
@@ -354,8 +358,6 @@ class Document(models.Model):
             octets /= 1024
 
 
-
-
 # ==========================================================================
 # Refonte v3 — Blocs éditoriaux de la page d'accueil
 # ==========================================================================
@@ -398,6 +400,62 @@ class BlocAccueil(models.Model):
     def liste_points(self):
         return [ligne.strip(" -•\t") for ligne in self.points.splitlines() if ligne.strip(" -•\t")]
 
+
+# ==========================================================================
+# Refonte v3 — Lot 2 : textes et listes modifiables dans l'admin
+# ==========================================================================
+
+def choix_pages_textes():
+    from .textes import PAGES
+    return PAGES
+
+
+class TexteSite(models.Model):
+    cle         = models.CharField(max_length=100, unique=True, verbose_name="Identifiant")
+    page        = models.CharField(max_length=30, choices=choix_pages_textes, verbose_name="Page")
+    libelle     = models.CharField(max_length=200, verbose_name="Emplacement")
+    valeur      = models.TextField(blank=True, verbose_name="Texte",
+                                   help_text="Laisser vide pour revenir au texte d'origine.")
+    date_maj    = models.DateTimeField(auto_now=True, verbose_name="Modifié le")
+
+    class Meta:
+        ordering            = ["page", "cle"]
+        verbose_name        = "Texte du site"
+        verbose_name_plural = "Textes du site"
+
+    def __str__(self):
+        return self.libelle
+
+
+class Element(models.Model):
+    LISTES = [
+        ("acces", "Accueil — Accès rapides « Que souhaitez-vous faire ? »"),
+        ("service", "Dispositifs — Offre de services"),
+        ("etape", "Dispositifs — Étapes du parcours d'accompagnement"),
+    ]
+
+    liste       = models.CharField(max_length=20, choices=LISTES, verbose_name="Liste")
+    titre       = models.CharField(max_length=120, verbose_name="Titre")
+    texte       = models.CharField(max_length=300, blank=True, verbose_name="Texte court")
+    points      = models.TextField(blank=True, verbose_name="Points clés",
+                                   help_text="Offre de services uniquement. Un point par ligne.")
+    page        = models.CharField(max_length=60, choices=choix_pages, blank=True, verbose_name="Page visée",
+                                   help_text="Page ouverte au clic (accès rapides et services).")
+    icone       = models.CharField(max_length=40, choices=choix_icones, blank=True, verbose_name="Icône")
+    ordre       = models.PositiveIntegerField(default=0, verbose_name="Ordre")
+    actif       = models.BooleanField(default=True, verbose_name="Affiché")
+
+    class Meta:
+        ordering            = ["liste", "ordre", "id"]
+        verbose_name        = "Élément de liste"
+        verbose_name_plural = "Listes (accès rapides, services, étapes)"
+
+    def __str__(self):
+        return self.titre
+
+    @property
+    def liste_points(self):
+        return [ligne.strip(" -•\t") for ligne in self.points.splitlines() if ligne.strip(" -•\t")]
+
+
     
-
-

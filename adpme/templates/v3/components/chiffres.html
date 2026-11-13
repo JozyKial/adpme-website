@@ -1,5 +1,5 @@
 {% load ui %}
-{% comment %} ADPME Congo — v3/components/chiffres.html — v1
+{% comment %} ADPME Congo — v3/components/chiffres.html — v2
    Bloc « En chiffres » (accueil, page Présentation). Paramètre : chiffres (admin > Chiffres clés).
    Ne s'affiche que s'il y a au moins un chiffre. Les nombres s'animent à l'apparition (data-compteur).
 {% endcomment %}
@@ -7,8 +7,8 @@
 <section class="chiffres" aria-labelledby="titre-chiffres">
     <div class="container">
         <div class="chiffres__entete">
-            <p class="chiffres__surtitre">En chiffres</p>
-            <h2 class="chiffres__titre" id="titre-chiffres">L'action de l'agence</h2>
+            <p class="chiffres__surtitre">{% texte "communs.chiffres_surtitre" %}</p>
+            <h2 class="chiffres__titre" id="titre-chiffres">{% texte "communs.chiffres_titre" %}</h2>
         </div>
         <ul class="chiffres__grille">
             {% for c in chiffres %}

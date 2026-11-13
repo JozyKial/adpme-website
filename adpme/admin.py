@@ -1,8 +1,8 @@
 # ==========================================================================
-# ADPME Congo — admin.py — v2
+# ADPME Congo — admin.py — v3
 # Interface d'administration (thème Unfold aux couleurs de l'ADPME).
 # Toutes les classes héritent de unfold.admin.ModelAdmin pour profiter du
-# nouveau design. Le menu latéral se règle dans adpme/unfold_config.py.
+# nouveau design. Le menu latéral se règle dans settings.py (UNFOLD).
 # ==========================================================================
 from django.contrib import admin
 from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
@@ -21,7 +21,9 @@ from .models import (
     FAQ, Discours,
     Slide, Programme, Parcours, ParcoursLien, ChiffreCle, Partenaire,
     Page, Antenne, Document, BlocAccueil,
+    TexteSite, Element,
 )
+from .textes import defaut
 
 
 def apercu_image(champ, hauteur=48):
@@ -235,5 +237,45 @@ class FAQAdmin(ModelAdmin):
     list_display_links  = ('question',)
     ordering            = ('ordre',)
     search_fields       = ('question', 'reponse')
+
+
+
+# ==========================================================================
+# Textes du site et listes (lot 2)
+# ==========================================================================
+@admin.register(TexteSite)
+class TexteSiteAdmin(ModelAdmin):
+    list_display    = ("libelle", "apercu_texte", "page", "date_maj")
+    list_filter     = ("page",)
+    search_fields   = ("libelle", "valeur", "cle")
+    list_per_page   = 50
+    fields          = ("page", "libelle", "valeur", "texte_origine", "cle")
+    readonly_fields = ("page", "libelle", "texte_origine", "cle")
+    warn_unsaved_form = True
+
+    @display(description="Texte actuel")
+    def apercu_texte(self, obj):
+        texte = obj.valeur or defaut(obj.cle)
+        return texte if len(texte) <= 90 else texte[:90] + "…"
+
+    @display(description="Texte d'origine")
+    def texte_origine(self, obj):
+        return defaut(obj.cle)
+
+    # Les textes sont créés automatiquement (migrate) : pas d'ajout ni de suppression manuels
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+@admin.register(Element)
+class ElementAdmin(ModelAdmin):
+    list_display  = ("titre", "liste", "page", "ordre", "actif")
+    list_editable = ("ordre", "actif")
+    list_filter   = ("liste", "actif")
+    search_fields = ("titre", "texte")
+    fields        = ("liste", "titre", "texte", "points", "page", "icone", "ordre", "actif")
 
     

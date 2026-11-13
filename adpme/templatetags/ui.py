@@ -1,8 +1,22 @@
 # ==========================================================================
-# ADPME Congo — templatetags/ui.py — v3
+# ADPME Congo — templatetags/ui.py — v4
+# Balises de gabarit pour l'interface v3.
+#   {% load ui %}
+#   {% icon "telephone" %}                       -> icône décorative
+#   {% icon "recherche" label="Rechercher" %}    -> icône porteuse de sens
+#   {% icon "fleche-droite" classe="mon-style" %}
+#   {% qr_svg "https://..." label="..." %}       -> QR code SVG (librairie segno)
+#   {{ numero|wa_lien }}                         -> numéro pour https://wa.me/
+#   {{ article.content|extrait:160 }}            -> résumé propre d'un texte CKEditor
+#   {% texte "accueil.cta_titre" %}              -> texte modifiable dans l'admin
+#   {% texte "accueil.cta_titre" as titre %}     -> idem, rangé dans une variable
+# Icônes au trait (grille 24x24), tracés inspirés de Lucide (licence ISC).
+# Pour ajouter une icône : ajouter une entrée dans ICONES (ou ICONES_PLEINES
+# pour les logos remplis).
 # ==========================================================================
 from functools import lru_cache
 from html import unescape
+
 from django import template
 from django.utils.html import format_html, mark_safe, strip_tags
 
@@ -84,7 +98,6 @@ def tel_lien(numero):
 
 
 
-
 @register.filter
 def wa_lien(numero):
     """'+242 06 123 45 67' -> '242061234567' (format attendu par https://wa.me/)."""
@@ -112,8 +125,6 @@ def qr_svg(donnees, label="QR code"):
     return format_html('<span class="qr" role="img" aria-label="{}">{}</span>', label, mark_safe(svg))
 
 
-
-
 @register.filter
 def extrait(html, longueur=180):
     """Résumé lisible d'un contenu CKEditor : retire les balises, convertit les
@@ -128,4 +139,17 @@ def extrait(html, longueur=180):
     return coupe + "…"
 
 
+@register.simple_tag(takes_context=True)
+def texte(context, cle):
+    """Texte du site modifiable dans l'admin (Textes du site).
+    Valeur de l'admin si elle est renseignée, sinon texte par défaut de adpme/textes.py."""
+    from django.conf import settings
+    from ..textes import TEXTES
+
+    valeur = (context.get("textes_site") or {}).get(cle)
+    if valeur:
+        return valeur
+    if cle in TEXTES:
+        return TEXTES[cle][2]
+    return f"[texte inconnu : {cle}]" if settings.DEBUG else ""
 
