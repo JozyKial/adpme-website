@@ -82,17 +82,27 @@ WSGI_APPLICATION = 'adpme_project.wsgi.application'
 
 
 # ── Base de données ────────────────────────────────────────────────
+# PostgreSQL sur le PC, MySQL sur PythonAnywhere : tout se règle dans le .env
+_DB_ENGINE = config('DB_ENGINE')
+_DB_OPTIONS = {}
+if 'mysql' in _DB_ENGINE:
+    # utf8mb4 : accents et caractères spéciaux complets ; mode strict recommandé par Django
+    _DB_OPTIONS = {
+        'charset': 'utf8mb4',
+        'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+    }
+if config('DB_AUTH_PLUGIN', default=None):
+    _DB_OPTIONS['auth_plugin'] = config('DB_AUTH_PLUGIN')
+
 DATABASES = {
     'default': {
-        'ENGINE':   config('DB_ENGINE'),
+        'ENGINE':   _DB_ENGINE,
         'NAME':     config('DB_NAME'),
         'USER':     config('DB_USER'),
         'PASSWORD': config('DB_PASSWORD'),
         'HOST':     config('DB_HOST'),
-        'PORT':     config('DB_PORT'),
-        'OPTIONS': {
-            'auth_plugin': config('DB_AUTH_PLUGIN', default=None),
-        } if config('DB_AUTH_PLUGIN', default=None) else {}
+        'PORT':     config('DB_PORT', default=''),
+        'OPTIONS':  _DB_OPTIONS,
     }
 }
 
@@ -224,3 +234,35 @@ UNFOLD = {
 }
 
 
+# ── Sécurité HTTPS (actif uniquement en ligne, quand DEBUG=False) ──────────
+if not DEBUG:
+    # PythonAnywhere reçoit le HTTPS puis transmet la requête à Django en http,
+    # en précisant dans l'en-tête X-Forwarded-Proto que le visiteur était en https.
+    # Sans cette ligne, Django croit que le site est en http : liens absolus,
+    # sitemap, robots.txt, balises canonical et QR code seraient en http.
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+    # Cookies envoyés uniquement en https (connexion à l'admin, formulaires)
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+
+    # Adresses autorisées à envoyer des formulaires (contact, lettre, admin).
+    # Dans le .env du serveur : CSRF_TRUSTED_ORIGINS=https://adpme.cg,https://www.adpme.cg
+    CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='', cast=Csv())
+
+    # Redirection http -> https faite par Django : laissée désactivée par défaut
+    # (voir la remarque sur Cloudflare). À activer dans le .env si besoin : SECURE_SSL_REDIRECT=True
+    SECURE_SSL_REDIRECT = config('SECURE_SSL_REDIRECT', default=False, cast=bool)
+
+    # HSTS : le navigateur retient que le site est toujours en https.
+    # Commencer petit (1 heure), puis passer à 31536000 (1 an) quand tout fonctionne.
+    SECURE_HSTS_SECONDS = config('SECURE_HSTS_SECONDS', default=3600, cast=int)
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+    SECURE_HSTS_PRELOAD = False
+
+    # Protections complémentaires
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
+    X_FRAME_OPTIONS = "SAMEORIGIN"
+
+    
