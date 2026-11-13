@@ -1,8 +1,9 @@
 # ==========================================================================
-# ADPME Congo — views.py — v6
+# ADPME Congo — views.py — v7
 # Vues. Lot 2 : listes (accès rapides, services, étapes) et messages du
 # formulaire de contact lus depuis l'admin.
 # Phase 4c : opportunités (offres, emplois, appels) et lettre d'information.
+# Phase 5 : recherche sans accents (adpme/recherche.py) et robots.txt.
 # ==========================================================================
 import logging
 from django.shortcuts import render, get_object_or_404, redirect
@@ -277,49 +278,30 @@ def StyleguideView(request):
 
 
 
-# ── Refonte v3 : recherche (version simple, enrichie en phase 5) ──────
+# ── Refonte v3 — Phase 5 : recherche et robots.txt ────────────────────
 def RechercheView(request):
-    """Recherche dans les pages du menu, les actualités, la FAQ, les documents et les opportunités."""
-    from .navigation import MENU_PRINCIPAL
+    """Recherche dans les pages, programmes, actualités, FAQ, documents et opportunités (adpme/recherche.py)."""
+    from .recherche import rechercher
 
     q = request.GET.get('q', '').strip()[:100]
-    pages, actualites, faqs, documents, offres = [], [], [], [], []
-
-    if len(q) >= 2:
-        terme = q.lower()
-        for rubrique in MENU_PRINCIPAL:
-            for lien in rubrique.get('liens', [rubrique]):
-                if terme in lien['titre'].lower() or terme in rubrique['titre'].lower():
-                    pages.append({
-                        'titre': lien['titre'],
-                        'rubrique': rubrique['titre'] if 'liens' in rubrique else '',
-                        'href': reverse(lien['url']),
-                        'icone': lien.get('icone', 'document'),
-                    })
-        actualites = (BlogActualite.objects
-                      .filter(published=True)
-                      .filter(Q(title__icontains=q) | Q(content__icontains=q))
-                      .select_related('category')[:12])
-        faqs = (FAQ.objects
-                .filter(active=True)
-                .filter(Q(question__icontains=q) | Q(reponse__icontains=q))[:10])
-        documents = (Document.objects
-                     .filter(actif=True)
-                     .filter(Q(titre__icontains=q) | Q(description__icontains=q))[:10])
-        offres = (Offre.objects
-                  .filter(actif=True)
-                  .filter(Q(titre__icontains=q) | Q(resume__icontains=q) | Q(contenu__icontains=q))[:10])
-
-    context = {
-        'q': q,
-        'pages': pages,
-        'actualites': actualites,
-        'faqs': faqs,
-        'documents': documents,
-        'offres': offres,
-        'total': len(pages) + len(actualites) + len(faqs) + len(documents) + len(offres),
-    }
+    resultats = rechercher(q) if len(q) >= 2 else rechercher("")
+    context = {'q': q, **resultats, 'total': sum(len(v) for v in resultats.values())}
     return render(request, 'v3/recherche.html', context)
+
+
+def RobotsView(request):
+    """robots.txt : ce que les moteurs de recherche peuvent explorer, et où trouver le plan du site."""
+    lignes = [
+        "User-agent: *",
+        "Disallow: /admin/",
+        "Disallow: /ckeditor/",
+        "Disallow: /recherche/",
+        "Disallow: /lettre-information/",
+        "Disallow: /styleguide/",
+        "",
+        f"Sitemap: {request.build_absolute_uri(reverse('sitemap'))}",
+    ]
+    return HttpResponse("\n".join(lignes) + "\n", content_type="text/plain; charset=utf-8")
 
 
 

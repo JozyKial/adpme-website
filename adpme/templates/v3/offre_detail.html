@@ -1,7 +1,8 @@
 {% extends "v3/base.html" %}
-{% load static ui %}
-{% comment %} ADPME Congo — v3/offre_detail.html — v1
+{% load static ui seo %}
+{% comment %} ADPME Congo — v3/offre_detail.html — v2
    Fiche d'une opportunité (admin > Opportunités). Textes : admin > Textes du site > Pages « Opportunités ».
+   Offre d'emploi ou de stage ouverte : décrite pour Google Jobs (schema.org JobPosting).
 {% endcomment %}
 
 {% block title %}{{ offre.titre }} — {% texte "opportunites.type_"|add:offre.type_offre %} — {% texte "general.titre_suffixe" %}{% endblock %}
@@ -9,6 +10,8 @@
 {% block og_type %}article{% endblock %}
 {% block og_title %}{{ offre.titre }}{% endblock %}
 {% block og_description %}{{ offre.resume|truncatechars:200 }}{% endblock %}
+
+{% block schema_org %}{% schema_offre_emploi offre %}{% endblock %}
 
 {% block page_hero %}
 {% url 'offres_type' offre.slug_type as url_type %}{% texte "opportunites.type_"|add:offre.type_offre as t_parent %}

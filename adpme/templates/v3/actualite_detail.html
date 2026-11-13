@@ -1,6 +1,6 @@
 {% extends "v3/base.html" %}
-{% load ui %}
-{# ADPME Congo — v3/actualite_detail.html — v3 : article d'actualité (textes : admin > Textes du site > Actualités) #}
+{% load ui seo %}
+{# ADPME Congo — v3/actualite_detail.html — v4 : article d'actualité (textes : admin > Textes du site > Actualités) ; schema.org NewsArticle #}
 
 {% block title %}{{ post.title }} — {% texte "general.titre_suffixe" %}{% endblock %}
 {% block meta_description %}{{ post.content|extrait:160 }}{% endblock %}
@@ -11,6 +11,8 @@
 {% block twitter_title %}{{ post.title }}{% endblock %}
 {% block twitter_description %}{{ post.content|extrait:200 }}{% endblock %}
 {% block twitter_image %}{% if post.image %}{{ request.scheme }}://{{ request.get_host }}{{ post.image.url }}{% else %}{{ block.super }}{% endif %}{% endblock %}
+
+{% block schema_org %}{% schema_article post %}{% url 'actualite' as url_actus %}{% texte "actualites.titre" as t_actus %}{% schema_fil_ariane post.title t_actus url_actus %}{% endblock %}
 
 {% block page_hero %}
 <section class="page-hero page-hero--article">

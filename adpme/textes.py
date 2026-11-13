@@ -1,5 +1,5 @@
 # ==========================================================================
-# ADPME Congo — textes.py — v3
+# ADPME Congo — textes.py — v4
 # Registre des « Textes du site » modifiables dans l'admin.
 #
 # Chaque entrée : "clé": (page, libellé affiché dans l'admin, texte par défaut)
@@ -25,6 +25,7 @@ PAGES = [
     ("agence", "Pages de l'agence et des services, discours"),
     ("opportunites", "Pages « Opportunités » (offres, emplois, appels)"),
     ("newsletter", "Lettre d'information (inscription, désinscription)"),
+    ("seo", "Référencement (informations lues par Google)"),
 ]
 
 TEXTES = {
@@ -231,6 +232,9 @@ TEXTES = {
     "recherche.groupe_faq": ("recherche", "Titre du groupe « questions »", "Questions fréquentes"),
     "recherche.groupe_documents": ("recherche", "Titre du groupe « documents »", "Documents"),
     "recherche.groupe_offres": ("recherche", "Titre du groupe « opportunités »", "Opportunités"),
+    "recherche.groupe_programmes": ("recherche", "Titre du groupe « programmes »", "Programmes"),
+    "recherche.conseil": ("recherche", "Astuce sous le champ de recherche",
+        "Astuce : les accents et les majuscules ne comptent pas. Tous les mots saisis doivent être présents."),
     "recherche.suggestion": ("recherche", "Message de suggestion si aucun résultat", "Essayez un autre mot, ou consultez directement :"),
     "recherche.lien_faq": ("recherche", "Suggestion : bouton FAQ", "La FAQ"),
     "recherche.lien_actualites": ("recherche", "Suggestion : bouton actualités", "Les actualités"),
@@ -298,6 +302,12 @@ TEXTES = {
     "newsletter.desinscription_bouton": ("newsletter", "Désinscription : bouton de confirmation", "Confirmer la désinscription"),
     "newsletter.desinscription_ok": ("newsletter", "Désinscription : message de confirmation",
         "Votre désinscription est enregistrée. Vous pouvez vous réinscrire à tout moment."),
+
+    # ── Référencement (données structurées schema.org) ───────────────────
+    "seo.organisation_nom": ("seo", "Nom officiel complet de l'agence",
+        "Agence de Développement des Très Petites, Petites et Moyennes Entreprises"),
+    "seo.organisation_sigle": ("seo", "Sigle de l'agence", "ADPME"),
+    "seo.ville": ("seo", "Ville du siège (adresse lue par Google)", "Brazzaville"),
 }
 
 

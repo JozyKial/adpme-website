@@ -1,9 +1,13 @@
 {% extends "v3/base.html" %}
-{% load ui %}
-{# ADPME Congo — v3/recherche.html — v4 : résultats de recherche (pages, actualités, FAQ, documents, opportunités) ; textes : admin > Textes du site > Recherche #}
+{% load static ui %}
+{% comment %} ADPME Congo — v3/recherche.html — v5
+   Résultats de recherche (adpme/recherche.py) : pages, programmes, actualités, FAQ, documents, opportunités.
+   Recherche sans accents ni majuscules, mots trouvés surlignés. Textes : admin > Textes du site > Recherche.
+{% endcomment %}
 
 {% block title %}{% texte "recherche.titre_page" %}{% if q %} : {{ q }}{% endif %} — {% texte "general.titre_suffixe" %}{% endblock %}
 {% block extra_head %}<meta name="robots" content="noindex, follow">{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'v3/css/recherche.css' %}">{% endblock %}
 
 {% block page_hero %}
 {% texte "recherche.titre" as t_titre %}
@@ -18,6 +22,7 @@
             <input class="input" id="q-page" type="search" name="q" value="{{ q }}" placeholder="{% texte "general.recherche_placeholder" %}" minlength="2" maxlength="100" required>
             <button type="submit" class="btn btn--primaire">{% icon "recherche" %}<span>{% texte "recherche.bouton" %}</span></button>
         </form>
+        <p class="recherche-conseil">{% texte "recherche.conseil" %}</p>
 
         {% if q %}
         <p class="recherche-resume" role="status">
@@ -27,10 +32,40 @@
 
         {% if pages %}
         <h2 class="recherche-titre">{% texte "recherche.groupe_pages" %}</h2>
-        <div class="grid grid--3">
+        <ul class="resultats">
             {% for p in pages %}
-            {% include "v3/components/tuile.html" with titre=p.titre desc=p.rubrique url=p.href icone=p.icone %}
+            <li class="resultat">
+                <span class="resultat__icone">{% icon p.icone %}</span>
+                <div>
+                    {% if p.rubrique %}<p class="resultat__chemin">{{ p.rubrique }}</p>{% endif %}
+                    <a class="resultat__titre" href="{{ p.href }}">{{ p.titre }}</a>
+                    {% if p.extrait %}<p class="resultat__extrait">{{ p.extrait }}</p>{% endif %}
+                </div>
+            </li>
             {% endfor %}
+        </ul>
+        {% endif %}
+
+        {% if programmes %}
+        <h2 class="recherche-titre">{% texte "recherche.groupe_programmes" %}</h2>
+        <ul class="resultats">
+            {% for p in programmes %}
+            <li class="resultat">
+                <span class="resultat__icone">{% icon p.icone %}</span>
+                <div>
+                    {% if p.public_cible %}<p class="resultat__chemin">{{ p.public_cible }}</p>{% endif %}
+                    <a class="resultat__titre" href="{% url 'programme_detail' p.slug %}">{{ p.titre }}</a>
+                    <p class="resultat__extrait">{{ p.extrait }}</p>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        {% if offres %}
+        <h2 class="recherche-titre">{% texte "recherche.groupe_offres" %}</h2>
+        <div class="offres">
+            {% for o in offres %}{% include "v3/components/carte_offre.html" %}{% endfor %}
         </div>
         {% endif %}
 
@@ -62,13 +97,6 @@
             </li>
             {% endfor %}
         </ul>
-        {% endif %}
-
-        {% if offres %}
-        <h2 class="recherche-titre">{% texte "recherche.groupe_offres" %}</h2>
-        <div class="offres">
-            {% for o in offres %}{% include "v3/components/carte_offre.html" %}{% endfor %}
-        </div>
         {% endif %}
 
         {% if q and not total %}

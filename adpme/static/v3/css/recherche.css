@@ -1,0 +1,39 @@
+/* ==========================================================================
+   ADPME Congo — v3/css/recherche.css — v1
+   Page de résultats de recherche (phase 5) : liste de résultats façon moteur
+   de recherche, extrait avec mots surlignés.
+   ========================================================================== */
+.recherche-conseil { margin: var(--sp-2) 0 var(--sp-6); font-size: var(--fs-xs); color: var(--texte-doux); }
+
+.resultats { display: grid; gap: var(--sp-3); margin: 0; padding: 0; list-style: none; }
+.resultat {
+  position: relative;
+  display: flex; gap: var(--sp-4); align-items: flex-start;
+  margin: 0;
+  padding: var(--sp-4) var(--sp-5);
+  border: 1px solid var(--ligne);
+  border-radius: var(--rayon-lg);
+  background: var(--fond);
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.resultat:hover { border-color: var(--c-primaire); box-shadow: var(--ombre-sm); }
+.resultat__icone {
+  display: grid; place-items: center; flex: 0 0 auto;
+  width: 44px; height: 44px;
+  border-radius: var(--rayon);
+  background: var(--vert-50); color: var(--c-primaire);
+}
+.resultat__chemin { margin: 0 0 2px; font-size: var(--fs-xs); font-weight: var(--fw-medium); color: var(--violet-700); text-transform: uppercase; letter-spacing: .05em; }
+.resultat__titre { font-size: var(--fs-lg); font-weight: var(--fw-bold); color: var(--encre); text-decoration: none; }
+.resultat__titre::after { content: ""; position: absolute; inset: 0; }
+.resultat__titre:hover { color: var(--c-primaire); }
+.resultat__extrait { margin: var(--sp-1) 0 0; font-size: var(--fs-sm); color: var(--texte-doux); }
+
+mark {
+  padding: 0 1px;
+  border-radius: 2px;
+  background: var(--accent-jaune-fond);
+  color: var(--encre);
+  font-weight: var(--fw-medium);
+}
+

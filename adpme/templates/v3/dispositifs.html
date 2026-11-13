@@ -1,6 +1,6 @@
 {% extends "v3/base.html" %}
-{% load static ui %}
-{% comment %} ADPME Congo — v3/dispositifs.html — v4
+{% load static ui seo %}
+{% comment %} ADPME Congo — v3/dispositifs.html — v5
    Vue d'ensemble de l'accompagnement : services, parcours, programmes, ressources.
    Textes : admin > Textes du site > Dispositifs. Services et étapes : admin > Listes.
    Programmes et partenaires : admin.
@@ -11,6 +11,8 @@
 {% block og_title %}{% texte "dispositifs.titre_page" %}{% endblock %}
 {% block og_description %}{% texte "dispositifs.meta_description" %}{% endblock %}
 {% block extra_css %}<link rel="stylesheet" href="{% static 'v3/css/accueil.css' %}">{% endblock %}
+
+{% block schema_org %}{% url 'information' as url_services %}{% texte "menu.services" as t_services %}{% texte "dispositifs.titre" as t_titre %}{% schema_fil_ariane t_titre t_services url_services %}{% endblock %}
 
 {% block page_hero %}
 <section class="page-hero">

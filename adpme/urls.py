@@ -1,10 +1,13 @@
 # ==========================================================================
-# ADPME Congo — urls.py — v2
+# ADPME Congo — urls.py — v3
 # Adresses du site. Phase 4c : opportunités et lettre d'information.
+# Phase 5 : plan du site (/sitemap.xml) et /robots.txt.
 # ==========================================================================
+from django.contrib.sitemaps.views import sitemap
 from django.urls import path, include
 from django.conf.urls.static import static
-from . import views 
+from . import views
+from .sitemaps import SITEMAPS
 
 from adpme_project import settings
 
@@ -38,6 +41,10 @@ urlpatterns = [
     path('lettre-information/inscription/', views.NewsletterInscriptionView, name="newsletter_inscription"),
     path('lettre-information/desinscription/<uuid:jeton>/', views.NewsletterDesinscriptionView, name="newsletter_desinscription"),
     
+    # Refonte v3 — Phase 5 : référencement
+    path('sitemap.xml', sitemap, {'sitemaps': SITEMAPS}, name="sitemap"),
+    path('robots.txt', views.RobotsView, name="robots"),
+
     # Refonte v3 — guide des composants (DEBUG uniquement)
     path('styleguide/', views.StyleguideView, name="styleguide"),
 
@@ -46,5 +53,4 @@ urlpatterns = [
 #+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
     

@@ -1,5 +1,5 @@
-{% load static ui %}<!DOCTYPE html>
-{# ADPME Congo — v3/base.html — v6 : textes par défaut dans admin > Textes du site > Général ; ajout de opportunites.css #}
+{% load static ui seo %}<!DOCTYPE html>
+{# ADPME Congo — v3/base.html — v7 : textes par défaut dans admin > Textes du site > Général ; données structurées schema.org (phase 5) #}
 <html lang="fr">
 <head>
     <meta charset="utf-8">
@@ -37,6 +37,7 @@
     <link rel="stylesheet" href="{% static 'v3/css/opportunites.css' %}">
     {% block extra_css %}{% endblock %}
 
+    {% schema_organisation %}
     {% block schema_org %}{% endblock %}
     {% block extra_head %}{% endblock %}
 </head>

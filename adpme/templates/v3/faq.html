@@ -1,9 +1,11 @@
 {% extends "v3/base.html" %}
-{% load ui %}
-{# ADPME Congo — v3/faq.html — v2 : questions fréquentes (admin > FAQ) avec filtre instantané ; textes : admin > Textes du site > FAQ et Documents #}
+{% load ui seo %}
+{# ADPME Congo — v3/faq.html — v3 : questions fréquentes (admin > FAQ) avec filtre instantané ; textes : admin > Textes du site > FAQ et Documents ; schema.org FAQPage #}
 
 {% block title %}{% texte "ressources.faq_titre_page" %} — {% texte "general.titre_suffixe" %}{% endblock %}
 {% block meta_description %}{% texte "ressources.faq_meta_description" %}{% endblock %}
+
+{% block schema_org %}{% schema_faq faqs %}{% endblock %}
 
 {% block page_hero %}
 {% url 'faq' as url_faq %}{% texte "menu.ressources" as t_parent %}{% texte "ressources.faq_titre" as t_titre %}{% texte "ressources.faq_intro" as t_intro %}
