@@ -1,21 +1,18 @@
 {% extends "v3/base.html" %}
 {% load ui %}
-{# ADPME Congo — v3/discours.html — v1 : mot du Directeur général / de la Ministre (admin > Discours) #}
+{# ADPME Congo — v3/discours.html — v2 : mot du Directeur général / de la Ministre (admin > Discours ; titres : admin > Textes du site) #}
 
-{% block title %}Mot {% if discours.type_discours == 'dg' %}du Directeur général{% else %}de la Ministre{% endif %} — ADPME Congo{% endblock %}
+{% block title %}{% if discours.type_discours == 'dg' %}{% texte "agence.mot_dg" %}{% else %}{% texte "agence.mot_ministre" %}{% endif %} — {% texte "general.titre_suffixe" %}{% endblock %}
 {% block meta_description %}{{ discours.extrait|truncatechars:160 }}{% endblock %}
-{% block og_title %}Mot {% if discours.type_discours == 'dg' %}du Directeur général{% else %}de la Ministre{% endif %} — ADPME{% endblock %}
+{% block og_title %}{% if discours.type_discours == 'dg' %}{% texte "agence.mot_dg" %}{% else %}{% texte "agence.mot_ministre" %}{% endif %} — {% texte "general.titre_suffixe" %}{% endblock %}
 {% block og_description %}{{ discours.extrait|truncatechars:200 }}{% endblock %}
 {% block og_type %}article{% endblock %}
 {% block og_image %}{% if discours.photo %}{{ request.scheme }}://{{ request.get_host }}{{ discours.photo.url }}{% else %}{{ block.super }}{% endif %}{% endblock %}
 
 {% block page_hero %}
 {% for r in menu_principal %}{% if r.id == rubrique_id %}
-{% if discours.type_discours == 'dg' %}
-{% include "v3/components/page_hero.html" with titre="Mot du Directeur général" parent_titre=r.titre parent_url=r.liens.0.href %}
-{% else %}
-{% include "v3/components/page_hero.html" with titre="Mot de la Ministre" parent_titre=r.titre parent_url=r.liens.0.href %}
-{% endif %}
+{% if discours.type_discours == 'dg' %}{% texte "agence.mot_dg" as t_titre %}{% else %}{% texte "agence.mot_ministre" as t_titre %}{% endif %}
+{% include "v3/components/page_hero.html" with titre=t_titre parent_titre=r.titre parent_url=r.liens.0.href %}
 {% endif %}{% endfor %}
 {% endblock %}
 

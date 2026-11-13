@@ -1,10 +1,10 @@
 {% extends "v3/base.html" %}
 {% load ui %}
-{# ADPME Congo — v3/page.html — v2 : page de contenu gérée dans l'admin (modèle Page) #}
+{# ADPME Congo — v3/page.html — v3 : page de contenu gérée dans l'admin (modèle Page) #}
 
-{% block title %}{{ page.titre }} — ADPME Congo{% endblock %}
+{% block title %}{{ page.titre }} — {% texte "general.titre_suffixe" %}{% endblock %}
 {% block meta_description %}{% firstof page.meta_description page.intro page.titre %}{% endblock %}
-{% block og_title %}{{ page.titre }} — ADPME Congo{% endblock %}
+{% block og_title %}{{ page.titre }} — {% texte "general.titre_suffixe" %}{% endblock %}
 {% block og_description %}{% firstof page.meta_description page.intro page.titre %}{% endblock %}
 {% block og_image %}{% if page.image %}{{ request.scheme }}://{{ request.get_host }}{{ page.image.url }}{% else %}{{ block.super }}{% endif %}{% endblock %}
 
@@ -20,7 +20,7 @@
         <article>
             {% if page.image %}<img class="programme__image" src="{{ page.image.url }}" alt="" loading="lazy">{% endif %}
             <div class="prose">{{ page.contenu|safe }}</div>
-            <p class="text-sm text-doux mt-6">Mis à jour le {{ page.date_maj|date:"j F Y" }}</p>
+            <p class="text-sm text-doux mt-6">{% texte "agence.mis_a_jour" %} {{ page.date_maj|date:"j F Y" }}</p>
         </article>
         {% include "v3/includes/aside_rubrique.html" %}
     </div>

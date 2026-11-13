@@ -1,16 +1,16 @@
 {% extends "v3/base.html" %}
 {% load ui %}
-{# ADPME Congo — v3/programme_detail.html — v1 : fiche d'un programme #}
+{# ADPME Congo — v3/programme_detail.html — v2 : fiche d'un programme (textes : admin > Textes du site > Programmes) #}
 
-{% block title %}{{ programme.titre }} — Programmes — ADPME Congo{% endblock %}
+{% block title %}{{ programme.titre }} — {% texte "programmes.titre_page" %} — {% texte "general.titre_suffixe" %}{% endblock %}
 {% block meta_description %}{{ programme.resume|truncatechars:160 }}{% endblock %}
 {% block og_title %}{{ programme.titre }}{% endblock %}
 {% block og_description %}{{ programme.resume|truncatechars:200 }}{% endblock %}
 {% block og_image %}{% if programme.image %}{{ request.scheme }}://{{ request.get_host }}{{ programme.image.url }}{% else %}{{ block.super }}{% endif %}{% endblock %}
 
 {% block page_hero %}
-{% url 'programme' as url_programmes %}
-{% include "v3/components/page_hero.html" with titre=programme.titre intro=programme.resume parent_titre="Programmes" parent_url=url_programmes %}
+{% url 'programme' as url_programmes %}{% texte "programmes.titre" as t_parent %}
+{% include "v3/components/page_hero.html" with titre=programme.titre intro=programme.resume parent_titre=t_parent parent_url=url_programmes %}
 {% endblock %}
 
 {% block content %}
@@ -28,13 +28,13 @@
         <aside class="encadre" aria-label="Informations pratiques">
             <span class="card__icone encadre__icone">{% icon programme.icone %}</span>
             {% if programme.public_cible %}
-            <p class="encadre__libelle">Public concerné</p>
+            <p class="encadre__libelle">{% texte "programmes.fiche_public" %}</p>
             <p>{{ programme.public_cible }}</p>
             {% endif %}
             {% if programme.site_web %}
-            <a class="btn btn--contour btn--bloc" href="{{ programme.site_web }}" target="_blank" rel="noopener">Site du programme {% icon "lien-externe" %}</a>
+            <a class="btn btn--contour btn--bloc" href="{{ programme.site_web }}" target="_blank" rel="noopener">{% texte "programmes.fiche_site" %} {% icon "lien-externe" %}</a>
             {% endif %}
-            <a class="btn btn--primaire btn--bloc" href="{% url 'contact' %}">Se renseigner</a>
+            <a class="btn btn--primaire btn--bloc" href="{% url 'contact' %}">{% texte "programmes.fiche_bouton" %}</a>
         </aside>
     </div>
 </section>
@@ -42,7 +42,8 @@
 {% if autres %}
 <section class="section section--alt">
     <div class="container">
-        {% include "v3/components/section_header.html" with surtitre="Programmes" titre="Autres programmes" %}
+        {% texte "programmes.autres_surtitre" as t_surtitre %}{% texte "programmes.autres_titre" as t_titre %}
+        {% include "v3/components/section_header.html" with surtitre=t_surtitre titre=t_titre %}
         <div class="grid grid--3">
             {% for p in autres %}
             {% url 'programme_detail' p.slug as url_programme %}

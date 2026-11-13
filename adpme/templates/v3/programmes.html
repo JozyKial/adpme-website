@@ -1,12 +1,13 @@
 {% extends "v3/base.html" %}
 {% load ui %}
-{# ADPME Congo — v3/programmes.html — v2 : liste des programmes (admin > Programmes) #}
+{# ADPME Congo — v3/programmes.html — v3 : liste des programmes (admin > Programmes ; textes : admin > Textes du site > Programmes) #}
 
-{% block title %}Programmes — ADPME Congo{% endblock %}
-{% block meta_description %}Les programmes portés par l'ADPME pour accompagner les porteurs d'idées et de projets et les dirigeants de TPME en République du Congo.{% endblock %}
+{% block title %}{% texte "programmes.titre_page" %} — {% texte "general.titre_suffixe" %}{% endblock %}
+{% block meta_description %}{% texte "programmes.meta_description" %}{% endblock %}
 
 {% block page_hero %}
-{% include "v3/components/page_hero.html" with titre="Programmes" intro="Les programmes portés par l'agence pour les porteurs d'idées et de projets et les dirigeants d'entreprises." %}
+{% texte "programmes.titre" as t_titre %}{% texte "programmes.intro" as t_intro %}
+{% include "v3/components/page_hero.html" with titre=t_titre intro=t_intro %}
 {% endblock %}
 
 {% block content %}
@@ -21,8 +22,8 @@
         </div>
         {% else %}
         <div class="etat-vide">
-            <p>Les programmes de l'agence seront bientôt présentés sur cette page.</p>
-            <a class="btn btn--primaire btn--sm" href="{% url 'contact' %}">Se renseigner auprès de l'agence</a>
+            <p>{% texte "programmes.vide_texte" %}</p>
+            <a class="btn btn--primaire btn--sm" href="{% url 'contact' %}">{% texte "programmes.vide_bouton" %}</a>
         </div>
         {% endif %}
     </div>

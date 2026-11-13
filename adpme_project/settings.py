@@ -110,6 +110,8 @@ TIME_ZONE        = 'Africa/Brazzaville'
 USE_I18N         = True
 USE_TZ           = True
 
+# Traduction française de l'administration (générée par migrate, voir adpme/traductions_admin.py)
+LOCALE_PATHS     = [BASE_DIR / "locale"]
 
 # ── Fichiers statiques ─────────────────────────────────────────────
 STATIC_URL          = '/static/'

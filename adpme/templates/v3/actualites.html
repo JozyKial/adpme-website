@@ -1,12 +1,13 @@
 {% extends "v3/base.html" %}
 {% load ui %}
-{# ADPME Congo — v3/actualites.html — v1 : liste des actualités, filtre par catégorie #}
+{# ADPME Congo — v3/actualites.html — v2 : liste des actualités, filtre par catégorie (textes : admin > Textes du site > Actualités) #}
 
-{% block title %}{% if categorie_active %}{{ categorie_active.name }} — {% endif %}Actualités{% if posts.number > 1 %} (page {{ posts.number }}){% endif %} — ADPME Congo{% endblock %}
-{% block meta_description %}Les actualités de l'ADPME : programmes, formations, événements et accompagnement des entrepreneurs en République du Congo.{% endblock %}
+{% block title %}{% if categorie_active %}{{ categorie_active.name }} — {% endif %}{% texte "actualites.titre_page" %}{% if posts.number > 1 %} (page {{ posts.number }}){% endif %} — {% texte "general.titre_suffixe" %}{% endblock %}
+{% block meta_description %}{% texte "actualites.meta_description" %}{% endblock %}
 
 {% block page_hero %}
-{% include "v3/components/page_hero.html" with titre="Actualités" intro="Les nouvelles de l'agence : programmes, formations, événements et rencontres avec les entrepreneurs." %}
+{% texte "actualites.titre" as t_titre %}{% texte "actualites.intro" as t_intro %}
+{% include "v3/components/page_hero.html" with titre=t_titre intro=t_intro %}
 {% endblock %}
 
 {% block content %}
@@ -14,7 +15,7 @@
     <div class="container">
         {% if categories|length > 1 %}
         <nav class="filtres" aria-label="Filtrer par catégorie">
-            <a href="{% url 'actualite' %}"{% if not categorie_active %} aria-current="page"{% endif %}>Toutes</a>
+            <a href="{% url 'actualite' %}"{% if not categorie_active %} aria-current="page"{% endif %}>{% texte "actualites.filtre_toutes" %}</a>
             {% for c in categories %}
             <a href="{% url 'actualite' %}?categorie={{ c.slug }}"{% if categorie_active.pk == c.pk %} aria-current="page"{% endif %}>{{ c.name }}</a>
             {% endfor %}
@@ -27,7 +28,7 @@
         </div>
         {% include "v3/components/pagination.html" with page=posts %}
         {% else %}
-        <p class="etat-vide">Aucune actualité publiée{% if categorie_active %} dans cette catégorie{% endif %} pour le moment.</p>
+        <p class="etat-vide">{% if categorie_active %}{% texte "actualites.vide_categorie" %}{% else %}{% texte "actualites.vide" %}{% endif %}</p>
         {% endif %}
     </div>
 </section>

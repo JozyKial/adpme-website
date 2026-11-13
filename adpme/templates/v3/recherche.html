@@ -1,31 +1,32 @@
 {% extends "v3/base.html" %}
 {% load ui %}
-{# ADPME Congo — v3/recherche.html — v2 : résultats de recherche (pages, actualités, FAQ) #}
+{# ADPME Congo — v3/recherche.html — v3 : résultats de recherche (pages, actualités, FAQ, documents) ; textes : admin > Textes du site > Recherche #}
 
-{% block title %}{% if q %}Recherche : {{ q }}{% else %}Recherche{% endif %} — ADPME Congo{% endblock %}
+{% block title %}{% texte "recherche.titre_page" %}{% if q %} : {{ q }}{% endif %} — {% texte "general.titre_suffixe" %}{% endblock %}
 {% block extra_head %}<meta name="robots" content="noindex, follow">{% endblock %}
 
 {% block page_hero %}
-{% include "v3/components/page_hero.html" with titre="Rechercher sur le site" %}
+{% texte "recherche.titre" as t_titre %}
+{% include "v3/components/page_hero.html" with titre=t_titre %}
 {% endblock %}
 
 {% block content %}
 <section class="section section--compacte">
     <div class="container">
         <form class="recherche-form recherche-form--page" action="{% url 'recherche' %}" method="get" role="search">
-            <label class="sr-only" for="q-page">Rechercher sur le site</label>
-            <input class="input" id="q-page" type="search" name="q" value="{{ q }}" placeholder="Rechercher une page, une actualité, une question…" minlength="2" maxlength="100" required>
-            <button type="submit" class="btn btn--primaire">{% icon "recherche" %}<span>Rechercher</span></button>
+            <label class="sr-only" for="q-page">{% texte "recherche.titre" %}</label>
+            <input class="input" id="q-page" type="search" name="q" value="{{ q }}" placeholder="{% texte "general.recherche_placeholder" %}" minlength="2" maxlength="100" required>
+            <button type="submit" class="btn btn--primaire">{% icon "recherche" %}<span>{% texte "recherche.bouton" %}</span></button>
         </form>
 
         {% if q %}
         <p class="recherche-resume" role="status">
-            {% if total %}{{ total }} résultat{{ total|pluralize }} pour « <strong>{{ q }}</strong> »{% else %}Aucun résultat pour « <strong>{{ q }}</strong> ».{% endif %}
+            {% if total %}{{ total }} résultat{{ total|pluralize }} pour « <strong>{{ q }}</strong> »{% else %}{% texte "recherche.aucun" %} « <strong>{{ q }}</strong> ».{% endif %}
         </p>
         {% endif %}
 
         {% if pages %}
-        <h2 class="recherche-titre">Pages</h2>
+        <h2 class="recherche-titre">{% texte "recherche.groupe_pages" %}</h2>
         <div class="grid grid--3">
             {% for p in pages %}
             {% include "v3/components/tuile.html" with titre=p.titre desc=p.rubrique url=p.href icone=p.icone %}
@@ -34,42 +35,42 @@
         {% endif %}
 
         {% if actualites %}
-        <h2 class="recherche-titre">Actualités</h2>
+        <h2 class="recherche-titre">{% texte "recherche.groupe_actualites" %}</h2>
         <div class="grid grid--3">
             {% for post in actualites %}{% include "v3/components/card_actualite.html" %}{% endfor %}
         </div>
         {% endif %}
 
         {% if faqs %}
-        <h2 class="recherche-titre">Questions fréquentes</h2>
+        <h2 class="recherche-titre">{% texte "recherche.groupe_faq" %}</h2>
         <div class="accordion container--etroit" style="margin-inline:0;padding:0;">
             {% for faq in faqs %}{% include "v3/components/accordion_item.html" with question=faq.question reponse=faq.reponse %}{% endfor %}
         </div>
         {% endif %}
 
         {% if documents %}
-            <h2 class="recherche-titre">Documents</h2>
-            <ul class="doc-liste">
-                {% for doc in documents %}
-                <li class="doc">
-                    <span class="doc__type">{{ doc.extension|default:"—" }}</span>
-                    <span class="doc__infos">
-                        <a class="doc__titre" href="{{ doc.fichier.url }}" target="_blank" rel="noopener">{{ doc.titre }}</a>
-                        <span class="doc__meta">{{ doc.get_categorie_display }} · {{ doc.date_publication|date:"j F Y" }}</span>
-                    </span>
-                    {% icon "telecharger" %}
-                </li>
-                {% endfor %}
-            </ul>
+        <h2 class="recherche-titre">{% texte "recherche.groupe_documents" %}</h2>
+        <ul class="doc-liste">
+            {% for doc in documents %}
+            <li class="doc">
+                <span class="doc__type">{{ doc.extension|default:"—" }}</span>
+                <span class="doc__infos">
+                    <a class="doc__titre" href="{{ doc.fichier.url }}" target="_blank" rel="noopener">{{ doc.titre }}</a>
+                    <span class="doc__meta">{{ doc.get_categorie_display }} · {{ doc.date_publication|date:"j F Y" }}</span>
+                </span>
+                {% icon "telecharger" %}
+            </li>
+            {% endfor %}
+        </ul>
         {% endif %}
 
         {% if q and not total %}
         <div class="etat-vide mt-6">
-            <p>Essayez un autre mot, ou consultez directement :</p>
+            <p>{% texte "recherche.suggestion" %}</p>
             <p class="cluster" style="justify-content:center;">
-                <a class="btn btn--contour btn--sm" href="{% url 'faq' %}">La FAQ</a>
-                <a class="btn btn--contour btn--sm" href="{% url 'actualite' %}">Les actualités</a>
-                <a class="btn btn--primaire btn--sm" href="{% url 'contact' %}">Nous contacter</a>
+                <a class="btn btn--contour btn--sm" href="{% url 'faq' %}">{% texte "recherche.lien_faq" %}</a>
+                <a class="btn btn--contour btn--sm" href="{% url 'actualite' %}">{% texte "recherche.lien_actualites" %}</a>
+                <a class="btn btn--primaire btn--sm" href="{% url 'contact' %}">{% texte "recherche.lien_contact" %}</a>
             </p>
         </div>
         {% endif %}

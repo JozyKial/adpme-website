@@ -1,13 +1,13 @@
 {% extends "v3/base.html" %}
 {% load ui %}
-{# ADPME Congo — v3/documents.html — v1 : documents à télécharger (admin > Documents) #}
+{# ADPME Congo — v3/documents.html — v2 : documents à télécharger (admin > Documents ; textes : admin > Textes du site > FAQ et Documents) #}
 
-{% block title %}Documents à télécharger — ADPME Congo{% endblock %}
-{% block meta_description %}Textes, guides pratiques, formulaires et rapports de l'ADPME à télécharger.{% endblock %}
+{% block title %}{% texte "ressources.docs_titre_page" %} — {% texte "general.titre_suffixe" %}{% endblock %}
+{% block meta_description %}{% texte "ressources.docs_meta_description" %}{% endblock %}
 
 {% block page_hero %}
-{% url 'faq' as url_faq %}
-{% include "v3/components/page_hero.html" with titre="Documents à télécharger" intro="Textes, guides pratiques, formulaires et rapports publiés par l'agence." parent_titre="Ressources" parent_url=url_faq %}
+{% url 'faq' as url_faq %}{% texte "menu.ressources" as t_parent %}{% texte "ressources.docs_titre" as t_titre %}{% texte "ressources.docs_intro" as t_intro %}
+{% include "v3/components/page_hero.html" with titre=t_titre intro=t_intro parent_titre=t_parent parent_url=url_faq %}
 {% endblock %}
 
 {% block content %}
@@ -16,7 +16,7 @@
         <div>
             {% if categories|length > 1 %}
             <nav class="filtres" aria-label="Filtrer par catégorie">
-                <a href="{% url 'documents' %}"{% if not categorie_active %} aria-current="page"{% endif %}>Tous</a>
+                <a href="{% url 'documents' %}"{% if not categorie_active %} aria-current="page"{% endif %}>{% texte "ressources.docs_tous" %}</a>
                 {% for cle, nom in categories %}
                 <a href="{% url 'documents' %}?categorie={{ cle }}"{% if categorie_active == cle %} aria-current="page"{% endif %}>{{ nom }}</a>
                 {% endfor %}
@@ -38,7 +38,7 @@
                 {% endfor %}
             </ul>
             {% else %}
-            <p class="etat-vide">Aucun document publié pour le moment.</p>
+            <p class="etat-vide">{% texte "ressources.docs_vide" %}</p>
             {% endif %}
         </div>
         {% include "v3/includes/aside_rubrique.html" %}

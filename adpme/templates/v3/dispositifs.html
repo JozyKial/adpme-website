@@ -1,6 +1,6 @@
 {% extends "v3/base.html" %}
 {% load static ui %}
-{% comment %} ADPME Congo — v3/dispositifs.html — v3
+{% comment %} ADPME Congo — v3/dispositifs.html — v4
    Vue d'ensemble de l'accompagnement : services, parcours, programmes, ressources.
    Textes : admin > Textes du site > Dispositifs. Services et étapes : admin > Listes.
    Programmes et partenaires : admin.
@@ -17,7 +17,7 @@
     <div class="container">
         <nav class="breadcrumb" aria-label="Fil d'Ariane">
             <ol>
-                <li><a href="{% url 'accueil' %}">Accueil</a></li>
+                <li><a href="{% url 'accueil' %}">{% texte "communs.fil_accueil" %}</a></li>
                 <li><a href="{% url 'information' %}">{% texte "menu.services" %}</a></li>
                 <li><span aria-current="page">{% texte "dispositifs.titre" %}</span></li>
             </ol>
@@ -53,7 +53,7 @@
                         {% for p in s.liste_points %}<li>{% icon "check" %}<span>{{ p }}</span></li>{% endfor %}
                     </ul>
                     {% endif %}
-                    {% if s.href %}<a class="btn btn--lien" href="{{ s.href }}" aria-hidden="true" tabindex="-1">En savoir plus {% icon "fleche-droite" %}</a>{% endif %}
+                    {% if s.href %}<a class="btn btn--lien" href="{{ s.href }}" aria-hidden="true" tabindex="-1">{% texte "communs.en_savoir_plus" %} {% icon "fleche-droite" %}</a>{% endif %}
                 </div>
             </article>
             {% endfor %}
@@ -113,9 +113,10 @@
             {% texte "dispositifs.res_formation_titre" as t1 %}{% texte "dispositifs.res_formation_texte" as x1 %}
             {% texte "dispositifs.res_documents_titre" as t2 %}{% texte "dispositifs.res_documents_texte" as x2 %}
             {% texte "dispositifs.res_faq_titre" as t3 %}{% texte "dispositifs.res_faq_texte" as x3 %}
-            {% include "v3/components/card_programme.html" with titre=t1 texte=x1 url=url_formation icone="formation" lien_texte="Découvrir les formations" %}
-            {% include "v3/components/card_programme.html" with titre=t2 texte=x2 url=url_documents icone="document" variante="violet" lien_texte="Consulter les documents" %}
-            {% include "v3/components/card_programme.html" with titre=t3 texte=x3 url=url_faq icone="question" lien_texte="Lire la FAQ" %}
+            {% texte "dispositifs.res_formation_lien" as l_formation %}{% texte "dispositifs.res_documents_lien" as l_documents %}{% texte "dispositifs.res_faq_lien" as l_faq %}
+            {% include "v3/components/card_programme.html" with titre=t1 texte=x1 url=url_formation icone="formation" lien_texte=l_formation %}
+            {% include "v3/components/card_programme.html" with titre=t2 texte=x2 url=url_documents icone="document" variante="violet" lien_texte=l_documents %}
+            {% include "v3/components/card_programme.html" with titre=t3 texte=x3 url=url_faq icone="question" lien_texte=l_faq %}
         </div>
     </div>
 </section>

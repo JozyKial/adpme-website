@@ -1,22 +1,24 @@
 {% extends "v3/base.html" %}
 {% load ui %}
-{% comment %} ADPME Congo — v3/contact.html — v1
+{% comment %} ADPME Congo — v3/contact.html — v2
    Formulaire (ContactForm) + coordonnées (admin > Informations de l'agence) + carte + antennes (admin > Antennes).
+   Textes et libellés du formulaire : admin > Textes du site > Page « Contact » et formulaire.
 {% endcomment %}
 
-{% block title %}Contact — ADPME Congo{% endblock %}
-{% block meta_description %}Contactez l'ADPME à Brazzaville : formulaire, téléphone, adresse et horaires d'accueil.{% endblock %}
+{% block title %}{% texte "contact.titre_page" %} — {% texte "general.titre_suffixe" %}{% endblock %}
+{% block meta_description %}{% texte "contact.meta_description" %}{% endblock %}
 
 {% block page_hero %}
-{% include "v3/components/page_hero.html" with titre="Nous contacter" intro="Une question, un projet ? Écrivez-nous ou venez nous rencontrer." %}
+{% texte "contact.titre" as t_titre %}{% texte "contact.intro" as t_intro %}
+{% include "v3/components/page_hero.html" with titre=t_titre intro=t_intro %}
 {% endblock %}
 
 {% block content %}
 <section class="section">
     <div class="container contact">
         <div class="contact__formulaire">
-            <h2>Écrire à l'agence</h2>
-            <p class="text-doux">Les champs marqués d'un <span class="requis" aria-hidden="true">*</span> sont obligatoires.</p>
+            <h2>{% texte "contact.form_titre" %}</h2>
+            <p class="text-doux">{% texte "contact.form_obligatoire" %}</p>
             <form class="form" method="post" action="{% url 'contact' %}" novalidate>
                 {% csrf_token %}
                 {% if form.non_field_errors %}<div class="alert alert--error" role="alert"><p>{{ form.non_field_errors|join:" " }}</p></div>{% endif %}
@@ -30,32 +32,32 @@
                     <label for="site_web">Ne pas remplir ce champ</label>
                     <input type="text" id="site_web" name="site_web" tabindex="-1" autocomplete="off">
                 </div>
-                <div><button type="submit" class="btn btn--primaire btn--lg">{% icon "message" %} Envoyer le message</button></div>
+                <div><button type="submit" class="btn btn--primaire btn--lg">{% icon "message" %} {% texte "contact.form_bouton" %}</button></div>
             </form>
         </div>
 
         <aside class="contact__coordonnees" aria-labelledby="titre-coordonnees">
-            <h2 id="titre-coordonnees">Coordonnées</h2>
+            <h2 id="titre-coordonnees">{% texte "contact.coord_titre" %}</h2>
             <ul class="coordonnees">
                 {% if agence.adresse %}
-                <li>{% icon "lieu" %}<div><strong>Adresse</strong><span>{{ agence.adresse }}</span></div></li>
+                <li>{% icon "lieu" %}<div><strong>{% texte "contact.coord_adresse" %}</strong><span>{{ agence.adresse }}</span></div></li>
                 {% endif %}
                 {% if agence.phone %}
-                <li>{% icon "telephone" %}<div><strong>Téléphone</strong><a href="tel:{{ agence.phone|tel_lien }}">{{ agence.phone }}</a></div></li>
+                <li>{% icon "telephone" %}<div><strong>{% texte "contact.coord_telephone" %}</strong><a href="tel:{{ agence.phone|tel_lien }}">{{ agence.phone }}</a></div></li>
                 {% endif %}
                 {% if agence.whatsapp %}
-                <li>{% icon "whatsapp" %}<div><strong>WhatsApp</strong><a href="https://wa.me/{{ agence.whatsapp|wa_lien }}" target="_blank" rel="noopener">{{ agence.whatsapp }}</a></div></li>
+                <li>{% icon "whatsapp" %}<div><strong>{% texte "contact.coord_whatsapp" %}</strong><a href="https://wa.me/{{ agence.whatsapp|wa_lien }}" target="_blank" rel="noopener">{{ agence.whatsapp }}</a></div></li>
                 {% endif %}
                 {% if agence.email_contact %}
-                <li>{% icon "email" %}<div><strong>E-mail</strong><a href="mailto:{{ agence.email_contact }}">{{ agence.email_contact }}</a></div></li>
+                <li>{% icon "email" %}<div><strong>{% texte "contact.coord_email" %}</strong><a href="mailto:{{ agence.email_contact }}">{{ agence.email_contact }}</a></div></li>
                 {% endif %}
                 {% if agence.horaires %}
-                <li>{% icon "horloge" %}<div><strong>Horaires d'accueil</strong><span>{{ agence.horaires }}</span></div></li>
+                <li>{% icon "horloge" %}<div><strong>{% texte "contact.coord_horaires" %}</strong><span>{{ agence.horaires }}</span></div></li>
                 {% endif %}
             </ul>
             {% if reseaux %}
-            <p class="contact__reseaux-titre">Suivez l'agence</p>
-            <ul class="contact__reseaux">
+            <p class="contact__reseaux-titre">{% texte "contact.reseaux" %}</p>
+            <ul class="site-footer__reseaux contact__reseaux">
                 {% for r in reseaux %}
                 <li><a href="{{ r.url }}" target="_blank" rel="noopener" aria-label="{{ r.libelle }} (nouvel onglet)">{% icon r.icone %}</a></li>
                 {% endfor %}
@@ -67,14 +69,15 @@
 
 {% if agence.carte_embed_url %}
 <section class="carte" aria-label="Plan d'accès">
-    <iframe src="{{ agence.carte_embed_url }}" title="Plan d'accès à la Direction générale de l'ADPME" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+    <iframe src="{{ agence.carte_embed_url }}" title="{% texte "contact.carte_titre" %}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
 </section>
 {% endif %}
 
 {% if antennes %}
 <section class="section section--alt" aria-labelledby="titre-antennes">
     <div class="container">
-        {% include "v3/components/section_header.html" with surtitre="Près de chez vous" titre="Nos antennes" id="titre-antennes" %}
+        {% texte "contact.antennes_surtitre" as t_surtitre %}{% texte "contact.antennes_titre" as t_titre %}
+        {% include "v3/components/section_header.html" with surtitre=t_surtitre titre=t_titre id="titre-antennes" %}
         <div class="grid grid--3">
             {% for a in antennes %}
             <article class="antenne">
@@ -86,7 +89,7 @@
                     {% if a.email %}<li>{% icon "email" %}<a href="mailto:{{ a.email }}">{{ a.email }}</a></li>{% endif %}
                     {% if a.horaires %}<li>{% icon "horloge" %}<span>{{ a.horaires }}</span></li>{% endif %}
                 </ul>
-                {% if a.lien_carte %}<a class="btn btn--contour btn--sm" href="{{ a.lien_carte }}" target="_blank" rel="noopener">Itinéraire {% icon "lien-externe" %}</a>{% endif %}
+                {% if a.lien_carte %}<a class="btn btn--contour btn--sm" href="{{ a.lien_carte }}" target="_blank" rel="noopener">{% texte "contact.antennes_itineraire" %} {% icon "lien-externe" %}</a>{% endif %}
             </article>
             {% endfor %}
         </div>

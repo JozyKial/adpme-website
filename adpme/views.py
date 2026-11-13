@@ -1,6 +1,7 @@
 # ==========================================================================
-# ADPME Congo — views.py — v4
-# Vues. Lot 2 : listes (accès rapides, services, étapes) lues depuis l'admin.
+# ADPME Congo — views.py — v5
+# Vues. Lot 2 : listes (accès rapides, services, étapes) et messages du
+# formulaire de contact lus depuis l'admin.
 # ==========================================================================
 import logging
 from django.shortcuts import render, get_object_or_404, redirect
@@ -19,6 +20,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib import messages
 from .forms import ContactForm
+from .textes import texte_admin
 
 from django.core.paginator import Paginator
 
@@ -174,7 +176,7 @@ def ContactView(request):
     if request.method == 'POST':
         # Piège à robots : ce champ est invisible pour les humains.
         if request.POST.get('site_web'):
-            messages.success(request, "Votre message a bien été envoyé.")
+            messages.success(request, texte_admin("contact.message_succes"))
             return redirect('contact')
 
         form = ContactForm(request.POST)
@@ -192,11 +194,11 @@ def ContactView(request):
                     recipient_list  = [settings.CONTACT_EMAIL],
                     fail_silently   = False,
                 )
-                messages.success(request, "Votre message a bien été envoyé. Nous vous répondrons dans les plus brefs délais.")
+                messages.success(request, texte_admin("contact.message_succes"))
                 return redirect('contact')
             except Exception as e:
                 logger.error(f"Erreur envoi email contact : {e}")
-                messages.error(request, "Une erreur est survenue lors de l'envoi. Veuillez réessayer ou nous contacter directement par téléphone.")
+                messages.error(request, texte_admin("contact.message_erreur"))
 
     context = {
         'form': form,

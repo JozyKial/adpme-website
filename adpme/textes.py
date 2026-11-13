@@ -1,5 +1,5 @@
 # ==========================================================================
-# ADPME Congo — textes.py — v1
+# ADPME Congo — textes.py — v2
 # Registre des « Textes du site » modifiables dans l'admin.
 #
 # Chaque entrée : "clé": (page, libellé affiché dans l'admin, texte par défaut)
@@ -17,6 +17,12 @@ PAGES = [
     ("accueil", "Page d'accueil"),
     ("dispositifs", "Page « Dispositifs d'accompagnement »"),
     ("communs", "Libellés communs (boutons, encadrés)"),
+    ("programmes", "Pages « Programmes »"),
+    ("actualites", "Pages « Actualités »"),
+    ("ressources", "Pages « FAQ » et « Documents »"),
+    ("contact", "Page « Contact » et formulaire"),
+    ("recherche", "Page « Recherche »"),
+    ("agence", "Pages de l'agence et des services, discours"),
 ]
 
 TEXTES = {
@@ -46,6 +52,8 @@ TEXTES = {
     "communs.aside_bouton": ("communs", "Colonne latérale : bouton de l'encadré de contact", "Nous contacter"),
     "communs.chiffres_surtitre": ("communs", "Bloc « En chiffres » : surtitre", "En chiffres"),
     "communs.chiffres_titre": ("communs", "Bloc « En chiffres » : titre", "L'action de l'agence"),
+    "communs.fil_accueil": ("communs", "Fil d'Ariane : premier lien", "Accueil"),
+    "communs.en_savoir_plus": ("communs", "Cartes et blocs : lien par défaut", "En savoir plus"),
 
     # ── Page d'accueil ───────────────────────────────────────────────────
     "accueil.titre_page": ("accueil", "Titre de la page (onglet du navigateur et Google)",
@@ -107,6 +115,9 @@ TEXTES = {
     "dispositifs.res_documents_titre": ("dispositifs", "Ressource « Documents » : titre", "Documents à télécharger"),
     "dispositifs.res_documents_texte": ("dispositifs", "Ressource « Documents » : texte",
         "Textes, guides pratiques, formulaires et rapports publiés par l'agence."),
+    "dispositifs.res_formation_lien": ("dispositifs", "Ressource « Formation » : texte du lien", "Découvrir les formations"),
+    "dispositifs.res_documents_lien": ("dispositifs", "Ressource « Documents » : texte du lien", "Consulter les documents"),
+    "dispositifs.res_faq_lien": ("dispositifs", "Ressource « FAQ » : texte du lien", "Lire la FAQ"),
     "dispositifs.res_faq_titre": ("dispositifs", "Ressource « FAQ » : titre", "Questions fréquentes"),
     "dispositifs.res_faq_texte": ("dispositifs", "Ressource « FAQ » : texte",
         "Les réponses aux questions les plus souvent posées à l'ADPME."),
@@ -115,6 +126,117 @@ TEXTES = {
         "Présentez-nous votre projet : l'ADPME vous oriente vers le dispositif le plus adapté."),
     "dispositifs.cta_bouton1": ("dispositifs", "Appel à l'action : premier bouton", "Nous contacter"),
     "dispositifs.cta_bouton2": ("dispositifs", "Appel à l'action : second bouton", "M'informer et m'orienter"),
+
+    # ── Programmes ───────────────────────────────────────────────────────
+    "programmes.titre_page": ("programmes", "Liste : titre de la page (onglet du navigateur et Google)", "Programmes"),
+    "programmes.meta_description": ("programmes", "Liste : description pour Google",
+        "Les programmes portés par l'ADPME pour accompagner les porteurs d'idées et de projets et les dirigeants "
+        "de TPME en République du Congo."),
+    "programmes.titre": ("programmes", "Liste : titre principal", "Programmes"),
+    "programmes.intro": ("programmes", "Liste : introduction",
+        "Les programmes portés par l'agence pour les porteurs d'idées et de projets et les dirigeants d'entreprises."),
+    "programmes.vide_texte": ("programmes", "Liste : message s'il n'y a aucun programme",
+        "Les programmes de l'agence seront bientôt présentés sur cette page."),
+    "programmes.vide_bouton": ("programmes", "Liste : bouton s'il n'y a aucun programme", "Se renseigner auprès de l'agence"),
+    "programmes.fiche_public": ("programmes", "Fiche : titre « public concerné »", "Public concerné"),
+    "programmes.fiche_site": ("programmes", "Fiche : bouton vers le site du programme", "Site du programme"),
+    "programmes.fiche_bouton": ("programmes", "Fiche : bouton de contact", "Se renseigner"),
+    "programmes.autres_surtitre": ("programmes", "Fiche : surtitre des autres programmes", "Programmes"),
+    "programmes.autres_titre": ("programmes", "Fiche : titre des autres programmes", "Autres programmes"),
+
+    # ── Actualités ───────────────────────────────────────────────────────
+    "actualites.titre_page": ("actualites", "Liste : titre de la page (onglet du navigateur et Google)", "Actualités"),
+    "actualites.meta_description": ("actualites", "Liste : description pour Google",
+        "Les actualités de l'ADPME : programmes, formations, événements et accompagnement des entrepreneurs "
+        "en République du Congo."),
+    "actualites.titre": ("actualites", "Liste : titre principal", "Actualités"),
+    "actualites.intro": ("actualites", "Liste : introduction",
+        "Les nouvelles de l'agence : programmes, formations, événements et rencontres avec les entrepreneurs."),
+    "actualites.filtre_toutes": ("actualites", "Liste : filtre « toutes les catégories »", "Toutes"),
+    "actualites.vide": ("actualites", "Liste : message s'il n'y a aucune actualité", "Aucune actualité publiée pour le moment."),
+    "actualites.vide_categorie": ("actualites", "Liste : message si la catégorie choisie est vide",
+        "Aucune actualité publiée dans cette catégorie pour le moment."),
+    "actualites.carte_lien": ("actualites", "Carte d'actualité : texte du lien", "Lire l'article"),
+    "actualites.partage_titre": ("actualites", "Article : titre du bloc de partage", "Partager cet article"),
+    "actualites.copier_lien": ("actualites", "Article : bouton « copier le lien »", "Copier le lien"),
+    "actualites.retour": ("actualites", "Article : lien de retour vers la liste", "Toutes les actualités"),
+    "actualites.lies_surtitre": ("actualites", "Article : surtitre des articles liés", "À lire aussi"),
+    "actualites.lies_titre": ("actualites", "Article : titre des articles liés", "D'autres actualités"),
+
+    # ── FAQ et documents ─────────────────────────────────────────────────
+    "ressources.faq_titre_page": ("ressources", "FAQ : titre de la page (onglet du navigateur et Google)", "Questions fréquentes"),
+    "ressources.faq_meta_description": ("ressources", "FAQ : description pour Google",
+        "Les réponses aux questions les plus posées à l'ADPME : services, programmes, accompagnement des entrepreneurs."),
+    "ressources.faq_titre": ("ressources", "FAQ : titre principal", "Questions fréquentes"),
+    "ressources.faq_intro": ("ressources", "FAQ : introduction", "Les réponses aux questions les plus souvent posées à l'agence."),
+    "ressources.faq_filtre": ("ressources", "FAQ : libellé du champ de recherche", "Rechercher dans les questions"),
+    "ressources.faq_filtre_exemple": ("ressources", "FAQ : texte d'exemple du champ de recherche", "Ex. : formation, financement…"),
+    "ressources.faq_aucune": ("ressources", "FAQ : message si la recherche ne donne rien",
+        "Aucune question ne correspond. Posez-nous directement votre question :"),
+    "ressources.faq_aucune_bouton": ("ressources", "FAQ : bouton si la recherche ne donne rien", "Nous contacter"),
+    "ressources.faq_vide": ("ressources", "FAQ : message s'il n'y a aucune question", "Les questions fréquentes seront bientôt publiées."),
+    "ressources.docs_titre_page": ("ressources", "Documents : titre de la page (onglet du navigateur et Google)",
+        "Documents à télécharger"),
+    "ressources.docs_meta_description": ("ressources", "Documents : description pour Google",
+        "Textes, guides pratiques, formulaires et rapports de l'ADPME à télécharger."),
+    "ressources.docs_titre": ("ressources", "Documents : titre principal", "Documents à télécharger"),
+    "ressources.docs_intro": ("ressources", "Documents : introduction",
+        "Textes, guides pratiques, formulaires et rapports publiés par l'agence."),
+    "ressources.docs_tous": ("ressources", "Documents : filtre « toutes les catégories »", "Tous"),
+    "ressources.docs_vide": ("ressources", "Documents : message s'il n'y a aucun document", "Aucun document publié pour le moment."),
+
+    # ── Contact ──────────────────────────────────────────────────────────
+    "contact.titre_page": ("contact", "Titre de la page (onglet du navigateur et Google)", "Contact"),
+    "contact.meta_description": ("contact", "Description pour Google",
+        "Contactez l'ADPME à Brazzaville : formulaire, téléphone, adresse et horaires d'accueil."),
+    "contact.titre": ("contact", "Titre principal", "Nous contacter"),
+    "contact.intro": ("contact", "Introduction", "Une question, un projet ? Écrivez-nous ou venez nous rencontrer."),
+    "contact.form_titre": ("contact", "Formulaire : titre", "Écrire à l'agence"),
+    "contact.form_obligatoire": ("contact", "Formulaire : mention des champs obligatoires",
+        "Les champs marqués d'un astérisque (*) sont obligatoires."),
+    "contact.champ_nom": ("contact", "Formulaire : libellé du nom", "Nom complet"),
+    "contact.champ_nom_exemple": ("contact", "Formulaire : exemple dans le champ nom", "Votre nom complet"),
+    "contact.champ_email": ("contact", "Formulaire : libellé de l'e-mail", "Adresse e-mail"),
+    "contact.champ_email_exemple": ("contact", "Formulaire : exemple dans le champ e-mail", "Votre adresse e-mail"),
+    "contact.champ_sujet": ("contact", "Formulaire : libellé du sujet", "Sujet"),
+    "contact.champ_sujet_exemple": ("contact", "Formulaire : exemple dans le champ sujet", "Sujet de votre message"),
+    "contact.champ_message": ("contact", "Formulaire : libellé du message", "Message"),
+    "contact.champ_message_exemple": ("contact", "Formulaire : exemple dans le champ message", "Votre message…"),
+    "contact.form_bouton": ("contact", "Formulaire : bouton d'envoi", "Envoyer le message"),
+    "contact.message_succes": ("contact", "Message affiché après un envoi réussi",
+        "Votre message a bien été envoyé. Nous vous répondrons dans les plus brefs délais."),
+    "contact.message_erreur": ("contact", "Message affiché si l'envoi échoue",
+        "Une erreur est survenue lors de l'envoi. Veuillez réessayer ou nous contacter directement par téléphone."),
+    "contact.coord_titre": ("contact", "Coordonnées : titre", "Coordonnées"),
+    "contact.coord_adresse": ("contact", "Coordonnées : libellé de l'adresse", "Adresse"),
+    "contact.coord_telephone": ("contact", "Coordonnées : libellé du téléphone", "Téléphone"),
+    "contact.coord_whatsapp": ("contact", "Coordonnées : libellé de WhatsApp", "WhatsApp"),
+    "contact.coord_email": ("contact", "Coordonnées : libellé de l'e-mail", "E-mail"),
+    "contact.coord_horaires": ("contact", "Coordonnées : libellé des horaires", "Horaires d'accueil"),
+    "contact.reseaux": ("contact", "Coordonnées : titre des réseaux sociaux", "Suivez l'agence"),
+    "contact.carte_titre": ("contact", "Carte : description (lecteurs d'écran)", "Plan d'accès à la Direction générale de l'ADPME"),
+    "contact.antennes_surtitre": ("contact", "Antennes : surtitre", "Près de chez vous"),
+    "contact.antennes_titre": ("contact", "Antennes : titre", "Nos antennes"),
+    "contact.antennes_itineraire": ("contact", "Antennes : bouton d'itinéraire", "Itinéraire"),
+
+    # ── Recherche ────────────────────────────────────────────────────────
+    "recherche.titre_page": ("recherche", "Titre de la page (onglet du navigateur)", "Recherche"),
+    "recherche.titre": ("recherche", "Titre principal", "Rechercher sur le site"),
+    "recherche.bouton": ("recherche", "Bouton de recherche", "Rechercher"),
+    "recherche.aucun": ("recherche", "Message si aucun résultat (suivi du mot cherché)", "Aucun résultat pour"),
+    "recherche.groupe_pages": ("recherche", "Titre du groupe « pages »", "Pages"),
+    "recherche.groupe_actualites": ("recherche", "Titre du groupe « actualités »", "Actualités"),
+    "recherche.groupe_faq": ("recherche", "Titre du groupe « questions »", "Questions fréquentes"),
+    "recherche.groupe_documents": ("recherche", "Titre du groupe « documents »", "Documents"),
+    "recherche.suggestion": ("recherche", "Message de suggestion si aucun résultat", "Essayez un autre mot, ou consultez directement :"),
+    "recherche.lien_faq": ("recherche", "Suggestion : bouton FAQ", "La FAQ"),
+    "recherche.lien_actualites": ("recherche", "Suggestion : bouton actualités", "Les actualités"),
+    "recherche.lien_contact": ("recherche", "Suggestion : bouton contact", "Nous contacter"),
+
+    # ── Pages de l'agence et discours ────────────────────────────────────
+    "agence.mis_a_jour": ("agence", "Pages : mention de date (suivie de la date)", "Mis à jour le"),
+    "agence.mot_dg": ("agence", "Titre de la page « Mot du Directeur général »", "Mot du Directeur général"),
+    "agence.mot_ministre": ("agence", "Titre de la page « Mot de la Ministre »", "Mot de la Ministre"),
 }
 
 
@@ -135,4 +257,13 @@ TEXTES["menu.contact"] = ("menu", "Pied de page › lien vers le contact", "Cont
 def defaut(cle):
     """Texte par défaut d'une clé (chaîne vide si la clé est inconnue)."""
     return TEXTES.get(cle, (None, None, ""))[2]
+
+
+def texte_admin(cle):
+    """Même chose que {% texte %}, depuis le code Python (vues, formulaires) :
+    texte saisi dans l'admin s'il existe, sinon texte par défaut."""
+    from .models import TexteSite
+
+    valeur = TexteSite.objects.filter(cle=cle).values_list("valeur", flat=True).first()
+    return valeur.strip() if valeur and valeur.strip() else defaut(cle)
 

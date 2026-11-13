@@ -1,5 +1,5 @@
 {% load ui %}
-{% comment %} ADPME Congo — v3/components/bloc_split.html — v1
+{% comment %} ADPME Congo — v3/components/bloc_split.html — v2
    Bloc éditorial « texte + image » (admin > Blocs de la page d'accueil).
    Paramètres : b (BlocAccueil), ident (id du titre), inverse (image à gauche),
    icone (icône si pas d'image), lignes (décor de lignes sur l'image), pastille (surtitre en pastille)
@@ -17,7 +17,7 @@
         </ul>
         {% endif %}
         {% if b.bouton_lien %}
-        <p class="split__action"><a class="btn btn--primaire btn--lg" href="{{ b.bouton_lien }}">{{ b.bouton_texte|default:"En savoir plus" }} {% icon "fleche-droite" %}</a></p>
+        <p class="split__action"><a class="btn btn--primaire btn--lg" href="{{ b.bouton_lien }}">{% if b.bouton_texte %}{{ b.bouton_texte }}{% else %}{% texte "communs.en_savoir_plus" %}{% endif %} {% icon "fleche-droite" %}</a></p>
         {% endif %}
     </div>
     <div class="split__visuel visuel{% if lignes %} visuel--lignes{% endif %}">

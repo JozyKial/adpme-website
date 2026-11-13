@@ -1,10 +1,11 @@
 # ==========================================================================
-# ADPME Congo — synchronisation.py — v1
+# ADPME Congo — synchronisation.py — v2
 # Exécuté automatiquement après chaque `py manage.py migrate` (voir apps.py) :
 #   1. crée dans l'admin les « Textes du site » manquants (registre textes.py),
 #      met à jour leur page et leur libellé, sans jamais toucher au texte saisi ;
 #   2. remplit une seule fois les listes (accès rapides, services, étapes)
-#      à partir de navigation.py si elles sont encore vides.
+#      à partir de navigation.py si elles sont encore vides ;
+#   3. génère la traduction française de l'administration (traductions_admin.py).
 # ==========================================================================
 
 
@@ -44,4 +45,8 @@ def synchroniser(**kwargs):
             for i, e in enumerate(ETAPES_PARCOURS, start=1)
         ])
 
-        
+    # 3. Traduction française de l'administration
+    from .traductions_admin import generer_catalogue
+    generer_catalogue()
+
+    

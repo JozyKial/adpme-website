@@ -1,6 +1,6 @@
 {% extends "v3/base.html" %}
 {% load static ui %}
-{% comment %} ADPME Congo — v3/accueil.html — v4
+{% comment %} ADPME Congo — v3/accueil.html — v5
    Page d'accueil. Chaque bloc ne s'affiche que s'il a du contenu dans l'admin :
    Slides, Blocs de la page d'accueil, Parcours, Programmes, Chiffres clés, Discours (DG),
    Actualités, Partenaires.
@@ -24,7 +24,7 @@
             <h2 class="hero__titre">{{ slide.titre }}</h2>
             {% if slide.texte %}<p class="hero__texte">{{ slide.texte }}</p>{% endif %}
             {% if slide.bouton_lien %}
-            <p class="hero__actions"><a class="btn btn--blanc btn--lg" href="{{ slide.bouton_lien }}">{{ slide.bouton_texte|default:"En savoir plus" }}</a></p>
+            <p class="hero__actions"><a class="btn btn--blanc btn--lg" href="{{ slide.bouton_lien }}">{% if slide.bouton_texte %}{{ slide.bouton_texte }}{% else %}{% texte "communs.en_savoir_plus" %}{% endif %}</a></p>
             {% endif %}
         </div>
     </div>
@@ -96,7 +96,7 @@
             {% for point in b.liste_points %}<li>{% icon "check" %}<span>{{ point }}</span></li>{% endfor %}
         </ul>
         {% endif %}
-        {% if b.bouton_lien %}<p class="mt-6 mb-0"><a class="btn btn--blanc" href="{{ b.bouton_lien }}">{{ b.bouton_texte|default:"En savoir plus" }}</a></p>{% endif %}
+        {% if b.bouton_lien %}<p class="mt-6 mb-0"><a class="btn btn--blanc" href="{{ b.bouton_lien }}">{% if b.bouton_texte %}{{ b.bouton_texte }}{% else %}{% texte "communs.en_savoir_plus" %}{% endif %}</a></p>{% endif %}
     </div>
 </section>
 {% endif %}{% endwith %}
@@ -169,7 +169,7 @@
                 {% endif %}
             </div>
             <div class="mot__texte">
-                <p class="section-header__surtitre" id="titre-mot-dg">Mot du {{ discours_dg.get_type_discours_display }}</p>
+                <p class="section-header__surtitre" id="titre-mot-dg">{% texte "agence.mot_dg" %}</p>
                 <blockquote class="mot__citation">{{ discours_dg.extrait|linebreaksbr }}</blockquote>
                 <p class="mot__auteur"><strong>{{ discours_dg.nom_auteur }}</strong><br><span>{{ discours_dg.fonction }}</span></p>
                 <a class="btn btn--lien" href="{% url 'discours_dg' %}">{% texte "accueil.mot_lien" %} {% icon "fleche-droite" %}</a>

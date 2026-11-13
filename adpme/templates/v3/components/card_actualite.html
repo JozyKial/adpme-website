@@ -1,5 +1,5 @@
 {% load ui %}
-{% comment %} ADPME Congo — v3/components/card_actualite.html — v1
+{% comment %} ADPME Congo — v3/components/card_actualite.html — v3
    Paramètre : post (objet BlogActualite)
 {% endcomment %}
 <article class="card">
@@ -20,7 +20,7 @@
         </h3>
         <p class="card__texte">{{ post.content|extrait:150 }}</p>
         <div class="card__pied">
-            <span class="btn btn--lien" aria-hidden="true">Lire l'article {% icon "fleche-droite" %}</span>
+            <span class="btn btn--lien" aria-hidden="true">{% texte "actualites.carte_lien" %} {% icon "fleche-droite" %}</span>
         </div>
     </div>
 </article>

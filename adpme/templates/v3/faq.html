@@ -1,13 +1,13 @@
 {% extends "v3/base.html" %}
 {% load ui %}
-{# ADPME Congo — v3/faq.html — v1 : questions fréquentes (admin > FAQ) avec filtre instantané #}
+{# ADPME Congo — v3/faq.html — v2 : questions fréquentes (admin > FAQ) avec filtre instantané ; textes : admin > Textes du site > FAQ et Documents #}
 
-{% block title %}Questions fréquentes — ADPME Congo{% endblock %}
-{% block meta_description %}Les réponses aux questions les plus posées à l'ADPME : services, programmes, accompagnement des entrepreneurs.{% endblock %}
+{% block title %}{% texte "ressources.faq_titre_page" %} — {% texte "general.titre_suffixe" %}{% endblock %}
+{% block meta_description %}{% texte "ressources.faq_meta_description" %}{% endblock %}
 
 {% block page_hero %}
-{% url 'faq' as url_faq %}
-{% include "v3/components/page_hero.html" with titre="Questions fréquentes" intro="Les réponses aux questions les plus souvent posées à l'agence." parent_titre="Ressources" parent_url=url_faq %}
+{% url 'faq' as url_faq %}{% texte "menu.ressources" as t_parent %}{% texte "ressources.faq_titre" as t_titre %}{% texte "ressources.faq_intro" as t_intro %}
+{% include "v3/components/page_hero.html" with titre=t_titre intro=t_intro parent_titre=t_parent parent_url=url_faq %}
 {% endblock %}
 
 {% block content %}
@@ -16,8 +16,8 @@
         <div>
             {% if faqs %}
             <div class="faq-filtre">
-                <label for="faq-filtre">Rechercher dans les questions</label>
-                <input class="input" id="faq-filtre" type="search" placeholder="Ex. : formation, financement…" data-faq-filtre>
+                <label for="faq-filtre">{% texte "ressources.faq_filtre" %}</label>
+                <input class="input" id="faq-filtre" type="search" placeholder="{% texte "ressources.faq_filtre_exemple" %}" data-faq-filtre>
                 <p class="text-sm text-doux" role="status" data-faq-statut></p>
             </div>
             <div class="accordion" data-faq-liste>
@@ -26,11 +26,11 @@
                 {% endfor %}
             </div>
             <div class="etat-vide mt-6" hidden data-faq-vide>
-                <p>Aucune question ne correspond. Posez-nous directement votre question :</p>
-                <a class="btn btn--primaire btn--sm" href="{% url 'contact' %}">Nous contacter</a>
+                <p>{% texte "ressources.faq_aucune" %}</p>
+                <a class="btn btn--primaire btn--sm" href="{% url 'contact' %}">{% texte "ressources.faq_aucune_bouton" %}</a>
             </div>
             {% else %}
-            <p class="etat-vide">Les questions fréquentes seront bientôt publiées.</p>
+            <p class="etat-vide">{% texte "ressources.faq_vide" %}</p>
             {% endif %}
         </div>
         {% include "v3/includes/aside_rubrique.html" %}
