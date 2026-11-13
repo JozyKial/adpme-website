@@ -1,0 +1,37 @@
+{% load ui %}
+{% comment %} ADPME Congo — v3/components/bloc_split.html — v1
+   Bloc éditorial « texte + image » (admin > Blocs de la page d'accueil).
+   Paramètres : b (BlocAccueil), ident (id du titre), inverse (image à gauche),
+   icone (icône si pas d'image), lignes (décor de lignes sur l'image), pastille (surtitre en pastille)
+{% endcomment %}
+<div class="container split{% if inverse %} split--inverse{% endif %}">
+    <div class="split__texte">
+        {% if b.surtitre %}
+        {% if pastille %}<p class="pastille">{% icon "formation" %} {{ b.surtitre }}</p>{% else %}<p class="section-header__surtitre">{{ b.surtitre }}</p>{% endif %}
+        {% endif %}
+        <h2 class="split__titre" id="{{ ident }}">{{ b.titre }}</h2>
+        {% if b.texte %}<p class="split__intro">{{ b.texte }}</p>{% endif %}
+        {% if b.liste_points %}
+        <ul class="liste-check">
+            {% for point in b.liste_points %}<li>{% icon "check" %}<span>{{ point }}</span></li>{% endfor %}
+        </ul>
+        {% endif %}
+        {% if b.bouton_lien %}
+        <p class="split__action"><a class="btn btn--primaire btn--lg" href="{{ b.bouton_lien }}">{{ b.bouton_texte|default:"En savoir plus" }} {% icon "fleche-droite" %}</a></p>
+        {% endif %}
+    </div>
+    <div class="split__visuel visuel{% if lignes %} visuel--lignes{% endif %}">
+        {% if b.image %}
+        <img src="{{ b.image.url }}" alt="" loading="lazy">
+        {% else %}
+        <div class="visuel__vide">{% icon icone|default:"batiment" %}</div>
+        {% endif %}
+        {% if b.badge_image or b.legende %}
+        <div class="visuel__legende">
+            {% if b.badge_image %}<span class="visuel__badge">{{ b.badge_image }}</span>{% endif %}
+            {% if b.legende %}<p>{{ b.legende }}</p>{% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+

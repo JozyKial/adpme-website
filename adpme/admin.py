@@ -1,4 +1,18 @@
+# ==========================================================================
+# ADPME Congo — admin.py — v2
+# Interface d'administration (thème Unfold aux couleurs de l'ADPME).
+# Toutes les classes héritent de unfold.admin.ModelAdmin pour profiter du
+# nouveau design. Le menu latéral se règle dans adpme/unfold_config.py.
+# ==========================================================================
 from django.contrib import admin
+from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.models import Group, User
+from django.utils.html import format_html
+from unfold.admin import ModelAdmin, TabularInline
+from unfold.decorators import display
+from unfold.forms import AdminPasswordChangeForm, UserChangeForm, UserCreationForm
+
 from .models import (
     AgenceInfo,
     BlogActualite,
@@ -6,13 +20,45 @@ from .models import (
     ActualiteEnImage,
     FAQ, Discours,
     Slide, Programme, Parcours, ParcoursLien, ChiffreCle, Partenaire,
-    Page, Antenne, Document,
-
+    Page, Antenne, Document, BlocAccueil,
 )
-from django.utils.html import format_html
 
+
+def apercu_image(champ, hauteur=48):
+    """Petite vignette dans la liste de l'admin."""
+    def apercu(self, obj):
+        image = getattr(obj, champ)
+        if image:
+            return format_html('<img src="{}" style="height:{}px;width:auto;border-radius:6px;">', image.url, hauteur)
+        return "—"
+    apercu.short_description = "Aperçu"
+    return apercu
+
+
+# ==========================================================================
+# Utilisateurs et groupes (formulaires au style Unfold)
+# ==========================================================================
+admin.site.unregister(User)
+admin.site.unregister(Group)
+
+
+@admin.register(User)
+class UtilisateurAdmin(BaseUserAdmin, ModelAdmin):
+    form                 = UserChangeForm
+    add_form             = UserCreationForm
+    change_password_form = AdminPasswordChangeForm
+
+
+@admin.register(Group)
+class GroupeAdmin(BaseGroupAdmin, ModelAdmin):
+    pass
+
+
+# ==========================================================================
+# L'agence
+# ==========================================================================
 @admin.register(AgenceInfo)
-class AgenceInfoAdmin(admin.ModelAdmin):
+class AgenceInfoAdmin(ModelAdmin):
     list_display = ('nom_agence', 'email_contact', 'phone', 'adresse')
     fieldsets = (
         ('Identité', {
@@ -35,35 +81,8 @@ class AgenceInfoAdmin(admin.ModelAdmin):
         return not AgenceInfo.objects.exists()
 
 
-class ActualiteEnImageInline(admin.TabularInline):
-    model                   = ActualiteEnImage
-    extra                   = 1
-    can_delete              = True
-    verbose_name            = "Image associée"
-    verbose_name_plural     = "Image associées"
-    show_change_link        = True
-
-@admin.register(BlogActualite)
-class BlogActualiteAdmin(admin.ModelAdmin):
-    list_display        = ('title', 'published','created_on','date_publication','author','category')
-    list_editable       = ('date_publication',)
-    search_fields       = ('title',)
-    inlines             = [ActualiteEnImageInline]
-
-@admin.register(Category)
-class Category(admin.ModelAdmin):
-    list_display = ('name',)
-
-
-@admin.register(FAQ)
-class FAQAdmin(admin.ModelAdmin):
-    list_display        = ('ordre', 'question', 'active')
-    list_editable       = ('ordre', 'active')
-    list_display_links  = ('question',)
-    ordering            = ('ordre',)
-
 @admin.register(Discours)
-class DiscoursAdmin(admin.ModelAdmin):
+class DiscoursAdmin(ModelAdmin):
     list_display    = ('get_type_discours_display', 'nom_auteur', 'fonction', 'date_maj')
     fieldsets = (
         ('Identité', {
@@ -79,35 +98,120 @@ class DiscoursAdmin(admin.ModelAdmin):
     get_type_discours_display.short_description = "Type"
 
 
+@admin.register(Antenne)
+class AntenneAdmin(ModelAdmin):
+    list_display  = ("nom", "ville", "telephone", "ordre", "actif")
+    list_editable = ("ordre", "actif")
 
 
 # ==========================================================================
-# Refonte v3 — Phase 3 : contenus de la page d'accueil
+# Actualités
 # ==========================================================================
+class ActualiteEnImageInline(TabularInline):
+    model                   = ActualiteEnImage
+    extra                   = 1
+    can_delete              = True
+    verbose_name            = "Image associée"
+    verbose_name_plural     = "Images associées"
+    show_change_link        = True
 
-def apercu_image(champ, hauteur=48):
-    """Petite vignette dans la liste de l'admin."""
-    def apercu(self, obj):
-        image = getattr(obj, champ)
-        if image:
-            return format_html('<img src="{}" style="height:{}px;width:auto;border-radius:4px;">', image.url, hauteur)
-        return "—"
-    apercu.short_description = "Aperçu"
-    return apercu
+
+@admin.register(BlogActualite)
+class BlogActualiteAdmin(ModelAdmin):
+    list_display        = ('title', 'statut', 'apercu', 'date_publication', 'category', 'author')
+    list_filter         = ('published', 'category')
+    search_fields       = ('title', 'content')
+    date_hierarchy      = 'date_publication'
+    inlines             = [ActualiteEnImageInline]
+    apercu              = apercu_image("image", 40)
+    warn_unsaved_form   = True
+
+    @display(description="Statut", label={"Publié": "success", "Brouillon": "warning"})
+    def statut(self, obj):
+        return "Publié" if obj.published else "Brouillon"
+
+    def save_model(self, request, obj, form, change):
+        # L'auteur est renseigné automatiquement à la création
+        if not obj.author_id:
+            obj.author = request.user
+        super().save_model(request, obj, form, change)
+
+
+@admin.register(Category)
+class CategoryAdmin(ModelAdmin):
+    list_display  = ('name',)
+    search_fields = ('name',)
+
+
+# ==========================================================================
+# Page d'accueil
+# ==========================================================================
+@admin.register(BlocAccueil)
+class BlocAccueilAdmin(ModelAdmin):
+    list_display  = ("get_cle_display", "titre", "apercu", "actif")
+    list_editable = ("actif",)
+    apercu        = apercu_image("image")
+    fieldsets = (
+        (None, {"fields": ("cle", "surtitre", "titre", "texte", "points")}),
+        ("Image", {"fields": ("image", "badge_image", "legende")}),
+        ("Bouton", {"fields": ("bouton_texte", "bouton_lien")}),
+        ("Affichage", {"fields": ("actif",)}),
+    )
 
 
 @admin.register(Slide)
-class SlideAdmin(admin.ModelAdmin):
+class SlideAdmin(ModelAdmin):
     list_display  = ("titre", "apercu", "ordre", "actif")
     list_editable = ("ordre", "actif")
     apercu        = apercu_image("image")
 
 
+class ParcoursLienInline(TabularInline):
+    model = ParcoursLien
+    extra = 1
+
+
+@admin.register(Parcours)
+class ParcoursAdmin(ModelAdmin):
+    list_display  = ("titre", "description", "ordre", "actif")
+    list_editable = ("ordre", "actif")
+    inlines       = [ParcoursLienInline]
+
+
+@admin.register(ChiffreCle)
+class ChiffreCleAdmin(ModelAdmin):
+    list_display  = ("valeur", "libelle", "source", "ordre", "actif")
+    list_editable = ("ordre", "actif")
+
+
+@admin.register(Partenaire)
+class PartenaireAdmin(ModelAdmin):
+    list_display  = ("nom", "apercu", "site_web", "ordre", "actif")
+    list_editable = ("ordre", "actif")
+    apercu        = apercu_image("logo", 36)
+
+
+# ==========================================================================
+# Pages, programmes et ressources
+# ==========================================================================
+@admin.register(Page)
+class PageAdmin(ModelAdmin):
+    list_display  = ("titre", "cle", "date_maj")
+    search_fields = ("titre", "contenu")
+    fields        = ("titre", "intro", "contenu", "image", "meta_description", "cle")
+    warn_unsaved_form = True
+
+    def get_readonly_fields(self, request, obj=None):
+        # L'identifiant est figé une fois la page créée : le site s'en sert pour la retrouver.
+        return ("cle",) if obj else ()
+
+
 @admin.register(Programme)
-class ProgrammeAdmin(admin.ModelAdmin):
+class ProgrammeAdmin(ModelAdmin):
     list_display  = ("titre", "public_cible", "sur_accueil", "ordre", "actif")
     list_editable = ("sur_accueil", "ordre", "actif")
     search_fields = ("titre", "resume")
+    warn_unsaved_form = True
     fieldsets = (
         (None, {"fields": ("titre", "resume", "public_cible", "icone", "image")}),
         ("Page détaillée", {"fields": ("contenu", "site_web")}),
@@ -115,62 +219,8 @@ class ProgrammeAdmin(admin.ModelAdmin):
     )
 
 
-class ParcoursLienInline(admin.TabularInline):
-    model = ParcoursLien
-    extra = 1
-
-
-@admin.register(Parcours)
-class ParcoursAdmin(admin.ModelAdmin):
-    list_display  = ("titre", "description", "ordre", "actif")
-    list_editable = ("ordre", "actif")
-    inlines       = [ParcoursLienInline]
-
-
-@admin.register(ChiffreCle)
-class ChiffreCleAdmin(admin.ModelAdmin):
-    list_display  = ("valeur", "libelle", "source", "ordre", "actif")
-    list_editable = ("ordre", "actif")
-
-
-@admin.register(Partenaire)
-class PartenaireAdmin(admin.ModelAdmin):
-    list_display  = ("nom", "apercu", "site_web", "ordre", "actif")
-    list_editable = ("ordre", "actif")
-    apercu        = apercu_image("logo", 36)
-
-
-
-
-# ==========================================================================
-# Refonte v3 — Phase 4 : pages de contenu
-# ==========================================================================
-
-@admin.register(Page)
-class PageAdmin(admin.ModelAdmin):
-    list_display  = ("titre", "cle", "date_maj")
-    search_fields = ("titre", "contenu")
-    fields        = ("titre", "intro", "contenu", "image", "meta_description", "cle")
-
-    def get_readonly_fields(self, request, obj=None):
-        # L'identifiant est figé une fois la page créée : le site s'en sert pour la retrouver.
-        return ("cle",) if obj else ()
-    
-
-
-
-# ==========================================================================
-# Refonte v3 — Phase 4b : antennes et documents
-# ==========================================================================
-
-@admin.register(Antenne)
-class AntenneAdmin(admin.ModelAdmin):
-    list_display  = ("nom", "ville", "telephone", "ordre", "actif")
-    list_editable = ("ordre", "actif")
-
-
 @admin.register(Document)
-class DocumentAdmin(admin.ModelAdmin):
+class DocumentAdmin(ModelAdmin):
     list_display  = ("titre", "categorie", "date_publication", "actif")
     list_editable = ("actif",)
     list_filter   = ("categorie", "actif")
@@ -178,3 +228,12 @@ class DocumentAdmin(admin.ModelAdmin):
     date_hierarchy = "date_publication"
 
 
+@admin.register(FAQ)
+class FAQAdmin(ModelAdmin):
+    list_display        = ('ordre', 'question', 'active')
+    list_editable       = ('ordre', 'active')
+    list_display_links  = ('question',)
+    ordering            = ('ordre',)
+    search_fields       = ('question', 'reponse')
+
+    

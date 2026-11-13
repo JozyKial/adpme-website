@@ -15,6 +15,9 @@ ALLOWED_HOSTS   = config('ALLOWED_HOSTS', cast=Csv())
 
 # ── Applications ───────────────────────────────────────────────────
 INSTALLED_APPS = [
+    # Thème de l'administration 
+    'unfold',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -165,4 +168,53 @@ else:
 
 # ── Divers ─────────────────────────────────────────────────────────
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+
+# ==========================================================================
+# Administration : thème Unfold aux couleurs de l'ADPME
+# Menu latéral et badge d'environnement : adpme/unfold_config.py
+# ==========================================================================
+from adpme.unfold_config import NAVIGATION as UNFOLD_NAVIGATION  # noqa: E402
+
+# Après connexion à l'admin, on arrive sur son tableau de bord
+LOGIN_REDIRECT_URL = "admin:index"
+
+UNFOLD = {
+    "SITE_TITLE": "ADPME Congo — Administration",
+    "SITE_HEADER": "ADPME Congo",
+    "SITE_SUBHEADER": "Gestion du site web",
+    "SITE_URL": "/",
+    "SITE_ICON": "adpme.unfold_config.icone",
+    "SITE_FAVICONS": [
+        {"rel": "icon", "sizes": "32x32", "type": "image/png", "href": "adpme.unfold_config.icone"},
+    ],
+    "ENVIRONMENT": "adpme.unfold_config.environnement",
+    "SHOW_HISTORY": True,
+    "SHOW_VIEW_ON_SITE": True,
+    "BORDER_RADIUS": "8px",
+    "COLORS": {
+        # Vert ADPME (#336633 = 600)
+        "primary": {
+            "50": "oklch(97.5% .012 144)",
+            "100": "oklch(94% .025 144)",
+            "200": "oklch(89% .045 144)",
+            "300": "oklch(81% .07 144)",
+            "400": "oklch(68% .095 144)",
+            "500": "oklch(56% .105 144)",
+            "600": "oklch(46.1% .097 143.8)",
+            "700": "oklch(38.8% .078 143.9)",
+            "800": "oklch(32.8% .063 144)",
+            "900": "oklch(27% .05 144)",
+            "950": "oklch(20% .04 144)",
+        },
+    },
+    "SIDEBAR": {
+        "show_search": True,
+        "show_all_applications": False,
+        "navigation": UNFOLD_NAVIGATION,
+    },
+}
+
 

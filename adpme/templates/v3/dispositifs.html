@@ -1,0 +1,136 @@
+{% extends "v3/base.html" %}
+{% load static ui %}
+{% comment %} ADPME Congo — v3/dispositifs.html — v2
+   Vue d'ensemble de l'accompagnement : services, parcours en 7 étapes, programmes, ressources.
+   Services et étapes : adpme/navigation.py (OFFRE_SERVICES, ETAPES_PARCOURS).
+   Programmes et partenaires : admin.
+{% endcomment %}
+
+{% block title %}Dispositifs d'accompagnement des TPME au Congo — ADPME{% endblock %}
+{% block meta_description %}Information, conseil, accompagnement, formation et programmes : tous les dispositifs de l'ADPME pour structurer et développer votre entreprise au Congo.{% endblock %}
+{% block og_title %}Dispositifs d'accompagnement des TPME — ADPME Congo{% endblock %}
+{% block og_description %}Information, conseil, accompagnement, formation et programmes de l'ADPME pour les entrepreneurs congolais.{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'v3/css/accueil.css' %}">{% endblock %}
+
+{% block page_hero %}
+<section class="page-hero">
+    <div class="container">
+        <nav class="breadcrumb" aria-label="Fil d'Ariane">
+            <ol>
+                <li><a href="{% url 'accueil' %}">Accueil</a></li>
+                <li><a href="{% url 'information' %}">Nos services</a></li>
+                <li><span aria-current="page">Dispositifs d'accompagnement</span></li>
+            </ol>
+        </nav>
+        <h1>Dispositifs d'accompagnement</h1>
+        <p class="page-hero__intro">Information, conseil, accompagnement, formation et programmes : l'ensemble des appuis de l'ADPME pour aider à la formalisation et au développement de votre entreprise au Congo.</p>
+        <ul class="hero-stats">
+            <li><strong>{{ services|length }}</strong><span>services d'appui</span></li>
+            <li><strong>{{ etapes|length }}</strong><span>étapes de parcours</span></li>
+            {% if programmes %}<li><strong>{{ programmes|length }}</strong><span>programme{{ programmes|length|pluralize }}</span></li>{% endif %}
+        </ul>
+    </div>
+</section>
+{% endblock %}
+
+{% block content %}
+
+{# ── 1. Offre de services ─────────────────────────────────────────── #}
+<section class="section" aria-labelledby="titre-services">
+    <div class="container">
+        {% include "v3/components/section_header.html" with surtitre="Notre offre" titre="Des services adaptés à chaque étape de votre projet" intro="Que vous ayez une idée, un projet en cours ou une entreprise à développer, l'ADPME vous propose des services non financiers adaptés à votre situation." id="titre-services" %}
+        <div class="grid grid--2">
+            {% for s in services %}
+            <article class="service service--{% cycle 'vert' 'jaune' 'rouge' 'vert' %}">
+                <span class="service__icone">{% icon s.icone %}</span>
+                <div class="service__corps">
+                    <h3 class="service__titre"><a href="{{ s.href }}">{{ s.titre }}</a></h3>
+                    <p class="service__intro">{{ s.intro }}</p>
+                    <ul class="liste-check liste-check--compacte">
+                        {% for p in s.points %}<li>{% icon "check" %}<span>{{ p }}</span></li>{% endfor %}
+                    </ul>
+                    <a class="btn btn--lien" href="{{ s.href }}" aria-hidden="true" tabindex="-1">En savoir plus {% icon "fleche-droite" %}</a>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{# ── 2. Parcours d'accompagnement ─────────────────────────────────── #}
+<section class="section section--alt" aria-labelledby="titre-etapes">
+    <div class="container">
+        <div class="section-header__ligne">
+            {% include "v3/components/section_header.html" with surtitre="Votre parcours" titre="Un accompagnement en 7 étapes" intro="De l'accueil à la consolidation de votre entreprise, un parcours personnalisé selon vos besoins." id="titre-etapes" %}
+            <a class="btn btn--contour" href="{% url 'accompagnement' %}">Le processus en détail {% icon "fleche-droite" %}</a>
+        </div>
+        <ol class="etapes">
+            {% for e in etapes %}
+            <li class="etape">
+                <span class="etape__numero" aria-hidden="true">{{ forloop.counter }}</span>
+                <h3 class="etape__titre">{{ e.titre }}</h3>
+                <p class="etape__texte">{{ e.texte }}</p>
+            </li>
+            {% endfor %}
+        </ol>
+    </div>
+</section>
+
+{# ── 3. Programmes ────────────────────────────────────────────────── #}
+{% if programmes %}
+<section class="section" aria-labelledby="titre-programmes">
+    <div class="container">
+        <div class="section-header__ligne">
+            {% include "v3/components/section_header.html" with surtitre="Programmes" titre="Les programmes portés par l'agence" id="titre-programmes" %}
+            <a class="btn btn--contour" href="{% url 'programme' %}">Tous les programmes {% icon "fleche-droite" %}</a>
+        </div>
+        <div class="grid grid--3">
+            {% for p in programmes %}
+            {% url 'programme_detail' p.slug as url_programme %}
+            {% include "v3/components/card_programme.html" with titre=p.titre texte=p.resume url=url_programme icone=p.icone public=p.public_cible variante=forloop.counter|divisibleby:2|yesno:"violet," %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{# ── 4. Ressources ────────────────────────────────────────────────── #}
+<section class="section section--alt" aria-labelledby="titre-ressources">
+    <div class="container">
+        {% include "v3/components/section_header.html" with surtitre="Ressources" titre="Pour aller plus loin" id="titre-ressources" %}
+        <div class="grid grid--3">
+            {% url 'formation' as url_formation %}{% url 'documents' as url_documents %}{% url 'faq' as url_faq %}
+            {% include "v3/components/card_programme.html" with titre="Formation et animation entrepreneuriale" texte="Ateliers pratiques, séminaires et formations de proximité pour renforcer vos compétences." url=url_formation icone="formation" lien_texte="Découvrir les formations" %}
+            {% include "v3/components/card_programme.html" with titre="Documents à télécharger" texte="Textes, guides pratiques, formulaires et rapports publiés par l'agence." url=url_documents icone="document" variante="violet" lien_texte="Consulter les documents" %}
+            {% include "v3/components/card_programme.html" with titre="Questions fréquentes" texte="Les réponses aux questions les plus souvent posées à l'ADPME." url=url_faq icone="question" lien_texte="Lire la FAQ" %}
+        </div>
+    </div>
+</section>
+
+{# ── 5. Partenaires ───────────────────────────────────────────────── #}
+{% if partenaires %}
+<section class="section section--compacte" aria-labelledby="titre-partenaires">
+    <div class="container">
+        {% include "v3/components/section_header.html" with surtitre="Ils nous accompagnent" titre="Nos partenaires" id="titre-partenaires" centre=True %}
+        <ul class="partenaires">
+            {% for p in partenaires %}
+            <li>
+                {% if p.site_web %}<a href="{{ p.site_web }}" target="_blank" rel="noopener" title="{{ p.nom }} (nouvel onglet)">{% endif %}
+                <img src="{{ p.logo.url }}" alt="{{ p.nom }}" loading="lazy">
+                {% if p.site_web %}</a>{% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</section>
+{% endif %}
+
+{# ── 6. Appel à l'action ──────────────────────────────────────────── #}
+<section class="section">
+    <div class="container">
+        {% url 'contact' as url_contact %}{% url 'information' as url_info %}
+        {% include "v3/components/cta_band.html" with titre="Prêt à vous faire accompagner ?" texte="Présentez-nous votre projet : l'ADPME vous oriente vers le dispositif le plus adapté." bouton_texte="Nous contacter" bouton_url=url_contact bouton2_texte="M'informer et m'orienter" bouton2_url=url_info %}
+    </div>
+</section>
+{% endblock %}
+

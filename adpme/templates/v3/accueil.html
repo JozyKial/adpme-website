@@ -69,6 +69,37 @@
     </div>
 </section>
 
+{# ── 2b. Qui sommes-nous ? ────────────────────────────────────────── #}
+{% if blocs.presentation %}
+<section class="section" aria-labelledby="titre-presentation">
+    {% include "v3/components/bloc_split.html" with b=blocs.presentation ident="titre-presentation" icone="batiment" lignes=True %}
+</section>
+{% endif %}
+
+{# ── 2c. Nos missions ─────────────────────────────────────────────── #}
+{% if blocs.missions %}
+<section class="section section--alt" aria-labelledby="titre-missions">
+    {% include "v3/components/bloc_split.html" with b=blocs.missions ident="titre-missions" icone="drapeau" %}
+</section>
+{% endif %}
+
+{# ── 2d. Nos priorités (bandeau) ──────────────────────────────────── #}
+{% with b=blocs.priorites %}{% if b %}
+<section class="priorites" aria-labelledby="titre-priorites">
+    {% if b.image %}<img class="priorites__image" src="{{ b.image.url }}" alt="" loading="lazy">{% endif %}
+    <div class="container priorites__contenu">
+        <h2 class="priorites__titre" id="titre-priorites">{{ b.titre }}</h2>
+        {% if b.texte %}<p class="priorites__texte">{{ b.texte }}</p>{% endif %}
+        {% if b.liste_points %}
+        <ul class="priorites__liste">
+            {% for point in b.liste_points %}<li>{% icon "check" %}<span>{{ point }}</span></li>{% endfor %}
+        </ul>
+        {% endif %}
+        {% if b.bouton_lien %}<p class="mt-6 mb-0"><a class="btn btn--blanc" href="{{ b.bouton_lien }}">{{ b.bouton_texte|default:"En savoir plus" }}</a></p>{% endif %}
+    </div>
+</section>
+{% endif %}{% endwith %}
+
 {# ── 3. Parcours « Vous êtes… » ───────────────────────────────────── #}
 {% if parcours %}
 <section class="section" aria-labelledby="titre-parcours">
@@ -109,6 +140,14 @@
             {% endfor %}
         </div>
     </div>
+</section>
+{% endif %}
+
+
+{# ── 4b. Développez vos compétences ───────────────────────────────── #}
+{% if blocs.competences %}
+<section class="section" aria-labelledby="titre-competences">
+    {% include "v3/components/bloc_split.html" with b=blocs.competences ident="titre-competences" icone="formation" inverse=True pastille=True %}
 </section>
 {% endif %}
 

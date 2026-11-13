@@ -31,11 +31,12 @@ class AgenceInfo(models.Model):
         return self.nom_agence
 
 class Category(models.Model):
-    name   = models.CharField(max_length=100, verbose_name="Categorie")
+    name   = models.CharField(max_length=100, verbose_name="Nom")
     slug   = AutoSlugField(populate_from = "name", unique=True, null=True, default=None)
 
     class Meta:
-        verbose_name = "Categorie"
+        verbose_name        = "Categorie"
+        verbose_name_plural = "Catégories"
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -60,7 +61,7 @@ class BlogActualite(models.Model):
     )
 
     title       = models.CharField(max_length=255, unique=True, verbose_name="Titre")
-    author      = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    author      = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Auteur")
     image       = models.ImageField(upload_to="actualite_img", blank=True, null=True, verbose_name="Image d'entête")
     content     = RichTextUploadingField()
     category    = models.ForeignKey(Category, related_name='category', on_delete=models.CASCADE, verbose_name="Catégorie")
@@ -75,8 +76,9 @@ class BlogActualite(models.Model):
 
 
     class Meta:
-        ordering = ['-date_publication']
-        verbose_name = "Actualite"
+        ordering            = ['-date_publication']
+        verbose_name        = "Actualite"
+        verbose_name_plural = "Actualités"
     
     def __str__(self):
         return f"{self.title} ({self.category})"
@@ -350,4 +352,52 @@ class Document(models.Model):
             if octets < 1024 or unite == "Go":
                 return f"{octets:.0f} {unite}" if unite == "o" else f"{octets:.1f} {unite}".replace(".", ",")
             octets /= 1024
+
+
+
+
+# ==========================================================================
+# Refonte v3 — Blocs éditoriaux de la page d'accueil
+# ==========================================================================
+
+class BlocAccueil(models.Model):
+    CLES = [
+        ("presentation", "Qui sommes-nous ? (texte + image)"),
+        ("missions", "Nos missions (liste + image)"),
+        ("priorites", "Nos priorités (bandeau pleine largeur)"),
+        ("competences", "Développez vos compétences (image + liste + bouton)"),
+    ]
+
+    cle         = models.CharField(max_length=30, choices=CLES, unique=True, verbose_name="Bloc")
+    surtitre    = models.CharField(max_length=80, blank=True, verbose_name="Surtitre",
+                                   help_text="Petit texte au-dessus du titre (ex. : Qui sommes-nous ?)")
+    titre       = models.CharField(max_length=150, verbose_name="Titre")
+    texte       = models.TextField(blank=True, verbose_name="Texte")
+    points      = models.TextField(blank=True, verbose_name="Liste à puces",
+                                   help_text="Un point par ligne.")
+    image       = models.ImageField(upload_to="accueil/", blank=True, null=True, verbose_name="Image",
+                                    help_text="Photo de l'ADPME, format paysage conseillé (1200×900).")
+    badge_image = models.CharField(max_length=40, blank=True, verbose_name="Badge sur l'image",
+                                   help_text="Bloc « compétences » uniquement (ex. : Programme SYB).")
+    legende     = models.CharField(max_length=120, blank=True, verbose_name="Légende sur l'image",
+                                   help_text="Bloc « compétences » uniquement.")
+    bouton_texte = models.CharField(max_length=60, blank=True, verbose_name="Texte du bouton")
+    bouton_lien = models.CharField(max_length=300, blank=True, verbose_name="Lien du bouton",
+                                   help_text="Chemin du site (ex. : /a-propos/) ou adresse complète.")
+    actif       = models.BooleanField(default=True, verbose_name="Affiché")
+
+    class Meta:
+        ordering            = ["cle"]
+        verbose_name        = "Bloc de la page d'accueil"
+        verbose_name_plural = "Blocs de la page d'accueil"
+
+    def __str__(self):
+        return f"{self.get_cle_display()} — {self.titre}"
+
+    @property
+    def liste_points(self):
+        return [ligne.strip(" -•\t") for ligne in self.points.splitlines() if ligne.strip(" -•\t")]
+
+    
+
 

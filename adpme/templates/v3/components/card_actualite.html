@@ -18,7 +18,7 @@
         <h3 class="card__titre">
             <a href="{% url 'actu_detail' post.blog_slug %}" class="card__lien-etendu">{{ post.title }}</a>
         </h3>
-        <p class="card__texte">{{ post.content|striptags|truncatewords:22 }}</p>
+        <p class="card__texte">{{ post.content|extrait:150 }}</p>
         <div class="card__pied">
             <span class="btn btn--lien" aria-hidden="true">Lire l'article {% icon "fleche-droite" %}</span>
         </div>

@@ -1,5 +1,5 @@
 # ==========================================================================
-# ADPME Congo — navigation.py — v4
+# ADPME Congo — navigation.py — v5
 # Menu principal du site : C'EST ICI qu'on modifie le méga-menu ET les
 # colonnes du footer (une seule source pour les deux).
 #
@@ -24,6 +24,7 @@ MENU_PRINCIPAL = [
         "id": "services",
         "titre": "Nos services",
         "liens": [
+            {"titre": "Dispositifs d'accompagnement", "url": "dispositifs", "icone": "utilisateurs"},
             {"titre": "Information et orientation", "url": "information", "icone": "boussole"},
             {"titre": "Conseil", "url": "conseil", "icone": "ampoule"},
             {"titre": "Accompagnement", "url": "accompagnement", "icone": "poignee"},
@@ -59,5 +60,52 @@ ACCES_RAPIDES = [
     {"titre": "Découvrir les programmes", "desc": "Programmes", "url": "programme", "icone": "drapeau"},
     {"titre": "Contacter l'agence", "desc": "Contact", "url": "contact", "icone": "message"},
 ]
+
+
+
+
+# --------------------------------------------------------------------------
+# Page « Dispositifs d'accompagnement »
+#   OFFRE_SERVICES : les 4 services (l'introduction vient de la Page de l'admin
+#   si elle existe ; sinon « resume » est utilisé).
+#   ETAPES_PARCOURS : le processus d'accompagnement en 7 étapes.
+# --------------------------------------------------------------------------
+OFFRE_SERVICES = [
+    {
+        "titre": "Information et orientation", "url": "information", "page": "information", "icone": "boussole",
+        "resume": "Trouver le bon interlocuteur et le bon dispositif pour votre projet.",
+        "points": ["Opportunités économiques", "Aide à la création et à la formalisation d'entreprise",
+                   "Mécanismes de financement", "Programmes de formation et d'accompagnement"],
+    },
+    {
+        "titre": "Conseil", "url": "conseil", "page": "conseil", "icone": "ampoule",
+        "resume": "Des échanges personnalisés pour structurer et sécuriser votre activité.",
+        "points": ["Clarification de l'idée de projet", "Analyse de la viabilité",
+                   "Organisation interne", "Décisions stratégiques"],
+    },
+    {
+        "titre": "Accompagnement", "url": "accompagnement", "page": "accompagnement", "icone": "poignee",
+        "resume": "Un suivi structuré, de la formalisation à la consolidation de l'entreprise.",
+        "points": ["Diagnostic de l'entreprise", "Plan d'affaires et formalisation",
+                   "Accès aux financements et aux dispositifs", "Suivi et consolidation"],
+    },
+    {
+        "titre": "Formation et animation", "url": "formation", "page": "formation", "icone": "formation",
+        "resume": "Renforcer les compétences des porteurs de projets et des dirigeants de TPME.",
+        "points": ["Culture entrepreneuriale", "Gestion d'entreprise",
+                   "Accès au financement", "Ateliers et formations de proximité"],
+    },
+]
+
+ETAPES_PARCOURS = [
+    {"titre": "Accueil et orientation", "texte": "Identification de vos besoins et orientation vers les dispositifs adaptés."},
+    {"titre": "Diagnostic", "texte": "Évaluation de la maturité du projet et de l'entreprise, et définition d'un parcours personnalisé."},
+    {"titre": "Conseil et structuration", "texte": "Plan d'affaires, organisation de l'activité, modèle économique."},
+    {"titre": "Formation", "texte": "Renforcement des compétences entrepreneuriales, techniques et managériales."},
+    {"titre": "Formalisation et accès aux dispositifs", "texte": "Démarches de formalisation, financements et programmes d'appui."},
+    {"titre": "Suivi post-création", "texte": "Suivi technique pour anticiper les difficultés et consolider l'activité."},
+    {"titre": "Croissance et pérennisation", "texte": "Productivité, innovation, accès aux marchés et compétitivité."},
+]
+
 
 

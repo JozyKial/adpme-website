@@ -1,11 +1,11 @@
 {% load static ui %}<!DOCTYPE html>
-{# ADPME Congo — v3/base.html — v3 #}
+{# ADPME Congo — v3/base.html — v4 #}
 <html lang="fr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}{% if agence %}{{ agence.nom_agence }}{% else %}ADPME{% endif %} — Congo{% endblock title %}</title>
-    <meta name="description" content="{% block meta_description %}L'ADPME accompagne les porteurs de projets, entrepreneurs et artisans dans la création, le développement et la pérennisation de leurs activités — Brazzaville, République du Congo.{% endblock %}">
+    <meta name="description" content="{% block meta_description %}L'ADPME accompagne les porteurs d'idées et de projets et les dirigeants de TPME dans la formalisation, le développement et la pérennisation de leurs entreprises — Brazzaville, République du Congo.{% endblock %}">
     <link rel="canonical" href="{% block canonical %}{{ request.scheme }}://{{ request.get_host }}{{ request.path }}{% endblock %}">
     <meta name="theme-color" content="#336633">
 
@@ -15,11 +15,11 @@
     <meta property="og:type" content="{% block og_type %}website{% endblock %}">
     <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
     <meta property="og:title" content="{% block og_title %}ADPME — Agence de Développement des TPME{% endblock %}">
-    <meta property="og:description" content="{% block og_description %}L'ADPME accompagne les porteurs de projets, entrepreneurs et artisans dans la création et le développement de leurs activités au Congo.{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}L'ADPME accompagne les porteurs d'idées et de projets et les dirigeants de TPME dans la formalisation et le développement de leurs entreprises au Congo.{% endblock %}">
     <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'assets/images/adpme-fav.png' %}{% endblock %}">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{% block twitter_title %}ADPME Congo{% endblock %}">
-    <meta name="twitter:description" content="{% block twitter_description %}L'ADPME accompagne les entrepreneurs congolais dans la création et le développement de leurs activités.{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}L'ADPME accompagne les porteurs de projets et les dirigeants de TPME dans la formalisation et le développement de leurs entreprises.{% endblock %}">
     <meta name="twitter:image" content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'assets/images/adpme-fav.png' %}{% endblock %}">
 
     <link rel="icon" type="image/png" href="{% static 'assets/images/adpme-fav.png' %}">
@@ -34,7 +34,6 @@
     <link rel="stylesheet" href="{% static 'v3/css/components.css' %}">
     <link rel="stylesheet" href="{% static 'v3/css/layout.css' %}">
     <link rel="stylesheet" href="{% static 'v3/css/pages.css' %}">
-
     {% block extra_css %}{% endblock %}
 
     {% block schema_org %}{% endblock %}

@@ -1,15 +1,15 @@
 {% extends "v3/base.html" %}
 {% load ui %}
-{# ADPME Congo — v3/actualite_detail.html — v1 : article d'actualité #}
+{# ADPME Congo — v3/actualite_detail.html — v2 : article d'actualité #}
 
 {% block title %}{{ post.title }} — ADPME Congo{% endblock %}
-{% block meta_description %}{{ post.content|striptags|truncatechars:160 }}{% endblock %}
+{% block meta_description %}{{ post.content|extrait:160 }}{% endblock %}
 {% block og_type %}article{% endblock %}
 {% block og_title %}{{ post.title }}{% endblock %}
-{% block og_description %}{{ post.content|striptags|truncatechars:200 }}{% endblock %}
+{% block og_description %}{{ post.content|extrait:160 }}{% endblock %}
 {% block og_image %}{% if post.image %}{{ request.scheme }}://{{ request.get_host }}{{ post.image.url }}{% else %}{{ block.super }}{% endif %}{% endblock %}
 {% block twitter_title %}{{ post.title }}{% endblock %}
-{% block twitter_description %}{{ post.content|striptags|truncatechars:200 }}{% endblock %}
+{% block twitter_description %}{{ post.content|extrait:160 }}{% endblock %}
 {% block twitter_image %}{% if post.image %}{{ request.scheme }}://{{ request.get_host }}{{ post.image.url }}{% else %}{{ block.super }}{% endif %}{% endblock %}
 
 {% block page_hero %}

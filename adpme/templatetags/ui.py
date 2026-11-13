@@ -1,9 +1,10 @@
 # ==========================================================================
-# ADPME Congo — templatetags/ui.py — v1
+# ADPME Congo — templatetags/ui.py — v3
 # ==========================================================================
 from functools import lru_cache
+from html import unescape
 from django import template
-from django.utils.html import format_html, mark_safe
+from django.utils.html import format_html, mark_safe, strip_tags
 
 register = template.Library()
 
@@ -109,5 +110,22 @@ def qr_svg(donnees, label="QR code"):
     except ImportError:
         return ""
     return format_html('<span class="qr" role="img" aria-label="{}">{}</span>', label, mark_safe(svg))
+
+
+
+
+@register.filter
+def extrait(html, longueur=180):
+    """Résumé lisible d'un contenu CKEditor : retire les balises, convertit les
+    codes HTML (&nbsp; &rsquo; &eacute;…) en vrais caractères, supprime les
+    espaces superflus et coupe proprement sur un mot."""
+    texte = unescape(strip_tags(str(html or "")))
+    texte = " ".join(texte.split())
+    longueur = int(longueur)
+    if len(texte) <= longueur:
+        return texte
+    coupe = texte[:longueur].rsplit(" ", 1)[0].rstrip(" ,;:.—-")
+    return coupe + "…"
+
 
 
