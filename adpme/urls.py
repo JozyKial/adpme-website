@@ -1,9 +1,12 @@
 # ==========================================================================
-# ADPME Congo — urls.py — v3
+# ADPME Congo — urls.py — v4
 # Adresses du site. Phase 4c : opportunités et lettre d'information.
 # Phase 5 : plan du site (/sitemap.xml) et /robots.txt.
+# v4 : /favicon.ico (icône lue par Google et Bing à la racine du site).
 # ==========================================================================
 from django.contrib.sitemaps.views import sitemap
+from django.templatetags.static import static as fichier_statique
+from django.views.generic import RedirectView
 from django.urls import path, include
 from django.conf.urls.static import static
 from . import views
@@ -44,6 +47,7 @@ urlpatterns = [
     # Refonte v3 — Phase 5 : référencement
     path('sitemap.xml', sitemap, {'sitemaps': SITEMAPS}, name="sitemap"),
     path('robots.txt', views.RobotsView, name="robots"),
+    path('favicon.ico', RedirectView.as_view(url=fichier_statique('v3/icones/favicon.ico'), permanent=True)),
 
     # Refonte v3 — guide des composants (DEBUG uniquement)
     path('styleguide/', views.StyleguideView, name="styleguide"),

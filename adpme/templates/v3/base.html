@@ -1,5 +1,5 @@
 {% load static ui seo %}<!DOCTYPE html>
-{# ADPME Congo — v3/base.html — v7 : textes par défaut dans admin > Textes du site > Général ; données structurées schema.org (phase 5) #}
+{# ADPME Congo — v3/base.html — v8 : textes par défaut dans admin > Textes du site > Général ; schema.org ; icônes du site (v3/icones) #}
 <html lang="fr">
 <head>
     <meta charset="utf-8">
@@ -16,13 +16,17 @@
     <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
     <meta property="og:title" content="{% block og_title %}{% texte "general.partage_titre" %}{% endblock %}">
     <meta property="og:description" content="{% block og_description %}{% texte "general.partage_description" %}{% endblock %}">
-    <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'assets/images/adpme-fav.png' %}{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'v3/icones/icone-512.png' %}{% endblock %}">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{% block twitter_title %}{% texte "general.partage_titre" %}{% endblock %}">
     <meta name="twitter:description" content="{% block twitter_description %}{% texte "general.partage_description" %}{% endblock %}">
-    <meta name="twitter:image" content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'assets/images/adpme-fav.png' %}{% endblock %}">
+    <meta name="twitter:image" content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'v3/icones/icone-512.png' %}{% endblock %}">
 
-    <link rel="icon" type="image/png" href="{% static 'assets/images/adpme-fav.png' %}">
+    {# Icônes du site : onglet, résultats Google/Bing, écran d'accueil des téléphones (utilitaires/generer_favicons.py) #}
+    <link rel="icon" href="/favicon.ico" sizes="48x48">
+    <link rel="icon" type="image/png" sizes="192x192" href="{% static 'v3/icones/icone-192.png' %}">
+    <link rel="icon" type="image/png" sizes="96x96" href="{% static 'v3/icones/icone-96.png' %}">
+    <link rel="apple-touch-icon" href="{% static 'v3/icones/apple-touch-icon.png' %}">
 
     {# Police : Source Sans 3 (Google Fonts). Pour s'en passer, supprimer ces 3 lignes : la pile système prend le relais. #}
     <link rel="preconnect" href="https://fonts.googleapis.com">
