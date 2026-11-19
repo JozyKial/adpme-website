@@ -1,0 +1,39 @@
+{% load ui %}
+{% comment %} ADPME Congo — v3/components/fiche_direction.html — v1
+   Fiche d'une direction (page « Organisation et missions ») : présentation,
+   missions telles que fixées par les statuts, services, référence du texte.
+   Paramètre : structure (objet Structure ; liste_services facultative)
+{% endcomment %}
+<article class="fiche-direction" id="{{ structure.slug }}" aria-labelledby="titre-{{ structure.slug }}">
+    <header class="fiche-direction__entete">
+        <span class="fiche-direction__icone">{% icon structure.icone|default:"batiment" %}</span>
+        <div>
+            <h3 class="fiche-direction__titre" id="titre-{{ structure.slug }}">{{ structure.nom }}{% if structure.sigle %} <span class="fiche-direction__sigle">({{ structure.sigle }})</span>{% endif %}</h3>
+            {% if structure.reference %}<p class="badge badge--neutre">{{ structure.reference }}</p>{% endif %}
+        </div>
+    </header>
+
+    <div class="fiche-direction__corps">
+        <div class="fiche-direction__missions">
+            {% if structure.presentation %}<p class="fiche-direction__presentation">{{ structure.presentation }}</p>{% endif %}
+            {% if structure.liste_missions %}
+            <p class="fiche-direction__libelle">{% texte "organisation.missions_libelle" %}</p>
+            <ul class="liste-check">
+                {% for m in structure.liste_missions %}<li>{% icon "check" %}<span>{{ m }}</span></li>{% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+
+        {% if structure.liste_services %}
+        <aside class="fiche-direction__services" aria-label="{% texte 'organisation.services_libelle' %}">
+            <p class="encadre__libelle">{% texte "organisation.services_libelle" %}</p>
+            <ul>
+                {% for s in structure.liste_services %}<li>{% icon "organigramme" %}<span>{{ s.nom }}</span></li>{% endfor %}
+            </ul>
+        </aside>
+        {% endif %}
+    </div>
+
+    <p class="fiche-direction__retour"><a href="#organigramme">{% icon "fleche-haut" %} {% texte "organisation.retour_organigramme" %}</a></p>
+</article>
+

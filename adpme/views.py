@@ -1,9 +1,10 @@
 # ==========================================================================
-# ADPME Congo — views.py — v7
+# ADPME Congo — views.py — v8
 # Vues. Lot 2 : listes (accès rapides, services, étapes) et messages du
 # formulaire de contact lus depuis l'admin.
 # Phase 4c : opportunités (offres, emplois, appels) et lettre d'information.
 # Phase 5 : recherche sans accents (adpme/recherche.py) et robots.txt.
+# v8 : page « Organisation et missions » (organigramme, en attente de validation).
 # ==========================================================================
 import logging
 from django.shortcuts import render, get_object_or_404, redirect
@@ -16,7 +17,7 @@ from .models import (
     FAQ, Discours,
     Slide, Programme, Parcours, ChiffreCle, Partenaire,
     Page, Antenne, Document, BlocAccueil, Element,
-    Offre, Abonne,
+    Offre, Abonne, Structure,
 )
 
 from django.core.mail import send_mail
@@ -158,6 +159,36 @@ def AccompagnementView(request):
 
 def ConseilView(request):
     return _page_contenu(request, "conseil", "adpme/conseil.html", "services")
+
+
+def OrganisationView(request):
+    """Organigramme et missions des directions (modèle Structure, admin > Organigramme).
+    Visible en local ; en ligne seulement si ORGANISATION_PUBLIEE=True (voir navigation.py)."""
+    from .navigation import ORGANISATION_PUBLIEE, ORGANISATION_VISIBLE
+
+    if not ORGANISATION_VISIBLE:
+        raise Http404()
+
+    structures = list(Structure.objects.filter(actif=True))
+    par_type = {cle: [] for cle, _ in Structure.TYPES}
+    for s in structures:
+        par_type[s.type_structure].append(s)
+
+    directions = par_type["direction"]
+    for d in directions:
+        d.liste_services = [s for s in par_type["service"] if s.parent_id == d.pk]
+
+    context = {
+        'comite': par_type["comite"][0] if par_type["comite"] else None,
+        'dg': par_type["dg"][0] if par_type["dg"] else None,
+        'rattaches': par_type["rattache"],
+        'directions': directions,
+        'comptables': par_type["comptable"],
+        'departementales': par_type["departementale"],
+        'apercu': not ORGANISATION_PUBLIEE,
+        'rubrique_id': 'agence',
+    }
+    return render(request, "v3/organisation.html", context)
 
 
 def ProgrammeView(request):

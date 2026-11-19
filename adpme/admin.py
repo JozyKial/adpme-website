@@ -1,7 +1,8 @@
 # ==========================================================================
-# ADPME Congo — admin.py — v4
+# ADPME Congo — admin.py — v5
 # Interface d'administration (thème Unfold aux couleurs de l'ADPME).
 # v4 : opportunités et abonnés à la lettre d'information (phase 4c).
+# v5 : organigramme (directions, services et missions).
 # Toutes les classes héritent de unfold.admin.ModelAdmin pour profiter du
 # nouveau design. Le menu latéral se règle dans settings.py (UNFOLD).
 # ==========================================================================
@@ -27,7 +28,7 @@ from .models import (
     Slide, Programme, Parcours, ParcoursLien, ChiffreCle, Partenaire,
     Page, Antenne, Document, BlocAccueil,
     TexteSite, Element,
-    Offre, Abonne,
+    Offre, Abonne, Structure,
 )
 from .textes import defaut
 
@@ -110,6 +111,49 @@ class DiscoursAdmin(ModelAdmin):
 class AntenneAdmin(ModelAdmin):
     list_display  = ("nom", "ville", "telephone", "ordre", "actif")
     list_editable = ("ordre", "actif")
+
+
+class ServiceInline(TabularInline):
+    model               = Structure
+    fk_name             = "parent"
+    fields              = ("nom", "ordre", "actif")
+    extra               = 0
+    verbose_name        = "Service de la direction"
+    verbose_name_plural = "Services de la direction"
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).filter(type_structure="service")
+
+
+@admin.register(Structure)
+class StructureAdmin(ModelAdmin):
+    list_display      = ("nom", "type_structure", "parent", "nombre_missions", "ordre", "actif")
+    list_editable     = ("ordre", "actif")
+    list_filter       = ("type_structure", "actif")
+    search_fields     = ("nom", "sigle", "missions")
+    list_per_page     = 50
+    warn_unsaved_form = True
+    fieldsets = (
+        (None, {"fields": ("type_structure", "nom", "sigle", "parent", "icone")}),
+        ("Missions (texte des statuts)", {"fields": ("presentation", "missions", "reference")}),
+        ("Affichage", {"fields": ("ordre", "actif", "slug")}),
+    )
+
+    @display(description="Missions")
+    def nombre_missions(self, obj):
+        return len(obj.liste_missions) or "—"
+
+    def get_inlines(self, request, obj):
+        # Les services se gèrent directement dans la fiche de leur direction
+        return [ServiceInline] if obj and obj.type_structure == "direction" else []
+
+    def save_formset(self, request, form, formset, change):
+        for service in formset.save(commit=False):
+            service.type_structure = "service"
+            service.save()
+        for supprime in formset.deleted_objects:
+            supprime.delete()
+        formset.save_m2m()
 
 
 # ==========================================================================
@@ -330,7 +374,7 @@ class AbonneAdmin(ModelAdmin):
         reponse = HttpResponse(content_type="text/csv; charset=utf-8")
         nom = f"abonnes-adpme-{timezone.localdate():%Y-%m-%d}.csv"
         reponse["Content-Disposition"] = f'attachment; filename="{nom}"'
-        reponse.write("﻿")  # pour qu'Excel lise correctement les accents
+        reponse.write("\ufeff")  # pour qu'Excel lise correctement les accents
         ecrivain = csv.writer(reponse, delimiter=";")
         ecrivain.writerow(["E-mail", "Inscrit", "Date d'inscription", "Lien de désinscription"])
         base = request.build_absolute_uri("/").rstrip("/")

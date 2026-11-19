@@ -1,5 +1,5 @@
 # ==========================================================================
-# ADPME Congo — navigation.py — v7
+# ADPME Congo — navigation.py — v8
 # Menu principal du site : C'EST ICI qu'on modifie le méga-menu ET les
 # colonnes du footer (une seule source pour les deux).
 #
@@ -8,7 +8,26 @@
 #   - "url" = nom de route Django (name="..." dans adpme/urls.py).
 #   - "icone" = nom d'une icône de adpme/templatetags/ui.py.
 #   - "aussi" = autres routes qui allument la rubrique (ex. détail d'actualité).
+#
+# v8 : page « Organisation et missions » (L'Agence), en attente de validation.
 # ==========================================================================
+from decouple import config
+from django.conf import settings
+
+# --------------------------------------------------------------------------
+# Page « Organisation et missions » (organigramme et missions des directions)
+#   - En local (DEBUG=True) : toujours visible, avec un bandeau « aperçu ».
+#   - En ligne : invisible (menu, plan du site, recherche, adresse en 404)
+#     tant que le fichier .env du serveur ne contient pas :
+#         ORGANISATION_PUBLIEE=True
+#     Après validation du DG : ajouter cette ligne au .env puis « Reload ».
+# --------------------------------------------------------------------------
+ORGANISATION_PUBLIEE = config("ORGANISATION_PUBLIEE", default=False, cast=bool)
+ORGANISATION_VISIBLE = settings.DEBUG or ORGANISATION_PUBLIEE
+
+_LIEN_ORGANISATION = [
+    {"titre": "Organisation et missions", "url": "organisation", "icone": "organigramme"},
+] if ORGANISATION_VISIBLE else []
 
 MENU_PRINCIPAL = [
     {
@@ -16,6 +35,7 @@ MENU_PRINCIPAL = [
         "titre": "L'Agence",
         "liens": [
             {"titre": "Présentation", "url": "a_propos", "icone": "batiment"},
+            *_LIEN_ORGANISATION,
             {"titre": "Mot du Directeur général", "url": "discours_dg", "icone": "message"},
             {"titre": "Mot de la Ministre", "url": "discours_ministre", "icone": "message"},
         ],
@@ -103,3 +123,4 @@ ETAPES_PARCOURS = [
     {"titre": "Suivi de l'entreprise", "texte": "Suivi technique pour anticiper les difficultés et consolider l'activité."},
     {"titre": "Croissance et pérennisation", "texte": "Productivité, innovation, accès aux marchés et compétitivité."},
 ]
+

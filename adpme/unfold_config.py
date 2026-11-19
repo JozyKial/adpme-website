@@ -1,7 +1,8 @@
 # ==========================================================================
-# ADPME Congo — unfold_config.py — v4
+# ADPME Congo — unfold_config.py — v5
 # Fonctions appelées par le thème d'administration Unfold (voir UNFOLD dans
 # settings.py) : badge d'environnement, icône, menu latéral, tableau de bord.
+# v5 : menu « L'agence » > Organigramme (directions et services).
 # ==========================================================================
 from django.conf import settings
 from django.templatetags.static import static
@@ -94,6 +95,7 @@ NAVIGATION = [
         "items": [
             _lien("Informations et coordonnées", "apartment", "agenceinfo"),
             _lien("Antennes", "location_on", "antenne"),
+            _lien("Organigramme (directions et services)", "account_tree", "structure"),
         ],
     },
     {

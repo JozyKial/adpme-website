@@ -1,5 +1,5 @@
 # ==========================================================================
-# ADPME Congo — textes.py — v4
+# ADPME Congo — textes.py — v5
 # Registre des « Textes du site » modifiables dans l'admin.
 #
 # Chaque entrée : "clé": (page, libellé affiché dans l'admin, texte par défaut)
@@ -8,6 +8,7 @@
 #     automatiquement dans l'admin avec leur valeur par défaut. Une valeur déjà
 #     modifiée dans l'admin n'est jamais écrasée.
 #   - Si un texte est vidé dans l'admin, la valeur par défaut ci-dessous revient.
+# v5 : textes de la page « Organisation et missions ».
 # ==========================================================================
 from .navigation import MENU_PRINCIPAL
 
@@ -23,6 +24,7 @@ PAGES = [
     ("contact", "Page « Contact » et formulaire"),
     ("recherche", "Page « Recherche »"),
     ("agence", "Pages de l'agence et des services, discours"),
+    ("organisation", "Page « Organisation et missions » (organigramme)"),
     ("opportunites", "Pages « Opportunités » (offres, emplois, appels)"),
     ("newsletter", "Lettre d'information (inscription, désinscription)"),
     ("seo", "Référencement (informations lues par Google)"),
@@ -244,6 +246,49 @@ TEXTES = {
     "agence.mis_a_jour": ("agence", "Pages : mention de date (suivie de la date)", "Mis à jour le"),
     "agence.mot_dg": ("agence", "Titre de la page « Mot du Directeur général »", "Mot du Directeur général"),
     "agence.mot_ministre": ("agence", "Titre de la page « Mot de la Ministre »", "Mot de la Ministre"),
+
+    # ── Organisation et missions (organigramme) ──────────────────────────
+    "organisation.titre_page": ("organisation", "Titre de la page (onglet du navigateur et Google)",
+        "Organisation et missions de l'ADPME"),
+    "organisation.meta_description": ("organisation", "Description pour Google",
+        "Organigramme de l'ADPME et missions de ses directions, telles que fixées par les statuts de l'agence "
+        "approuvés par le décret n° 2022-96 du 2 mars 2022."),
+    "organisation.titre": ("organisation", "Titre principal", "Organisation et missions"),
+    "organisation.intro": ("organisation", "Introduction sous le titre",
+        "L'organigramme de l'agence et les missions de ses directions, telles que fixées par ses statuts."),
+    "organisation.apercu": ("organisation", "Bandeau d'aperçu (affiché seulement tant que la page n'est pas publiée)",
+        "Aperçu local : cette page n'est pas encore publiée sur le site en ligne. Elle est en attente de validation."),
+    "organisation.organigramme_surtitre": ("organisation", "Organigramme : surtitre", "Organigramme"),
+    "organisation.organigramme_titre": ("organisation", "Organigramme : titre", "L'organisation de l'agence"),
+    "organisation.organigramme_aide": ("organisation", "Organigramme : aide sous le titre",
+        "Sélectionnez une direction pour consulter ses missions et ses services."),
+    "organisation.rattaches_titre": ("organisation", "Organigramme : titre des structures rattachées à la Direction générale",
+        "Rattachés à la Direction générale"),
+    "organisation.departementales_titre": ("organisation", "Titre « Directions départementales »",
+        "Directions départementales"),
+    "organisation.departementales_texte": ("organisation", "Texte sous « Directions départementales »",
+        "Les directions départementales de l'agence sont régies par des textes spécifiques (statuts, article 40)."),
+    "organisation.directions_surtitre": ("organisation", "Missions : surtitre", "Directions centrales"),
+    "organisation.directions_titre": ("organisation", "Missions : titre", "Les missions des directions"),
+    "organisation.directions_intro": ("organisation", "Missions : introduction",
+        "Les missions de chaque direction sont reprises telles qu'elles figurent dans les statuts de l'agence."),
+    "organisation.missions_libelle": ("organisation", "Fiche d'une direction : phrase avant la liste des missions",
+        "Elle est chargée, notamment, de :"),
+    "organisation.services_libelle": ("organisation", "Fiche d'une direction : titre de la liste des services",
+        "Elle comprend"),
+    "organisation.retour_organigramme": ("organisation", "Fiche d'une direction : lien de retour",
+        "Retour à l'organigramme"),
+    "organisation.autres_titre": ("organisation", "Titre de la section Agence comptable et directions départementales",
+        "Agence comptable et directions départementales"),
+    "organisation.source": ("organisation", "Mention de la source (bas de l'organigramme et des missions)",
+        "Source : statuts de l'Agence de développement des très petites, petites et moyennes entreprises, "
+        "approuvés par le décret n° 2022-96 du 2 mars 2022 (Journal officiel de la République du Congo "
+        "n° 10-2022 du 10 mars 2022)."),
+    "organisation.cta_titre": ("organisation", "Appel à l'action : titre", "Une question, un projet ?"),
+    "organisation.cta_texte": ("organisation", "Appel à l'action : texte",
+        "L'agence vous oriente vers le bon interlocuteur et le dispositif adapté à votre situation."),
+    "organisation.cta_bouton1": ("organisation", "Appel à l'action : premier bouton", "Nous contacter"),
+    "organisation.cta_bouton2": ("organisation", "Appel à l'action : second bouton", "Nos dispositifs"),
 
     # ── Opportunités ─────────────────────────────────────────────────────
     "opportunites.titre_page": ("opportunites", "Liste : titre de la page (onglet du navigateur et Google)", "Opportunités"),

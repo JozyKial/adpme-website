@@ -1,5 +1,5 @@
 # ==========================================================================
-# ADPME Congo — templatetags/ui.py — v4
+# ADPME Congo — templatetags/ui.py — v5
 # Balises de gabarit pour l'interface v3.
 #   {% load ui %}
 #   {% icon "telephone" %}                       -> icône décorative
@@ -13,6 +13,7 @@
 # Icônes au trait (grille 24x24), tracés inspirés de Lucide (licence ISC).
 # Pour ajouter une icône : ajouter une entrée dans ICONES (ou ICONES_PLEINES
 # pour les logos remplis).
+# v5 : icônes « organigramme » et « ordinateur » (page Organisation et missions).
 # ==========================================================================
 from functools import lru_cache
 from html import unescape
@@ -56,6 +57,8 @@ ICONES = {
     "question": '<circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/>',
     "message": '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
     "whatsapp": '<path d="M3 21l1.65-4.65A9 9 0 1 1 7.7 19.4z"/><path d="M9 9.2c0 3 2.8 5.8 5.8 5.8l.9-1.3-1.8-.9-.9.7a4.4 4.4 0 0 1-2.3-2.3l.7-.9-.9-1.8z"/>',
+    "organigramme": '<rect x="9" y="2" width="6" height="5" rx="1"/><rect x="2" y="17" width="6" height="5" rx="1"/><rect x="16" y="17" width="6" height="5" rx="1"/><path d="M12 7v5M5 17v-3a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v3"/>',
+    "ordinateur": '<rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>',
 }
 
 # Logos remplis (réseaux sociaux)

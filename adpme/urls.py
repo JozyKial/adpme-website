@@ -1,8 +1,9 @@
 # ==========================================================================
-# ADPME Congo — urls.py — v4
+# ADPME Congo — urls.py — v5
 # Adresses du site. Phase 4c : opportunités et lettre d'information.
 # Phase 5 : plan du site (/sitemap.xml) et /robots.txt.
 # v4 : /favicon.ico (icône lue par Google et Bing à la racine du site).
+# v5 : /agence/organisation/ (organigramme et missions des directions).
 # ==========================================================================
 from django.contrib.sitemaps.views import sitemap
 from django.templatetags.static import static as fichier_statique
@@ -19,6 +20,7 @@ urlpatterns = [
     # Accueil & Infos
     path('',views.AccueilView, name="accueil"),
     path('a-propos/', views.AproposView, name='a_propos'),
+    path('agence/organisation/', views.OrganisationView, name='organisation'),
     path('programme/', views.ProgrammeView, name="programme"),
     path('programme/<slug:slug>/', views.ProgrammeDetailView, name="programme_detail"),
     path('actualite/', views.ActualiteView,name="actualite"),
@@ -57,4 +59,5 @@ urlpatterns = [
 #+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
     

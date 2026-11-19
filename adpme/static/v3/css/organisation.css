@@ -1,0 +1,334 @@
+/* ==========================================================================
+   ADPME Congo — organisation.css — v1
+   Page « Organisation et missions » : organigramme (HTML/CSS, sans image)
+   et fiches des directions. Chargée uniquement par v3/organisation.html.
+   Ordinateur (≥ 1100px) : directions côte à côte, reliées par des traits.
+   Mobile et tablette : organigramme en colonne, de haut en bas.
+   ========================================================================== */
+
+.orga-apercu { margin: var(--sp-5) 0 0; }
+.orga-apercu .icon { margin-top: 0.1em; }
+
+/* ── 1. Cadre de l'organigramme ────────────────────────────────────────── */
+.orga {
+  --orga-trait: var(--ligne-forte);
+  --orga-ecart: var(--sp-5);
+  padding: var(--sp-6) var(--sp-4);
+  border: 1px solid var(--ligne);
+  border-radius: var(--rayon-lg);
+  background-color: var(--fond);
+  background-image: radial-gradient(var(--ligne) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+@media (min-width: 768px) {
+  .orga { padding: var(--sp-7) var(--sp-6); }
+}
+
+/* Boîtes de l'organigramme */
+.orga__boite {
+  position: relative;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: var(--sp-2);
+  padding: var(--sp-3) var(--sp-4);
+  border: 1px solid var(--ligne);
+  border-radius: var(--rayon);
+  background: var(--fond);
+  color: var(--encre);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-serre);
+  text-align: center;
+  text-decoration: none;
+}
+.orga__boite .icon { width: 22px; height: 22px; }
+
+.orga__boite--comite {
+  min-width: min(100%, 260px);
+  background: var(--violet-50); border-color: var(--violet-100); color: var(--violet-800);
+}
+.orga__boite--dg {
+  min-width: min(100%, 300px);
+  padding-block: var(--sp-4);
+  border-color: var(--vert-800);
+  background: var(--vert-700); color: #fff;
+  font-size: var(--fs-lg);
+  box-shadow: var(--ombre);
+}
+
+/* ── 2. Sommet : comité, direction générale, structures rattachées ─────── */
+.orga__sommet {
+  position: relative;
+  display: flex; flex-direction: column; align-items: center;
+}
+/* Trait vertical entre deux éléments du sommet */
+.orga__sommet > * + * { margin-top: var(--orga-ecart); }
+.orga__sommet > * + *::before {
+  content: "";
+  position: absolute; left: 50%;
+  top: calc(-1 * var(--orga-ecart) - 1px);
+  width: 2px; height: var(--orga-ecart);
+  transform: translateX(-50%);
+  background: var(--orga-trait);
+}
+
+.orga__rattaches {
+  position: relative;
+  max-width: 100%;
+  padding: var(--sp-3) var(--sp-4);
+  border: 1px dashed var(--ligne-forte);
+  border-radius: var(--rayon-lg);
+  background: var(--fond);
+  text-align: center;
+}
+.orga__rattaches-titre {
+  margin: 0 0 var(--sp-2);
+  font-size: var(--fs-xs); font-weight: var(--fw-bold);
+  text-transform: uppercase; letter-spacing: .06em;
+  color: var(--texte-doux);
+}
+.orga__rattaches ul {
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-wrap: wrap; justify-content: center; gap: var(--sp-2);
+}
+.orga__rattaches li { margin: 0; }
+.orga__puce {
+  display: inline-flex; align-items: center; gap: var(--sp-2);
+  padding: var(--sp-1) var(--sp-3);
+  border-radius: var(--rayon-pill);
+  background: var(--vert-50); color: var(--vert-800);
+  font-size: var(--fs-sm); font-weight: var(--fw-medium);
+  text-decoration: none;
+}
+.orga__puce .icon { width: 16px; height: 16px; }
+a.orga__puce:hover { background: var(--vert-100); }
+
+/* ── 3. Directions centrales et agence comptable ───────────────────────── */
+.orga__directions {
+  position: relative;
+  list-style: none; margin: 0; padding: var(--orga-ecart) 0 0;
+  display: grid; gap: var(--orga-ecart);
+  grid-template-columns: minmax(0, 1fr);
+}
+.orga__colonne { position: relative; margin: 0; display: flex; flex-direction: column; }
+/* Mobile : un trait vertical au-dessus de chaque boîte */
+.orga__colonne::before {
+  content: "";
+  position: absolute; left: 50%;
+  top: calc(-1 * var(--orga-ecart));
+  width: 2px; height: var(--orga-ecart);
+  transform: translateX(-50%);
+  background: var(--orga-trait);
+}
+
+.orga__boite--direction,
+.orga__boite--comptable {
+  flex: 1 1 auto;
+  border-top: 4px solid var(--c-primaire);
+  font-size: var(--fs-sm);
+  transition: box-shadow var(--transition), border-color var(--transition), transform var(--transition);
+}
+.orga__boite--comptable { border-top-color: var(--violet-700); }
+.orga__boite--direction .icon,
+.orga__boite--comptable .icon {
+  width: 40px; height: 40px; padding: 9px;
+  border-radius: 50%;
+  background: var(--vert-50); color: var(--c-primaire);
+}
+.orga__boite--comptable .icon { background: var(--violet-50); color: var(--violet-700); }
+.orga__boite--direction:hover,
+.orga__boite--comptable:hover {
+  border-color: var(--vert-600);
+  box-shadow: var(--ombre);
+  transform: translateY(-2px);
+}
+.orga__boite--direction:focus-visible,
+.orga__boite--comptable:focus-visible { outline: 3px solid var(--c-focus); outline-offset: 2px; }
+.orga__sigle {
+  padding: 0 var(--sp-2);
+  border-radius: var(--rayon-pill);
+  background: var(--fond-alt);
+  color: var(--texte-doux);
+  font-size: var(--fs-xs);
+}
+
+.orga__services {
+  list-style: none; margin: var(--sp-2) 0 0; padding: 0;
+  display: grid; gap: var(--sp-1);
+}
+.orga__services li {
+  margin: 0;
+  padding: var(--sp-2) var(--sp-3);
+  border-left: 3px solid var(--vert-100);
+  border-radius: var(--rayon-sm);
+  background: var(--fond-alt);
+  color: var(--texte);
+  font-size: var(--fs-xs);
+  line-height: var(--lh-titre);
+}
+
+/* Ordinateur : directions côte à côte, reliées par une barre horizontale */
+@media (min-width: 1100px) {
+  .orga__directions {
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    grid-template-columns: none;
+    gap: var(--sp-3);
+    padding-top: calc(var(--orga-ecart) * 2);
+  }
+  /* Trait vertical sous le sommet, jusqu'à la barre */
+  .orga__directions::before {
+    content: "";
+    position: absolute; left: 50%; top: 0;
+    width: 2px; height: var(--orga-ecart);
+    transform: translateX(-50%);
+    background: var(--orga-trait);
+  }
+  .orga__colonne::before { top: calc(-1 * var(--orga-ecart)); }
+  /* Barre horizontale : chaque colonne en trace un morceau */
+  .orga__colonne::after {
+    content: "";
+    position: absolute;
+    top: calc(-1 * var(--orga-ecart));
+    left: calc(-1 * var(--sp-3) / 2); right: calc(-1 * var(--sp-3) / 2);
+    height: 2px;
+    background: var(--orga-trait);
+  }
+  .orga__colonne:first-child::after { left: 50%; }
+  .orga__colonne:last-child::after { right: 50%; }
+  .orga__colonne:only-child::after { display: none; }
+  .orga__boite--direction,
+  .orga__boite--comptable { flex: 0 0 auto; min-height: 9.5rem; justify-content: flex-start; }
+}
+
+/* ── 4. Directions départementales ─────────────────────────────────────── */
+.orga__departements {
+  margin-top: var(--sp-6);
+  padding-top: var(--sp-5);
+  border-top: 1px solid var(--ligne);
+  text-align: center;
+}
+.orga__departements-titre {
+  display: flex; align-items: center; justify-content: center; gap: var(--sp-2);
+  margin: 0 0 var(--sp-3);
+  font-weight: var(--fw-bold); color: var(--encre);
+}
+.orga__departements-titre a { color: inherit; }
+.orga__departements ul,
+.orga-pastilles {
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-wrap: wrap; justify-content: center; gap: var(--sp-2);
+}
+.orga-pastilles { justify-content: flex-start; }
+.orga__departements li,
+.orga-pastilles li {
+  margin: 0;
+  padding: var(--sp-1) var(--sp-3);
+  border: 1px solid var(--ligne);
+  border-radius: var(--rayon-pill);
+  background: var(--fond);
+  color: var(--texte);
+  font-size: var(--fs-sm);
+}
+
+/* Mention de la source (statuts, Journal officiel) */
+.orga-source {
+  display: flex; align-items: flex-start; gap: var(--sp-2);
+  max-width: 80ch;
+  margin: var(--sp-5) 0 0;
+  color: var(--texte-doux);
+  font-size: var(--fs-sm);
+}
+.orga-source .icon { margin-top: 0.15em; }
+
+/* ── 5. Sommaire des directions ─────────────────────────────────────────── */
+.orga-sommaire ul {
+  list-style: none; margin: 0 0 var(--sp-6); padding: 0;
+  display: flex; flex-wrap: wrap; gap: var(--sp-2);
+}
+.orga-sommaire li { margin: 0; }
+.orga-sommaire a {
+  display: inline-flex; align-items: center; gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-4);
+  border: 1px solid var(--ligne);
+  border-radius: var(--rayon-pill);
+  background: var(--fond);
+  color: var(--encre);
+  font-size: var(--fs-sm); font-weight: var(--fw-medium);
+  text-decoration: none;
+}
+.orga-sommaire a .icon { color: var(--c-primaire); }
+.orga-sommaire a:hover { border-color: var(--c-primaire); }
+
+/* ── 6. Fiches des directions ───────────────────────────────────────────── */
+.fiches-direction { display: grid; gap: var(--sp-5); }
+
+.fiche-direction {
+  padding: var(--sp-5);
+  border: 1px solid var(--ligne);
+  border-left: 4px solid var(--c-primaire);
+  border-radius: var(--rayon-lg);
+  background: var(--fond);
+  transition: box-shadow var(--transition);
+}
+@media (min-width: 768px) {
+  .fiche-direction { padding: var(--sp-6); }
+}
+/* Fiche ouverte depuis l'organigramme : mise en évidence */
+.fiche-direction:target { box-shadow: 0 0 0 3px var(--violet-100), var(--ombre); }
+
+.fiche-direction__entete {
+  display: flex; align-items: center; gap: var(--sp-4);
+  margin-bottom: var(--sp-5);
+  padding-bottom: var(--sp-4);
+  border-bottom: 1px solid var(--ligne);
+}
+.fiche-direction__icone {
+  flex-shrink: 0;
+  display: grid; place-items: center;
+  width: 56px; height: 56px;
+  border-radius: var(--rayon);
+  background: var(--vert-50); color: var(--c-primaire);
+}
+.fiche-direction__icone .icon { width: 28px; height: 28px; }
+.fiche-direction__titre { margin: 0 0 var(--sp-2); font-size: var(--fs-xl); }
+.fiche-direction__sigle { color: var(--texte-doux); font-weight: var(--fw-medium); }
+.fiche-direction__entete .badge { margin: 0; }
+
+.fiche-direction__corps { display: grid; gap: var(--sp-5); }
+@media (min-width: 992px) {
+  .fiche-direction__corps:has(.fiche-direction__services) { grid-template-columns: minmax(0, 1fr) 300px; gap: var(--sp-7); }
+}
+.fiche-direction__presentation { margin: 0 0 var(--sp-3); color: var(--texte-doux); }
+.fiche-direction__libelle { margin: 0 0 var(--sp-4); font-weight: var(--fw-bold); color: var(--encre); }
+.fiche-direction__missions .liste-check { max-width: 72ch; }
+
+.fiche-direction__services {
+  align-self: start;
+  padding: var(--sp-4) var(--sp-5);
+  border-radius: var(--rayon);
+  background: var(--vert-50);
+}
+.fiche-direction__services .encadre__libelle { margin: 0 0 var(--sp-3); }
+.fiche-direction__services ul { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-3); }
+.fiche-direction__services li {
+  display: flex; align-items: flex-start; gap: var(--sp-2);
+  margin: 0;
+  font-weight: var(--fw-medium); color: var(--encre);
+  line-height: var(--lh-titre);
+}
+.fiche-direction__services .icon { margin-top: 0.05em; color: var(--c-primaire); }
+
+.fiche-direction__retour { margin: var(--sp-5) 0 0; font-size: var(--fs-sm); }
+.fiche-direction__retour a { display: inline-flex; align-items: center; gap: var(--sp-1); }
+
+/* ── 7. Agence comptable et directions départementales ──────────────────── */
+.orga-carte { position: static; height: 100%; align-content: start; }
+.orga-carte h3 { margin: 0; font-size: var(--fs-lg); }
+.orga-carte .badge { justify-self: start; }
+
+/* ── 8. Impression : une fiche ne se coupe pas entre deux pages ─────────── */
+@media print {
+  .orga { background-image: none; }
+  .fiche-direction { break-inside: avoid; }
+  .orga-sommaire, .fiche-direction__retour, .orga-apercu { display: none; }
+}
+

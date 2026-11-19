@@ -1,8 +1,9 @@
 # ==========================================================================
-# ADPME Congo — models.py — v5
+# ADPME Congo — models.py — v6
 # Modèles. Lot 2 : TexteSite (textes du site) et Element (listes modifiables).
 # Phase 4c : Offre (appels d'offres, emplois et stages, appels à candidatures)
 # et Abonne (lettre d'information).
+# v6 : Structure (organigramme et missions des directions, statuts de 2022).
 # ==========================================================================
 import uuid
 
@@ -537,5 +538,58 @@ class Abonne(models.Model):
 
     def __str__(self):
         return self.email
+
+
+# ==========================================================================
+# v6 — Organisation de l'agence : organigramme et missions des directions
+# Source : statuts de l'ADPME approuvés par le décret n° 2022-96 du 2 mars 2022
+# (Journal officiel n° 10-2022 du 10 mars 2022). Contenu initial chargé par la
+# migration 0019 ; tout reste modifiable dans l'admin.
+# ==========================================================================
+
+class Structure(models.Model):
+    TYPES = [
+        ("comite", "Comité de direction"),
+        ("dg", "Direction générale"),
+        ("rattache", "Rattaché à la Direction générale"),
+        ("direction", "Direction centrale"),
+        ("service", "Service d'une direction"),
+        ("comptable", "Agence comptable"),
+        ("departementale", "Direction départementale"),
+    ]
+
+    type_structure = models.CharField(max_length=20, choices=TYPES, verbose_name="Type")
+    nom         = models.CharField(max_length=200, verbose_name="Nom",
+                                   help_text="Ex. : Direction des finances et de la comptabilité")
+    slug        = AutoSlugField(populate_from="nom", unique=True, editable=True, blank=True,
+                                verbose_name="Ancre dans la page",
+                                help_text="Rempli automatiquement. Sert aux liens de l'organigramme vers la fiche.")
+    sigle       = models.CharField(max_length=20, blank=True, verbose_name="Sigle",
+                                   help_text="Facultatif. Affiché dans l'organigramme s'il est renseigné.")
+    parent      = models.ForeignKey("self", null=True, blank=True, on_delete=models.CASCADE,
+                                    related_name="services", limit_choices_to={"type_structure": "direction"},
+                                    verbose_name="Direction de rattachement",
+                                    help_text="Uniquement pour un service : la direction dont il dépend.")
+    icone       = models.CharField(max_length=40, choices=choix_icones, blank=True, verbose_name="Icône")
+    presentation = models.CharField(max_length=300, blank=True, verbose_name="Phrase de présentation",
+                                    help_text="Ex. : La direction … est dirigée et animée par un directeur.")
+    missions    = models.TextField(blank=True, verbose_name="Missions",
+                                   help_text="Une mission par ligne, telle qu'elle figure dans les statuts.")
+    reference   = models.CharField(max_length=120, blank=True, verbose_name="Référence du texte",
+                                   help_text="Ex. : Statuts, articles 29 et 30")
+    ordre       = models.PositiveIntegerField(default=0, verbose_name="Ordre")
+    actif       = models.BooleanField(default=True, verbose_name="Affichée")
+
+    class Meta:
+        ordering            = ["ordre", "id"]
+        verbose_name        = "Structure de l'organigramme"
+        verbose_name_plural = "Organigramme (directions et services)"
+
+    def __str__(self):
+        return f"{self.nom} ({self.sigle})" if self.sigle else self.nom
+
+    @property
+    def liste_missions(self):
+        return [ligne.strip(" -•\t") for ligne in self.missions.splitlines() if ligne.strip(" -•\t")]
 
     

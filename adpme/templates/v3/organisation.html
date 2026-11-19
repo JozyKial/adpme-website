@@ -1,0 +1,188 @@
+{% extends "v3/base.html" %}
+{% load static ui %}
+{% comment %} ADPME Congo — v3/organisation.html — v1
+   Page « Organisation et missions » : organigramme + missions des directions.
+   Données : admin > L'agence > Organigramme (modèle Structure).
+   Textes : admin > Textes du site > Page « Organisation et missions ».
+   Visible en local ; en ligne seulement si ORGANISATION_PUBLIEE=True (navigation.py).
+{% endcomment %}
+
+{% block title %}{% texte "organisation.titre_page" %} — {% texte "general.titre_suffixe" %}{% endblock %}
+{% block meta_description %}{% texte "organisation.meta_description" %}{% endblock %}
+{% block og_title %}{% texte "organisation.titre_page" %}{% endblock %}
+{% block og_description %}{% texte "organisation.meta_description" %}{% endblock %}
+{% block twitter_title %}{% texte "organisation.titre_page" %}{% endblock %}
+{% block twitter_description %}{% texte "organisation.meta_description" %}{% endblock %}
+
+{% block extra_css %}<link rel="stylesheet" href="{% static 'v3/css/organisation.css' %}">{% endblock %}
+
+{% block schema_org %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "GovernmentOrganization",
+  "name": "{% texte 'seo.organisation_nom' as nom %}{{ nom|escapejs }}",
+  "alternateName": "{% texte 'seo.organisation_sigle' as sigle %}{{ sigle|escapejs }}",
+  "url": "{{ request.scheme }}://{{ request.get_host }}/",
+  "department": [{% for d in directions %}
+    {"@type": "GovernmentOrganization", "name": "{{ d.nom|escapejs }}", "url": "{{ request.scheme }}://{{ request.get_host }}{{ request.path }}#{{ d.slug }}"}{% if not forloop.last %},{% endif %}{% endfor %}
+  ]
+}
+</script>
+{% endblock %}
+
+{% block page_hero %}
+{% texte "organisation.titre" as titre_page %}{% texte "organisation.intro" as intro_page %}
+{% for r in menu_principal %}{% if r.id == rubrique_id %}
+{% include "v3/components/page_hero.html" with titre=titre_page intro=intro_page parent_titre=r.titre parent_url=r.liens.0.href %}
+{% endif %}{% endfor %}
+{% endblock %}
+
+{% block content %}
+{% if apercu %}
+<div class="container">
+    <p class="alert alert--warning orga-apercu" role="note">{% icon "info" %} <span>{% texte "organisation.apercu" %}</span></p>
+</div>
+{% endif %}
+
+{# ── 1. Organigramme ─────────────────────────────────────────────────── #}
+<section class="section" aria-labelledby="titre-organigramme">
+    <div class="container">
+        {% texte "organisation.organigramme_surtitre" as surtitre %}{% texte "organisation.organigramme_titre" as titre %}{% texte "organisation.organigramme_aide" as aide %}
+        {% include "v3/components/section_header.html" with surtitre=surtitre titre=titre intro=aide id="titre-organigramme" only %}
+
+        <div class="orga" id="organigramme">
+            {# Sommet : comité de direction, direction générale et structures rattachées #}
+            <div class="orga__sommet">
+                {% if comite %}
+                <div class="orga__boite orga__boite--comite">{% icon comite.icone %}<span>{{ comite.nom }}</span></div>
+                {% endif %}
+                {% if dg %}
+                <div class="orga__boite orga__boite--dg">{% icon dg.icone %}<span>{{ dg.nom }}</span></div>
+                {% endif %}
+                {% if rattaches %}
+                <div class="orga__rattaches">
+                    <p class="orga__rattaches-titre">{% texte "organisation.rattaches_titre" %}</p>
+                    <ul>
+                        {% for r in rattaches %}
+                        <li>{% if r.liste_missions %}<a class="orga__puce" href="#{{ r.slug }}">{% else %}<span class="orga__puce">{% endif %}{% icon r.icone %}<span>{{ r.nom }}</span>{% if r.liste_missions %}</a>{% else %}</span>{% endif %}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+
+            {# Directions centrales (avec leurs services) et agence comptable #}
+            {% if directions or comptables %}
+            <ul class="orga__directions">
+                {% for d in directions %}
+                <li class="orga__colonne">
+                    <a class="orga__boite orga__boite--direction" href="#{{ d.slug }}">
+                        {% icon d.icone %}
+                        <span class="orga__nom">{{ d.nom }}</span>
+                        {% if d.sigle %}<span class="orga__sigle">{{ d.sigle }}</span>{% endif %}
+                    </a>
+                    {% if d.liste_services %}
+                    <ul class="orga__services">
+                        {% for s in d.liste_services %}<li>{{ s.nom }}</li>{% endfor %}
+                    </ul>
+                    {% endif %}
+                </li>
+                {% endfor %}
+                {% for c in comptables %}
+                <li class="orga__colonne">
+                    <a class="orga__boite orga__boite--comptable" href="#{{ c.slug }}">
+                        {% icon c.icone %}
+                        <span class="orga__nom">{{ c.nom }}</span>
+                        {% if c.sigle %}<span class="orga__sigle">{{ c.sigle }}</span>{% endif %}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+
+            {# Directions départementales #}
+            {% if departementales %}
+            <div class="orga__departements">
+                <p class="orga__departements-titre">{% icon "lieu" %} <a href="#directions-departementales">{% texte "organisation.departementales_titre" %}</a></p>
+                <ul>
+                    {% for dd in departementales %}<li>{{ dd.nom }}</li>{% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+
+        <p class="orga-source">{% icon "document" %} <span>{% texte "organisation.source" %}</span></p>
+    </div>
+</section>
+
+{# ── 2. Missions des directions ──────────────────────────────────────── #}
+{% if directions %}
+<section class="section section--alt" aria-labelledby="titre-missions">
+    <div class="container">
+        {% texte "organisation.directions_surtitre" as surtitre %}{% texte "organisation.directions_titre" as titre %}{% texte "organisation.directions_intro" as intro %}
+        {% include "v3/components/section_header.html" with surtitre=surtitre titre=titre intro=intro id="titre-missions" only %}
+
+        <nav class="orga-sommaire" aria-label="{{ titre }}">
+            <ul>
+                {% for d in directions %}<li><a href="#{{ d.slug }}">{% icon d.icone %}<span>{{ d.nom }}</span></a></li>{% endfor %}
+            </ul>
+        </nav>
+
+        <div class="fiches-direction">
+            {% for d in directions %}
+            {% include "v3/components/fiche_direction.html" with structure=d %}
+            {% endfor %}
+            {% for r in rattaches %}{% if r.liste_missions %}
+            {% include "v3/components/fiche_direction.html" with structure=r %}
+            {% endif %}{% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{# ── 3. Agence comptable et directions départementales ───────────────── #}
+{% if comptables or departementales %}
+<section class="section" aria-labelledby="titre-autres">
+    <div class="container">
+        {% texte "organisation.autres_titre" as titre %}
+        {% include "v3/components/section_header.html" with titre=titre id="titre-autres" only %}
+        <div class="grid grid--2">
+            {% for c in comptables %}
+            <article class="encadre orga-carte" id="{{ c.slug }}">
+                <span class="encadre__icone">{% icon c.icone %}</span>
+                <h3>{{ c.nom }}</h3>
+                {% if c.presentation %}<p>{{ c.presentation }}</p>{% endif %}
+                {% if c.liste_missions %}
+                <ul class="liste-check liste-check--compacte">
+                    {% for m in c.liste_missions %}<li>{% icon "check" %}<span>{{ m }}</span></li>{% endfor %}
+                </ul>
+                {% endif %}
+                {% if c.reference %}<p class="badge badge--neutre">{{ c.reference }}</p>{% endif %}
+            </article>
+            {% endfor %}
+            {% if departementales %}
+            <article class="encadre orga-carte" id="directions-departementales">
+                <span class="encadre__icone">{% icon "lieu" %}</span>
+                <h3>{% texte "organisation.departementales_titre" %}</h3>
+                <p>{% texte "organisation.departementales_texte" %}</p>
+                <ul class="orga-pastilles">
+                    {% for dd in departementales %}<li>{{ dd.nom }}</li>{% endfor %}
+                </ul>
+            </article>
+            {% endif %}
+        </div>
+        <p class="orga-source">{% icon "document" %} <span>{% texte "organisation.source" %}</span></p>
+    </div>
+</section>
+{% endif %}
+
+<section class="section section--compacte">
+    <div class="container">
+        {% texte "organisation.cta_titre" as cta_titre %}{% texte "organisation.cta_texte" as cta_texte %}{% texte "organisation.cta_bouton1" as cta_b1 %}{% texte "organisation.cta_bouton2" as cta_b2 %}
+        {% url 'contact' as url_contact %}{% url 'dispositifs' as url_dispositifs %}
+        {% include "v3/components/cta_band.html" with titre=cta_titre texte=cta_texte bouton_texte=cta_b1 bouton_url=url_contact bouton2_texte=cta_b2 bouton2_url=url_dispositifs %}
+    </div>
+</section>
+{% endblock %}
+
